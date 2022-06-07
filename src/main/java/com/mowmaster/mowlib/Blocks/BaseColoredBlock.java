@@ -92,39 +92,46 @@ public class BaseColoredBlock extends Block
     @Override
     public InteractionResult use(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
 
+        int getColor;
+        int currentColor;
+        TranslatableComponent sameColor;
+        BlockState newState;
         List<Item> DYES = ForgeRegistries.ITEMS.tags().getTag(ItemTags.create(new ResourceLocation("forge", "dyes"))).stream().toList();
+
+        ItemStack itemInHand = p_60506_.getMainHandItem();
+        ItemStack itemInOffHand = p_60506_.getOffhandItem();
 
         if(p_60506_.getItemInHand(p_60507_).getItem() instanceof ColorApplicator)
         {
-            int getColor = ColorReference.getColorFromItemStackInt(p_60506_.getItemInHand(p_60507_));
-            int currentColor = ColorReference.getColorFromStateInt(p_60503_);
+            getColor = ColorReference.getColorFromItemStackInt(p_60506_.getItemInHand(p_60507_));
+            currentColor = ColorReference.getColorFromStateInt(p_60503_);
             if(currentColor != getColor)
             {
-                BlockState newState = ColorReference.addColorToBlockState(p_60503_,getColor);
+                newState = ColorReference.addColorToBlockState(p_60503_,getColor);
                 p_60504_.setBlock(p_60505_,newState,3);
                 //p_60504_.markAndNotifyBlock(p_60505_,null,p_60503_,newState,3,1);
                 return InteractionResult.SUCCESS;
             }
-            TranslatableComponent sameColor = new TranslatableComponent(MODID + ".recolor.message_sameColor");
+            sameColor = new TranslatableComponent(MODID + ".recolor.message_sameColor");
             sameColor.withStyle(ChatFormatting.RED);
             p_60506_.sendMessage(sameColor, Util.NIL_UUID);
             return InteractionResult.FAIL;
 
         }
-        else if(DYES.contains(p_60506_.getItemInHand(p_60507_).getItem()))
+        else if(DYES.contains(itemInOffHand.getItem()))
         {
-            int getColor = ColorReference.getColorFromDyeInt(p_60506_.getItemInHand(p_60507_));
-            int currentColor = ColorReference.getColorFromStateInt(p_60503_);
-            if(currentColor != getColor)
-            {
-                BlockState newState = ColorReference.addColorToBlockState(p_60503_,getColor);
-                p_60504_.setBlock(p_60505_,newState,3);
+            getColor = ColorReference.getColorFromDyeInt(itemInOffHand);
+            currentColor = ColorReference.getColorFromStateInt(p_60503_);
+            if (currentColor != getColor) {
+                newState = ColorReference.addColorToBlockState(p_60503_, getColor);
+                p_60504_.setBlock(p_60505_, newState, 3);
                 return InteractionResult.SUCCESS;
+            } else {
+                sameColor = new TranslatableComponent("mowlib.recolor.message_sameColor");
+                sameColor.withStyle(ChatFormatting.RED);
+                p_60506_.sendMessage(sameColor, Util.NIL_UUID);
+                return InteractionResult.FAIL;
             }
-            TranslatableComponent sameColor = new TranslatableComponent(MODID + ".recolor.message_sameColor");
-            sameColor.withStyle(ChatFormatting.RED);
-            p_60506_.sendMessage(sameColor, Util.NIL_UUID);
-            return InteractionResult.FAIL;
 
         }
 
