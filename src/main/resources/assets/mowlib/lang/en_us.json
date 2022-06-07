@@ -1,0 +1,9 @@
+{
+  "itemGroup.tab_mowlibtab": "MowLib",
+
+  "mowlib.recolor.message_sameColor": "Block is Already This Color",
+
+
+  "item.mowlib.applicator": "Color Applicator",
+  "item.mowlib.applicator.description": "§3 Crouch Right Click to Save Color, Right Click to Apply Color, Offhand and Any Placed Crystal Stone Blocks will Place with Current Color."
+}
