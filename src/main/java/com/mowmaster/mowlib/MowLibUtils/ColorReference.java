@@ -219,12 +219,12 @@ public class ColorReference
         return getColor(getColorFromStateList(state));
     }
 
-    public static List<Integer> getColorFromStateList( BlockState state)
+    public static List<Integer> getColorFromStateList(BlockState state)
     {
         int r = 0;
         int g = 0;
         int b = 0;
-        if(state.getBlock().getRegistryName().getNamespace().equals(MODID))
+        if(state.hasProperty(COLOR_RED) && state.hasProperty(COLOR_GREEN) && state.hasProperty(COLOR_BLUE))
         {
             if(state.hasProperty(COLOR_RED))r=state.getValue(COLOR_RED);
             if(state.hasProperty(COLOR_GREEN))g=state.getValue(COLOR_GREEN);
