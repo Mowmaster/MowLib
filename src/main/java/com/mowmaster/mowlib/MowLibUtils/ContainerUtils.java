@@ -70,7 +70,13 @@ public class ContainerUtils {
 
     public static AbstractContainerMenu getAbstractContainerMenu(int id)
     {
-        AbstractContainerMenu abstractContainerMenu = new AbstractContainerMenu(null,id) {
+        AbstractContainerMenu abstractContainerMenu = new AbstractContainerMenu(null,id)
+        {
+            @Override
+            public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+                return null;
+            }
+
             @Override
             public boolean stillValid(Player p_38874_) {
                 return true;

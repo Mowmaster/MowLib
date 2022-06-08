@@ -3,7 +3,7 @@ package com.mowmaster.mowlib.MowLibUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -12,36 +12,36 @@ import java.util.List;
 public class TooltipUtils
 {
 
-    public static void addTooltipMessage(List<Component> componentList, ItemStack stack, TranslatableComponent translatableComponent)
+    public static void addTooltipMessage(List<Component> componentList, ItemStack stack, MutableComponent translatableComponent)
     {
-        TranslatableComponent base = translatableComponent;
+        MutableComponent base = translatableComponent;
         componentList.add(base);
     }
 
-    public static void addTooltipMessageWithStyle(List<Component> componentList, TranslatableComponent translatableComponent, ChatFormatting chatFormatting)
+    public static void addTooltipMessageWithStyle(List<Component> componentList, MutableComponent translatableComponent, ChatFormatting chatFormatting)
     {
-        TranslatableComponent base = translatableComponent;
+        MutableComponent base = translatableComponent;
         base.withStyle(chatFormatting);
         componentList.add(base);
     }
 
     public static void addTooltipMessageWithStyle(List<Component> componentList, String localizationString, ChatFormatting chatFormatting)
     {
-        TranslatableComponent base = new TranslatableComponent(localizationString);
+        MutableComponent base = Component.translatable(localizationString);
         base.withStyle(chatFormatting);
         componentList.add(base);
     }
 
-    public static void addTooltipShiftMessage(String MODID, List<Component> componentList, ItemStack stack, TranslatableComponent translatableComponent)
+    public static void addTooltipShiftMessage(String MODID, List<Component> componentList, ItemStack stack, MutableComponent translatableComponent)
     {
         if(!Screen.hasShiftDown())
         {
-            TranslatableComponent base = new TranslatableComponent(MODID + ".description_shift");
+            MutableComponent base = Component.translatable(MODID + ".description_shift");
             base.withStyle(ChatFormatting.WHITE);
             componentList.add(base);
         }
         else {
-            TranslatableComponent base = translatableComponent;
+            MutableComponent base = translatableComponent;
             componentList.add(base);
         }
     }
@@ -50,12 +50,12 @@ public class TooltipUtils
     {
         if(!Screen.hasShiftDown())
         {
-            TranslatableComponent base = new TranslatableComponent(MODID + ".description_shift");
+            MutableComponent base = Component.translatable(MODID + ".description_shift");
             base.withStyle(ChatFormatting.WHITE);
             componentList.add(base);
         }
         else {
-            TranslatableComponent base = new TranslatableComponent(localizationString);
+            MutableComponent base = Component.translatable(localizationString);
             base.withStyle(chatFormatting);
             componentList.add(base);
         }
@@ -65,45 +65,45 @@ public class TooltipUtils
     {
         if(!Screen.hasShiftDown())
         {
-            TranslatableComponent base = new TranslatableComponent(MODID + ".description_shift");
+            MutableComponent base = Component.translatable(MODID + ".description_shift");
             base.withStyle(ChatFormatting.WHITE);
             componentList.add(base);
         }
         else {
             for(int i=0;i<localizationString.size();i++)
             {
-                TranslatableComponent base = new TranslatableComponent(localizationString.get(i));
+                MutableComponent base = Component.translatable(localizationString.get(i));
                 base.withStyle((chatFormatting.size()>=i)?(chatFormatting.get(i)):(chatFormatting.get(0)));
                 componentList.add(base);
             }
         }
     }
 
-    public static void addTooltipShiftMessageWithStyle(String MODID, List<Component> componentList, TranslatableComponent translatableComponent, ChatFormatting chatFormatting)
+    public static void addTooltipShiftMessageWithStyle(String MODID, List<Component> componentList, MutableComponent translatableComponent, ChatFormatting chatFormatting)
     {
         if(!Screen.hasShiftDown())
         {
-            TranslatableComponent base = new TranslatableComponent(MODID + ".description_shift");
+            MutableComponent base = Component.translatable(MODID + ".description_shift");
             base.withStyle(ChatFormatting.WHITE);
             componentList.add(base);
         }
         else {
-            TranslatableComponent base = translatableComponent;
+            MutableComponent base = translatableComponent;
             base.withStyle(chatFormatting);
             componentList.add(base);
         }
     }
 
-    public static void addTooltipAltMessage(String MODID, List<Component> componentList, ItemStack stack, TranslatableComponent translatableComponent)
+    public static void addTooltipAltMessage(String MODID, List<Component> componentList, ItemStack stack, MutableComponent translatableComponent)
     {
         if(!Screen.hasAltDown())
         {
-            TranslatableComponent base = new TranslatableComponent(MODID + ".description_alt");
+            MutableComponent base = Component.translatable(MODID + ".description_alt");
             base.withStyle(ChatFormatting.WHITE);
             componentList.add(base);
         }
         else {
-            TranslatableComponent base = translatableComponent;
+            MutableComponent base = translatableComponent;
             componentList.add(base);
         }
     }
@@ -112,27 +112,27 @@ public class TooltipUtils
     {
         if(!Screen.hasAltDown())
         {
-            TranslatableComponent base = new TranslatableComponent(MODID + ".description_alt");
+            MutableComponent base = Component.translatable(MODID + ".description_alt");
             base.withStyle(ChatFormatting.WHITE);
             componentList.add(base);
         }
         else {
-            TranslatableComponent base = new TranslatableComponent(localizationString);
+            MutableComponent base = Component.translatable(localizationString);
             base.withStyle(chatFormatting);
             componentList.add(base);
         }
     }
 
-    public static void addTooltipAltMessageWithStyle(String MODID, List<Component> componentList, TranslatableComponent translatableComponent, ChatFormatting chatFormatting)
+    public static void addTooltipAltMessageWithStyle(String MODID, List<Component> componentList, MutableComponent translatableComponent, ChatFormatting chatFormatting)
     {
         if(!Screen.hasAltDown())
         {
-            TranslatableComponent base = new TranslatableComponent(MODID + ".description_alt");
+            MutableComponent base = Component.translatable(MODID + ".description_alt");
             base.withStyle(ChatFormatting.WHITE);
             componentList.add(base);
         }
         else {
-            TranslatableComponent base = translatableComponent;
+            MutableComponent base = translatableComponent;
             base.withStyle(chatFormatting);
             componentList.add(base);
         }

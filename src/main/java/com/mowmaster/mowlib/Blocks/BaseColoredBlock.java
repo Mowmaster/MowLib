@@ -3,10 +3,8 @@ package com.mowmaster.mowlib.Blocks;
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.MowLibUtils.ColorReference;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
@@ -31,7 +29,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
+import static com.mowmaster.mowlib.MowLibUtils.MessageUtils.getMowLibComponentLocalized;
 
 public class BaseColoredBlock extends Block
 {
@@ -94,7 +92,7 @@ public class BaseColoredBlock extends Block
 
         int getColor;
         int currentColor;
-        TranslatableComponent sameColor;
+        Component sameColor;
         BlockState newState;
         List<Item> DYES = ForgeRegistries.ITEMS.tags().getTag(ItemTags.create(new ResourceLocation("forge", "dyes"))).stream().toList();
 
@@ -112,9 +110,8 @@ public class BaseColoredBlock extends Block
                 //p_60504_.markAndNotifyBlock(p_60505_,null,p_60503_,newState,3,1);
                 return InteractionResult.SUCCESS;
             }
-            sameColor = new TranslatableComponent(MODID + ".recolor.message_sameColor");
-            sameColor.withStyle(ChatFormatting.RED);
-            p_60506_.sendMessage(sameColor, Util.NIL_UUID);
+            sameColor = getMowLibComponentLocalized(".recolor.message_sameColor", ChatFormatting.RED);
+            if(p_60504_.isClientSide)p_60506_.displayClientMessage(sameColor, false);
             return InteractionResult.FAIL;
 
         }
@@ -127,9 +124,8 @@ public class BaseColoredBlock extends Block
                 p_60504_.setBlock(p_60505_, newState, 3);
                 return InteractionResult.SUCCESS;
             } else {
-                sameColor = new TranslatableComponent("mowlib.recolor.message_sameColor");
-                sameColor.withStyle(ChatFormatting.RED);
-                p_60506_.sendMessage(sameColor, Util.NIL_UUID);
+                sameColor = getMowLibComponentLocalized(".recolor.message_sameColor", ChatFormatting.RED);
+                if(p_60504_.isClientSide)p_60506_.displayClientMessage(sameColor, false);
                 return InteractionResult.FAIL;
             }
 

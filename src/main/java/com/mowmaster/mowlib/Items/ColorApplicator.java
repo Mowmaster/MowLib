@@ -5,7 +5,6 @@ import com.mowmaster.mowlib.MowLibUtils.ColorReference;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -162,11 +161,10 @@ public class ColorApplicator extends Item {
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         List<Integer> list = getColorList(p_41421_);
         super.getTooltipImage(p_41421_);
-        p_41423_.add((new TranslatableComponent("item.minecraft.bundle.fullness", list.size(), 8)).withStyle(ChatFormatting.GRAY));
+        p_41423_.add((Component.translatable("item.minecraft.bundle.fullness", list.size(), 8)).withStyle(ChatFormatting.GRAY));
         for(int i=0;i<list.size();i++)
         {
-            TranslatableComponent minNeeded = new TranslatableComponent( list.get(i).toString());
-            minNeeded.withStyle(ChatFormatting.WHITE);
+            Component minNeeded = Component.translatable(list.get(i).toString()).withStyle(ChatFormatting.WHITE);
             p_41423_.add(minNeeded);
         }
 
@@ -176,7 +174,6 @@ public class ColorApplicator extends Item {
 
         //Bundle chats: https://discord.com/channels/313125603924639766/915304642668290119/915758371091677225
         // https://github.com/MinecraftForge/MinecraftForge/commit/7631600b53c9ff8e8bb5de35ecbc26cc1b36c707
-
     }
 
 }
