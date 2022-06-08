@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mowlib:applicator"
+    }
+  ],
+  "result": {
+    "item": "mowlib:applicator",
+    "count": 1
+  }
+}
