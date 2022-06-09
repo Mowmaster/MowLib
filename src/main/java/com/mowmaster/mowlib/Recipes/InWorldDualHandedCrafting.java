@@ -34,6 +34,8 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
     private final Ingredient offhandTool;
     private final Ingredient mainhandTool;
     private final ItemStack resultBlock;
+    private final Boolean consumeOffhandItem;
+    private final Boolean consumeMainhandItem;
     //private final ItemStack offhandTool;
 
     /*public InWorldDualHandedCrafting(ResourceLocation id, String group, @Nullable Ingredient blockTarget, ItemStack resultBlock, ItemStack offhandTool)
@@ -45,13 +47,15 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
         this.offhandTool = offhandTool;
     }*/
 
-    public InWorldDualHandedCrafting(ResourceLocation id, String group, @Nullable Ingredient blockTarget, @Nullable Ingredient mainhandTool, @Nullable Ingredient offhandTool, ItemStack resultBlock)
+    public InWorldDualHandedCrafting(ResourceLocation id, String group, @Nullable Ingredient blockTarget, @Nullable Ingredient mainhandTool, @Nullable Boolean consumeMainhandItem, @Nullable Ingredient offhandTool, @Nullable Boolean consumeOffhandItem, ItemStack resultBlock)
     {
         this.group = group;
         this.id = id;
         this.blockTarget = blockTarget;
         this.mainhandTool = mainhandTool;
+        this.consumeMainhandItem = consumeMainhandItem;
         this.offhandTool = offhandTool;
+        this.consumeOffhandItem = consumeOffhandItem;
         this.resultBlock = resultBlock;
     }
 
@@ -109,6 +113,10 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
         return resultBlock;
     }
 
+    public Boolean consumeMainHand(){return consumeMainhandItem;}
+
+    public Boolean consumeOffHand(){return consumeOffhandItem;}
+
     @Override
     public ResourceLocation getId()
     {
@@ -147,9 +155,9 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
         public static final ResourceLocation ID =
                 new ResourceLocation(MODID,"dualhandedcrafting");
 
-        protected InWorldDualHandedCrafting createRecipe(ResourceLocation recipeId, String group, Ingredient blockTarget , Ingredient mainhandTool , Ingredient offhandTool, ItemStack result)
+        protected InWorldDualHandedCrafting createRecipe(ResourceLocation recipeId, String group, Ingredient blockTarget, Ingredient mainhandTool, Boolean consumeMainhandItem, Ingredient offhandTool, Boolean consumeOffhandItem, ItemStack result)
         {
-            return new InWorldDualHandedCrafting(recipeId, group, blockTarget, mainhandTool, offhandTool, result);
+            return new InWorldDualHandedCrafting(recipeId, group, blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, result);
         }
 
         @Override
@@ -158,10 +166,13 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
             String group = GsonHelper.getAsString(json, "group", "");
             Ingredient blockTarget = json.has("blockTarget") ? CraftingHelper.getIngredient(json.get("blockTarget")) : null;
             Ingredient mainhandTool = json.has("mainhandTool") ? CraftingHelper.getIngredient(json.get("mainhandTool")) : null;
+            Boolean consumeMainhandItem = json.has("consumeMainhandItem") ? GsonHelper.getAsBoolean(json,"consumeMainhandItem") : true;
             Ingredient offhandTool = json.has("offhandTool") ? CraftingHelper.getIngredient(json.get("offhandTool")) : null;
+            Boolean consumeOffhandItem = json.has("consumeOffhandItem") ? GsonHelper.getAsBoolean(json,"consumeOffhandItem") : true;
             ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
-            return createRecipe(recipeId, group, blockTarget, mainhandTool, offhandTool, result);
+            return createRecipe(recipeId, group, blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, result);
         }
+
 
         @Override
         public InWorldDualHandedCrafting fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer)
@@ -171,10 +182,12 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
             Ingredient blockTarget = hasInput ? Ingredient.fromNetwork(buffer) : null;
             boolean hasMainHandTool = buffer.readBoolean();
             Ingredient mainhandTool = hasMainHandTool ? Ingredient.fromNetwork(buffer) : null;
+            boolean consumeMainhandItem = buffer.readBoolean();
             boolean hasOffHandTool = buffer.readBoolean();
             Ingredient offhandTool = hasOffHandTool ? Ingredient.fromNetwork(buffer) : null;
+            boolean consumeOffhandItem = buffer.readBoolean();
             ItemStack result = buffer.readItem();
-            return createRecipe(recipeId, group,  blockTarget, mainhandTool, offhandTool, result);
+            return createRecipe(recipeId, group,  blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, result);
         }
 
         @Override
@@ -187,9 +200,11 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
             boolean hasMainHandTool = recipe.mainhandTool != null;
             buffer.writeBoolean(hasMainHandTool);
             if (hasMainHandTool) recipe.mainhandTool.toNetwork(buffer);
+            buffer.writeBoolean(recipe.consumeMainhandItem);
             boolean hasOffHandTool = recipe.offhandTool != null;
             buffer.writeBoolean(hasOffHandTool);
             if (hasOffHandTool) recipe.offhandTool.toNetwork(buffer);
+            buffer.writeBoolean(recipe.consumeOffhandItem);
             buffer.writeItem(recipe.resultBlock);
         }
 

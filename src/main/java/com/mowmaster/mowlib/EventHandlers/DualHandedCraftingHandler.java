@@ -8,11 +8,13 @@ import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
 import com.mowmaster.mowlib.Registry.DeferredRecipeSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,16 +35,19 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber
 public class DualHandedCraftingHandler
 {
+
     @SubscribeEvent()
-    public static void hammerCrafting(PlayerInteractEvent.RightClickBlock event) {
+    public static void dualHandedCrafting(PlayerInteractEvent.RightClickBlock event) {
+
         Level level = event.getWorld();
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
         Player player = event.getPlayer();
 
-        if(!level.isClientSide())
+        if(!level.isClientSide() && event.getHand().equals(InteractionHand.OFF_HAND))
         {
-            if(player.getMainHandItem() != null && player.getOffhandItem() != null)
+            //Requires 2 Items to be used or the Color Applicator and an empty hand to be used. (could make a tag exception to this later maybe???)
+            if((player.getMainHandItem() != null && player.getOffhandItem() != null) || (player.getMainHandItem().getItem() instanceof ColorApplicator) || (player.getOffhandItem().getItem() instanceof ColorApplicator))
             {
                 ItemStack blockTarget = new ItemStack(state.getBlock().asItem());
                 if(blockTarget != null)
@@ -53,21 +58,31 @@ public class DualHandedCraftingHandler
                         ItemStack getResultItem = getBlockItemResult(getRecipe).stream().findFirst().get();
                         if(getResultItem != null)
                         {
-                            if(Block.byItem(getResultItem.getItem()) != null && Block.byItem(getResultItem.getItem()) != Blocks.AIR)
+                            if(!player.isCreative())
                             {
-                                if(!player.isCreative())
+                                if(consumeMainHandItemOrDurability(getRecipe))
                                 {
                                     if(player.getMainHandItem().isDamageableItem()) {
                                         MowLibItemUtils.damageItem(player.getMainHandItem(),1);
                                     }
-                                    else player.getMainHandItem().shrink(1);
+                                    else {
+                                        player.getMainHandItem().shrink(1);
+                                    }
+                                }
 
+                                if(consumeOffHandItemOrDurability(getRecipe))
+                                {
                                     if(player.getOffhandItem().isDamageableItem()) {
                                         MowLibItemUtils.damageItem(player.getOffhandItem(),1);
                                     }
-                                    else player.getOffhandItem().shrink(1);
+                                    else {
+                                        player.getOffhandItem().shrink(1);
+                                    }
                                 }
+                            }
 
+                            if(Block.byItem(getResultItem.getItem()) != null && Block.byItem(getResultItem.getItem()) != Blocks.AIR)
+                            {
                                 BlockState blockToSet = Block.byItem(getResultItem.getItem()).defaultBlockState();
                                 if(blockToSet.hasProperty(ColorReference.COLOR_RED) && blockToSet.hasProperty(ColorReference.COLOR_GREEN) && blockToSet.hasProperty(ColorReference.COLOR_BLUE))
                                 {
@@ -93,9 +108,7 @@ public class DualHandedCraftingHandler
                                 if(state.hasProperty(BlockStateProperties.INVERTED) && blockToSet.hasProperty(BlockStateProperties.INVERTED))blockToSet = blockToSet.setValue(BlockStateProperties.INVERTED,state.getValue(BlockStateProperties.INVERTED));
                                 if(state.hasProperty(BlockStateProperties.HAS_BOOK) && blockToSet.hasProperty(BlockStateProperties.HAS_BOOK))blockToSet = blockToSet.setValue(BlockStateProperties.HAS_BOOK,state.getValue(BlockStateProperties.HAS_BOOK));
 
-                                //System.out.println("Post Set: " + blockToSet.getValue(SlabBlock.TYPE));
                                 level.setBlockAndUpdate(pos,blockToSet);
-                                event.setCancellationResult(InteractionResult.CONSUME);
                                 //level.setBlockAndUpdate(pos,Blocks.BEDROCK.defaultBlockState());
                             }
                             else
@@ -107,17 +120,13 @@ public class DualHandedCraftingHandler
                                     else if(player.getOffhandItem().getItem() instanceof ColorApplicator)ColorReference.addColorToItemStack(getResultItem,ColorReference.getColorFromItemStackInt(player.getOffhandItem()));
                                 }
                                 MowLibItemUtils.spawnItemStack(level, pos.getX(), pos.getY(), pos.getZ(), getResultItem);
-                                event.setCancellationResult(InteractionResult.CONSUME);
                             }
                         }
                     }
                 }
-                /*if(player.getMainHandItem().getItem() instanceof BaseHammerItem)
-                {
-
-                }*/
             }
         }
+
     }
 
 
@@ -134,6 +143,14 @@ public class DualHandedCraftingHandler
 
     protected static Collection<ItemStack> getBlockItemResult(InWorldDualHandedCrafting recipe) {
         return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem()));
+    }
+
+    protected static Boolean consumeMainHandItemOrDurability(InWorldDualHandedCrafting recipe) {
+        return (recipe == null)?(true):(recipe.consumeMainHand());
+    }
+
+    protected static Boolean consumeOffHandItemOrDurability(InWorldDualHandedCrafting recipe) {
+        return (recipe == null)?(true):(recipe.consumeOffHand());
     }
 
     /*

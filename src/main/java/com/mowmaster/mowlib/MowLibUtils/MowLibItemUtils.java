@@ -33,8 +33,9 @@ public class MowLibItemUtils
             int currentDamage = itemToDamage.getDamageValue();
             int maxDamage = itemToDamage.getMaxDamage();
             int damageDifference = maxDamage-currentDamage;
+            int damageToSet = damageDifference-damageAmount;
 
-            if(damageDifference>=damageAmount)itemToDamage.setDamageValue(currentDamage+damageAmount);
+            if(damageDifference>=damageAmount && damageToSet>0)itemToDamage.setDamageValue(currentDamage+damageAmount);
             else
             {
                 itemToDamage.shrink(1);
