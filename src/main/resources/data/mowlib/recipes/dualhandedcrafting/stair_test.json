@@ -1,0 +1,15 @@
+{
+  "type": "mowlib:dualhandedcrafting",
+  "blockTarget": {
+    "tag": "minecraft:stairs"
+  },
+  "mainhandTool": {
+    "item": "minecraft:wooden_axe"
+  },
+  "offhandTool": {
+    "item": "minecraft:stick"
+  },
+  "result": {
+    "item": "minecraft:stone_stairs"
+  }
+}

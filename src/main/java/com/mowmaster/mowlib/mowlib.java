@@ -1,6 +1,7 @@
 package com.mowmaster.mowlib;
 
 import com.mojang.logging.LogUtils;
+import com.mowmaster.mowlib.Registry.DeferredRecipeSerializers;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import com.mowmaster.mowlib.Registry.MowLibClientRegistry;
 import net.minecraft.world.level.block.Block;
@@ -46,6 +47,7 @@ public class mowlib
 
         DeferredRegisterItems.ITEMS.register(eventBus);
         //DeferredRegisterBlocks.BLOCKS.register(eventBus);
+        DeferredRecipeSerializers.register(eventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event)

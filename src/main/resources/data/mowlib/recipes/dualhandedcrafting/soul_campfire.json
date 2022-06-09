@@ -1,0 +1,15 @@
+{
+  "type": "mowlib:dualhandedcrafting",
+  "blockTarget": {
+    "tag": "minecraft:logs_that_burn"
+  },
+  "mainhandTool": {
+    "item": "minecraft:flint_and_steel"
+  },
+  "offhandTool": {
+    "item": "minecraft:soul_sand"
+  },
+  "result": {
+    "item": "minecraft:soul_campfire"
+  }
+}

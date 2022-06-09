@@ -233,6 +233,17 @@ public class ColorReference
         return Arrays.asList(r,g,b);
     }
 
+    public static boolean isColorItem(ItemStack stackIn)
+    {
+        CompoundTag blockColors = stackIn.getOrCreateTag();
+        if(blockColors.contains(MODID +"_color"))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public static int getColorFromItemStackInt( ItemStack stackIn)
     {
         CompoundTag blockColors = stackIn.getOrCreateTag();
