@@ -46,7 +46,7 @@ public class DualHandedCraftingHandler
 
         if(!level.isClientSide())
         {
-            if(player.getMainHandItem() != null && player.getOffhandItem() != null && event.getHand().equals(InteractionHand.OFF_HAND))
+            if(player.getMainHandItem() != null && player.getOffhandItem() != null && event.getHand().equals(InteractionHand.MAIN_HAND))
             {
                 ItemStack blockTarget = new ItemStack(state.getBlock().asItem());
                 if(blockTarget != null)
