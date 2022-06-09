@@ -44,10 +44,9 @@ public class DualHandedCraftingHandler
         BlockState state = level.getBlockState(pos);
         Player player = event.getPlayer();
 
-        if(!level.isClientSide() && event.getHand().equals(InteractionHand.OFF_HAND))
+        if(!level.isClientSide())
         {
-            //Requires 2 Items to be used or the Color Applicator and an empty hand to be used. (could make a tag exception to this later maybe???)
-            if((player.getMainHandItem() != null && player.getOffhandItem() != null) || (player.getMainHandItem().getItem() instanceof ColorApplicator) || (player.getOffhandItem().getItem() instanceof ColorApplicator))
+            if(player.getMainHandItem() != null && player.getOffhandItem() != null && event.getHand().equals(InteractionHand.OFF_HAND))
             {
                 ItemStack blockTarget = new ItemStack(state.getBlock().asItem());
                 if(blockTarget != null)
