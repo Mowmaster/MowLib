@@ -1,4 +1,4 @@
-package com.mowmaster.mowlib.Blocks;
+package com.mowmaster.mowlib.Blocks.BaseBlocks;
 
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.MowLibUtils.ColorReference;

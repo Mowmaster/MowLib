@@ -36,16 +36,10 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
     private final ItemStack resultBlock;
     private final Boolean consumeOffhandItem;
     private final Boolean consumeMainhandItem;
-    //private final ItemStack offhandTool;
 
-    /*public InWorldDualHandedCrafting(ResourceLocation id, String group, @Nullable Ingredient blockTarget, ItemStack resultBlock, ItemStack offhandTool)
-    {
-        this.group = group;
-        this.id = id;
-        this.blockTarget = blockTarget;
-        this.resultBlock = resultBlock;
-        this.offhandTool = offhandTool;
-    }*/
+
+
+    //Someday add in a bool value to set as something fake players could do too or not???
 
     public InWorldDualHandedCrafting(ResourceLocation id, String group, @Nullable Ingredient blockTarget, @Nullable Ingredient mainhandTool, @Nullable Boolean consumeMainhandItem, @Nullable Ingredient offhandTool, @Nullable Boolean consumeOffhandItem, ItemStack resultBlock)
     {

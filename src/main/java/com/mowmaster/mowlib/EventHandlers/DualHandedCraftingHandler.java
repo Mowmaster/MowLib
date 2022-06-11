@@ -87,6 +87,7 @@ public class DualHandedCraftingHandler
                                 {
                                     if(player.getMainHandItem().getItem() instanceof ColorApplicator)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromItemStackInt(player.getMainHandItem()));
                                     else if(player.getOffhandItem().getItem() instanceof ColorApplicator)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromItemStackInt(player.getOffhandItem()));
+                                //Include options for dyes sometime too???
                                 }
 
                                 if(state.hasProperty(BlockStateProperties.WATERLOGGED) && blockToSet.hasProperty(BlockStateProperties.WATERLOGGED))blockToSet = blockToSet.setValue(BlockStateProperties.WATERLOGGED,state.getValue(BlockStateProperties.WATERLOGGED));
