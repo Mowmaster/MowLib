@@ -39,8 +39,8 @@ public class BaseMachineBlock extends BaseColoredBlock{
     protected MachineBaseTypeRecipe getRecipe(Level level, ItemStack stackIn) {
         Container cont = ContainerUtils.getContainer(1);
         cont.setItem(-1,stackIn);
-        List<MachineBaseTypeRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBaseTypeRecipe.MACHINE_BASE,cont,level);
-        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MachineBaseTypeRecipe.MACHINE_BASE,cont,level).get(0) : null;
+        List<MachineBaseTypeRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBaseTypeRecipe.Type.INSTANCE,cont,level);
+        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MachineBaseTypeRecipe.Type.INSTANCE,cont,level).get(0) : null;
     }
 
     protected Collection<ItemStack> getProcessResults(MachineBaseTypeRecipe recipe) {

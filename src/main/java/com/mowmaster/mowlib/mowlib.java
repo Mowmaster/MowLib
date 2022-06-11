@@ -1,6 +1,8 @@
 package com.mowmaster.mowlib;
 
 import com.mojang.logging.LogUtils;
+import com.mowmaster.mowlib.Capabilities.Dust.CapabilityDust;
+import com.mowmaster.mowlib.Capabilities.Experience.CapabilityExperience;
 import com.mowmaster.mowlib.Registry.DeferredRecipeSerializers;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import com.mowmaster.mowlib.Registry.MowLibClientRegistry;
@@ -9,6 +11,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -81,14 +84,12 @@ public class mowlib
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
-    /*@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents
-    {
+    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+    public static class RegistryEvents {
         @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent)
-        {
-            // Register a new block here
-            //LOGGER.info("HELLO from Register Block");
+        public static void attachCapabilities(final RegisterCapabilitiesEvent event) {
+            CapabilityExperience.register(event);
+            CapabilityDust.register(event);
         }
-    }*/
+    }
 }

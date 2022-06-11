@@ -252,7 +252,7 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
 
             Container cont = ContainerUtils.getContainer(2);
             cont.setItem(-1,stackIn);
-            List<MachineBlockRepairItemsRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsRecipe.MACHINE_REPAIR_ITEMS,cont,level);
+            List<MachineBlockRepairItemsRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsRecipe.Type.INSTANCE,cont,level);
             List<ItemStack> stackie = new ArrayList<>();
             for(MachineBlockRepairItemsRecipe recipe : recipes)
             {
@@ -268,7 +268,7 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
 
         Container cont = ContainerUtils.getContainer(2);
         cont.setItem(-1,stackIn);
-        List<MachineBlockRepairItemsRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsRecipe.MACHINE_REPAIR_ITEMS,cont,level);
+        List<MachineBlockRepairItemsRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsRecipe.Type.INSTANCE,cont,level);
         List<String> stackie = new ArrayList<>();
         for(MachineBlockRepairItemsRecipe recipe : recipes)
         {
@@ -453,7 +453,7 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
                 cont.setItem(-1, stackIn.get(i));
             }
         }
-        List<MachineBlockRenderItemsRecipe> recipes = getLevel().getRecipeManager().getRecipesFor(MachineBlockRenderItemsRecipe.MACHINE_RENDER_ITEMS,cont,getLevel());
+        List<MachineBlockRenderItemsRecipe> recipes = getLevel().getRecipeManager().getRecipesFor(MachineBlockRenderItemsRecipe.Type.INSTANCE,cont,getLevel());
         return getLevel() != null ? (recipes.size() > 0)?(recipes.get(0)):(null) : null;
     }
 

@@ -21,8 +21,8 @@ public class MowLibEffectUtils
     protected static MobEffectColorRecipe getRecipeMobEffectColor(Level level, ItemStack stackIn) {
         Container container = ContainerUtils.getContainer(1);
         container.setItem(-1,stackIn);
-        List<MobEffectColorRecipe> recipes = level.getRecipeManager().getRecipesFor(MobEffectColorRecipe.MOBEFFECTCOLOR,container,level);
-        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MobEffectColorRecipe.MOBEFFECTCOLOR,container,level).get(0) : null;
+        List<MobEffectColorRecipe> recipes = level.getRecipeManager().getRecipesFor(MobEffectColorRecipe.Type.INSTANCE,container,level);
+        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MobEffectColorRecipe.Type.INSTANCE,container,level).get(0) : null;
     }
 
     protected static String getProcessResultMobEffectColorRecipe(MobEffectColorRecipe recipe) {
@@ -41,8 +41,8 @@ public class MowLibEffectUtils
     protected static MobEffectColorRecipeCorrupted getRecipeMobEffectColorCorrupted(Level level, ItemStack stackIn) {
         Container container = ContainerUtils.getContainer(1);
         container.setItem(-1,stackIn);
-        List<MobEffectColorRecipeCorrupted> recipes = level.getRecipeManager().getRecipesFor(MobEffectColorRecipeCorrupted.MOBEFFECTCOLORCORRUPTED,container,level);
-        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MobEffectColorRecipeCorrupted.MOBEFFECTCOLORCORRUPTED,container,level).get(0) : null;
+        List<MobEffectColorRecipeCorrupted> recipes = level.getRecipeManager().getRecipesFor(MobEffectColorRecipeCorrupted.Type.INSTANCE,container,level);
+        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MobEffectColorRecipeCorrupted.Type.INSTANCE,container,level).get(0) : null;
     }
 
     protected static String getProcessResultMobEffectColorRecipeCorrupted(MobEffectColorRecipeCorrupted recipe) {

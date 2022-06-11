@@ -52,8 +52,8 @@ public class BaseWorkStationBlock extends BaseColoredBlock{
     protected WorkStationBaseTypeRecipe getRecipe(Level level, ItemStack stackIn) {
         Container cont = ContainerUtils.getContainer(1);
         cont.setItem(-1,stackIn);
-        List<WorkStationBaseTypeRecipe> recipes = level.getRecipeManager().getRecipesFor(WorkStationBaseTypeRecipe.WORKSTATION_BASE,cont,level);
-        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(WorkStationBaseTypeRecipe.WORKSTATION_BASE,cont,level).get(0) : null;
+        List<WorkStationBaseTypeRecipe> recipes = level.getRecipeManager().getRecipesFor(WorkStationBaseTypeRecipe.Type.INSTANCE,cont,level);
+        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(WorkStationBaseTypeRecipe.Type.INSTANCE,cont,level).get(0) : null;
     }
 
     protected Collection<ItemStack> getProcessResults(WorkStationBaseTypeRecipe recipe) {

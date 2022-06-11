@@ -45,8 +45,8 @@ public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlo
     public MachineBlockRepairItemsHintRecipe getRecipe(Level level, ItemStack stackIn) {
         Container cont = ContainerUtils.getContainer(1);
         cont.setItem(-1,stackIn);
-        List<MachineBlockRepairItemsHintRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsHintRecipe.MACHINE_REPAIR_ITEMS_HINT,cont,level);
-        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsHintRecipe.MACHINE_REPAIR_ITEMS_HINT,cont,level).get(0) : null;
+        List<MachineBlockRepairItemsHintRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsHintRecipe.Type.INSTANCE,cont,level);
+        return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsHintRecipe.Type.INSTANCE,cont,level).get(0) : null;
     }
 
     public String getProcessResultTitle(MachineBlockRepairItemsHintRecipe recipe) {
