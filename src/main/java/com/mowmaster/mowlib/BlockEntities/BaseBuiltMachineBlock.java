@@ -2,7 +2,7 @@ package com.mowmaster.mowlib.BlockEntities;
 
 import com.google.common.collect.Maps;
 import com.mowmaster.mowlib.Blocks.BaseBlocks.BaseColoredBlock;
-import com.mowmaster.mowlib.Items.BaseRepairScroll;
+import com.mowmaster.mowlib.Items.BaseRepairNote;
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.MowLibUtils.ColorReference;
 import com.mowmaster.mowlib.MowLibUtils.ContainerUtils;
@@ -87,7 +87,7 @@ public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlo
             {
                 if(!table.isFullyRepaired())
                 {
-                    if(itemInMainHand.getItem() instanceof BaseRepairScroll scroll)
+                    if(itemInMainHand.getItem() instanceof BaseRepairNote scroll)
                     {
                         scroll.setMachineBlock(itemInMainHand,this);
                         scroll.setRepairItem(itemInMainHand,table.getNextRepairItem());
@@ -115,7 +115,7 @@ public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlo
                             ItemStack itemFound = ItemStack.EMPTY;
                             itemFound = IntStream.range(0,inv.getContainerSize())
                                     .mapToObj((inv)::getItem)//Function being applied to each interval
-                                    .filter(itemStack -> itemStack.getItem() instanceof BaseRepairScroll)
+                                    .filter(itemStack -> itemStack.getItem() instanceof BaseRepairNote)
                                     //.filter(itemStack -> ((T2RepairScroll)itemStack.getItem()).getRepairItem(itemStack).getItem().equals(itemInMainHand.getItem()))
                                     .findFirst().orElse(ItemStack.EMPTY);
                             if(!itemFound.isEmpty())
@@ -125,7 +125,7 @@ public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlo
                                     if(inv.getItem(i).getItem().equals(itemFound.getItem()))
                                     {
                                         ItemStack stackie = inv.getItem(i);
-                                        BaseRepairScroll scroll = ((BaseRepairScroll)stackie.getItem());
+                                        BaseRepairNote scroll = ((BaseRepairNote)stackie.getItem());
                                         scroll.setMachineBlock(stackie, Blocks.AIR);
                                         scroll.setRepairItem(stackie,ItemStack.EMPTY);
                                         scroll.setHintTitle(stackie,"");

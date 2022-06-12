@@ -2,6 +2,7 @@ package com.mowmaster.mowlib.BlockEntities;
 
 
 import com.mowmaster.mowlib.Capabilities.Dust.DustMagic;
+import com.mowmaster.mowlib.Items.BaseDustStorageBlockItem;
 import com.mowmaster.mowlib.Items.BaseDustStorageItem;
 import com.mowmaster.mowlib.MowLibUtils.ContainerUtils;
 import com.mowmaster.mowlib.Networking.MowLibPacketHandler;
@@ -15,8 +16,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -202,7 +201,7 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
                     if(!simulate)
                     {
                         rh.insertItem(slot,insertedItem,false);
-                        if(insertedItem.getItem() instanceof BaseDustStorageItem)
+                        if(insertedItem.getItem() instanceof BaseDustStorageItem || insertedItem.getItem() instanceof BaseDustStorageBlockItem)
                         {
                             dustMagic = DustMagic.getDustMagicInItemStack(insertedItem);
                         }
@@ -410,7 +409,8 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
         {
             for(int i=0; i < rh.getSlots();i++)
             {
-                if(rh.getStackInSlot(i).getItem() instanceof BaseDustStorageItem)return true;
+                Item item = rh.getStackInSlot(i).getItem();
+                if(item instanceof BaseDustStorageItem || item instanceof BaseDustStorageBlockItem)return true;
             }
         }
 
@@ -425,7 +425,8 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
         {
             for(int i=0; i < rh.getSlots();i++)
             {
-                if(rh.getStackInSlot(i).getItem() instanceof BaseDustStorageItem)list.add(i);
+                Item item = rh.getStackInSlot(i).getItem();
+                if(item instanceof BaseDustStorageItem || item instanceof BaseDustStorageBlockItem)list.add(i);
             }
         }
 
@@ -438,7 +439,7 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
         {
             int slot = getDustContainerSlots().get(0);
             ItemStack getDustContainerStack = getStoredRepairItemStack(slot);
-            if(getDustContainerStack.getItem() instanceof BaseDustStorageItem)
+            if(getDustContainerStack.getItem() instanceof BaseDustStorageItem || getDustContainerStack.getItem() instanceof BaseDustStorageBlockItem)
             {
                 DustMagic.setDustMagicInStack(getDustContainerStack,dustMagic);
             }
