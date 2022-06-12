@@ -37,6 +37,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils.spawnItemStack;
+
 public class BaseBuiltMachineBlockEntity extends BlockEntity {
 
     private LazyOptional<IItemHandler> repairItemsHandler = LazyOptional.of(this::createRepairItemsHandler);
@@ -516,24 +518,6 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
         return repairItem;
     }
 
-
-    public void spawnItemStack(Level worldIn, double x, double y, double z, ItemStack stack) {
-        Random RANDOM = new Random();
-        double d0 = (double) EntityType.ITEM.getWidth();
-        double d1 = 1.0D - d0;
-        double d2 = d0 / 2.0D;
-        double d3 = Math.floor(x) + RANDOM.nextDouble() * d1 + d2;
-        double d4 = Math.floor(y) + RANDOM.nextDouble() * d1;
-        double d5 = Math.floor(z) + RANDOM.nextDouble() * d1 + d2;
-
-        while(!stack.isEmpty()) {
-            ItemEntity itementity = new ItemEntity(worldIn, d3, d4, d5, stack.split(RANDOM.nextInt(21) + 10));
-            float f = 0.05F;
-            itementity.lerpMotion(RANDOM.nextGaussian() * 0.05000000074505806D, RANDOM.nextGaussian() * 0.05000000074505806D + 0.20000000298023224D, RANDOM.nextGaussian() * 0.05000000074505806D);
-            worldIn.addFreshEntity(itementity);
-        }
-    }
-
     public void dropInventoryItems(Level worldIn, BlockPos pos) {
         IItemHandler h = repairItemsHandler.orElse(null);
         syncDustInTableWithContainer();
@@ -546,7 +530,7 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
 
     public void tick()
     {
-        if(getLevel().getGameTime()%20 == 0){if(!isFullyRepaired()){ MowLibPacketHandler.sendToNearby(level,getPos(),new MowLibPacketParticles(MowLibPacketParticles.EffectType.ANY_COLOR,getPos().getX(),getPos().getY()+getRepairParticleHeight(),getPos().getZ(),255,255,255));}}
+        if(getLevel().getGameTime()%20 == 0){if(!isFullyRepaired()){ MowLibPacketHandler.sendToNearby(level,getPos(),new MowLibPacketParticles(MowLibPacketParticles.EffectType.ANY_COLOR,getPos().getX()+0.5D,getPos().getY()+getRepairParticleHeight(),getPos().getZ()+0.5D,255,255,255));}}
     }
 
     @Override

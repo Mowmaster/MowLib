@@ -22,15 +22,5 @@
   "result": {
     "item": "mowlib:applicator",
     "count": 1
-  },
-
-  "conditions": [
-    {
-      "type": "forge:not",
-      "value":{
-        "type": "forge:mod_loaded",
-        "modid": "effectscrolls"
-      }
-    }
-  ]
+  }
 }

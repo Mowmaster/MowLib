@@ -7,6 +7,16 @@
   "item.mowlib.applicator": "Color Applicator",
   "item.mowlib.applicator.description": "§3 Crouch Right Click to Save Color, Right Click to Apply Color, Offhand and Any Placed Crystal Stone Blocks will Place with Current Color.",
 
+  "item.mowlib.repair_note": "Repair Order",
+  "item.mowlib.repair_note.description": "§3 Right Click on a Machine or Workstation that is 'smoking' to receive a new repair request. If it is enchanted, right clicking again will just get another repair request unless the first request hasn't been fulfilled.",
+
+
+  "mowlib.hint.scroll_made": "A New Repair Order has been Created.",
+  "mowlib.hint.repair_made": "A Repair has been Made.",
+  "mowlib.hint.repair_finished": "A Workstation or Machine has been fully repaired.",
+  "mowlib.hint.found": "An Item In your Inventory can be used to repair the Machine",
+  "mowlib.hint.title": "Repair Item Needed:",
+
   "mowlib_colorName000": "Black",
   "mowlib_colorName001": "Dark Blue",
   "mowlib_colorName002": "Less Dark Blue",

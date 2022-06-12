@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils.spawnItemStack;
+
 public class BaseBuiltFueledMachineBlockEntity extends BaseBuiltMachineBlockEntity
 {
     private LazyOptional<IItemHandler> allowedInputsHandler = LazyOptional.of(this::createAllowedInputsHandler);
@@ -417,10 +419,6 @@ public class BaseBuiltFueledMachineBlockEntity extends BaseBuiltMachineBlockEnti
             }
         }
     }
-
-
-
-
 
     public void dropInputsItems(Level worldIn, BlockPos pos) {
         IItemHandler h = allowedInputsHandler.orElse(null);

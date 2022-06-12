@@ -111,7 +111,7 @@ public class BaseColoredBlock extends Block
                 return InteractionResult.SUCCESS;
             }
             sameColor = getMowLibComponentLocalized(".recolor.message_sameColor", ChatFormatting.RED);
-            if(p_60504_.isClientSide)p_60506_.displayClientMessage(sameColor, false);
+            if(p_60504_.isClientSide)p_60506_.displayClientMessage(sameColor, true);
             return InteractionResult.FAIL;
 
         }
@@ -125,7 +125,7 @@ public class BaseColoredBlock extends Block
                 return InteractionResult.SUCCESS;
             } else {
                 sameColor = getMowLibComponentLocalized(".recolor.message_sameColor", ChatFormatting.RED);
-                if(p_60504_.isClientSide)p_60506_.displayClientMessage(sameColor, false);
+                if(p_60504_.isClientSide)p_60506_.displayClientMessage(sameColor, true);
                 return InteractionResult.FAIL;
             }
 

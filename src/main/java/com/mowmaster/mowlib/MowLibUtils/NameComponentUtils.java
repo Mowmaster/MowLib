@@ -18,27 +18,27 @@ public class NameComponentUtils
 
             @Override
             public Style getStyle() {
-                return null;
+                return componentStart.getStyle();
             }
 
             @Override
             public ComponentContents getContents() {
-                return null;
+                return componentStart.getContents();
             }
 
             @Override
             public String getString() {
-                return Component.super.getString();
+                return name + componentStart.getString();
             }
 
             @Override
             public String getString(int p_130669_) {
-                return Component.super.getString(p_130669_);
+                return name + componentStart.getString(p_130669_);
             }
 
             @Override
             public List<Component> getSiblings() {
-                return null;
+                return componentStart.getSiblings();
             }
 
             @Override
@@ -53,7 +53,7 @@ public class NameComponentUtils
 
             @Override
             public FormattedCharSequence getVisualOrderText() {
-                return null;
+                return componentStart.getVisualOrderText();
             }
 
             @Override

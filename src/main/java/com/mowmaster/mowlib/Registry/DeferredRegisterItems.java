@@ -1,6 +1,7 @@
 package com.mowmaster.mowlib.Registry;
 
 
+import com.mowmaster.mowlib.Items.BaseRepairNote;
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.Tabs.MowLibTab;
 import net.minecraft.world.item.Item;
@@ -19,6 +20,10 @@ public class DeferredRegisterItems
 
     public static final RegistryObject<Item> COLOR_APPLICATOR = ITEMS.register("applicator",
             () -> new ColorApplicator(new Item.Properties().stacksTo(1).tab(MowLibTab.TAB_ITEMS)));
+
+    public static final RegistryObject<Item> SCROLL_T2_REPAIR = ITEMS.register("repair_note",
+            () -> new BaseRepairNote(new Item.Properties().stacksTo(1).tab(MowLibTab.TAB_ITEMS)));
+
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
