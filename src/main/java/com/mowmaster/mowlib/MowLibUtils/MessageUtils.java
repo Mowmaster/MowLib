@@ -34,9 +34,16 @@ public class MessageUtils
         player.displayClientMessage(message,true);
     }
 
+    public static void messagePopupText(Player player, ChatFormatting color, String unlocMessage)
+    {
+        MutableComponent message = Component.literal(unlocMessage);
+        message.withStyle(color);
+        player.displayClientMessage(message,true);
+    }
+
     public static void messagePopupWithAppend(String MODID, Player player, ChatFormatting color, String localizedMessage, List<String> appendedMessage)
     {
-        MutableComponent message = Component.translatable(localizedMessage);
+        MutableComponent message = (localizedMessage.contains(MODID))?(Component.translatable(localizedMessage)):(Component.literal(localizedMessage));
         for(int i = 0; i<appendedMessage.size(); i++)
         {
             if(appendedMessage.get(i).contains(MODID))
@@ -59,9 +66,16 @@ public class MessageUtils
         player.displayClientMessage(message,false);
     }
 
+    public static void messagePlayerChatText(Player player, ChatFormatting color, String unlocMessage)
+    {
+        MutableComponent message = Component.literal(unlocMessage);
+        message.withStyle(color);
+        player.displayClientMessage(message,false);
+    }
+
     public static void messagePlayerChatWithAppend(String MODID, Player player, ChatFormatting color, String localizedMessage, List<String> appendedMessage)
     {
-        MutableComponent message = Component.translatable(localizedMessage);
+        MutableComponent message = (localizedMessage.contains(MODID))?(Component.translatable(localizedMessage)):(Component.literal(localizedMessage));
         for(int i = 0; i<appendedMessage.size(); i++)
         {
             if(appendedMessage.get(i).contains(MODID))
