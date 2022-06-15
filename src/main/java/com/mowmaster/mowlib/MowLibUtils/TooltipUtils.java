@@ -55,9 +55,18 @@ public class TooltipUtils
             componentList.add(base);
         }
         else {
-            MutableComponent base = Component.translatable(localizationString);
-            base.withStyle(chatFormatting);
-            componentList.add(base);
+            if(localizationString.contains(MODID))
+            {
+                MutableComponent base = Component.translatable(localizationString);
+                base.withStyle(chatFormatting);
+                componentList.add(base);
+            }
+            else
+            {
+                MutableComponent base = Component.literal(localizationString);
+                base.withStyle(chatFormatting);
+                componentList.add(base);
+            }
         }
     }
 
@@ -72,9 +81,18 @@ public class TooltipUtils
         else {
             for(int i=0;i<localizationString.size();i++)
             {
-                MutableComponent base = Component.translatable(localizationString.get(i));
-                base.withStyle((chatFormatting.size()>=i)?(chatFormatting.get(i)):(chatFormatting.get(0)));
-                componentList.add(base);
+                if(localizationString.contains(MODID))
+                {
+                    MutableComponent base = Component.translatable(localizationString.get(i));
+                    base.withStyle((chatFormatting.size()>=i)?(chatFormatting.get(i)):(chatFormatting.get(0)));
+                    componentList.add(base);
+                }
+                else
+                {
+                    MutableComponent base = Component.literal(localizationString.get(i));
+                    base.withStyle((chatFormatting.size()>=i)?(chatFormatting.get(i)):(chatFormatting.get(0)));
+                    componentList.add(base);
+                }
             }
         }
     }
@@ -117,9 +135,18 @@ public class TooltipUtils
             componentList.add(base);
         }
         else {
-            MutableComponent base = Component.translatable(localizationString);
-            base.withStyle(chatFormatting);
-            componentList.add(base);
+            if(localizationString.contains(MODID))
+            {
+                MutableComponent base = Component.translatable(localizationString);
+                base.withStyle(chatFormatting);
+                componentList.add(base);
+            }
+            else
+            {
+                MutableComponent base = Component.literal(localizationString);
+                base.withStyle(chatFormatting);
+                componentList.add(base);
+            }
         }
     }
 
@@ -135,6 +162,34 @@ public class TooltipUtils
             MutableComponent base = translatableComponent;
             base.withStyle(chatFormatting);
             componentList.add(base);
+        }
+    }
+
+    public static void addTooltipAltMessageMultiWithStyle(String MODID, List<Component> componentList, List<String> localizationString, List<ChatFormatting> chatFormatting)
+    {
+        if(!Screen.hasAltDown())
+        {
+            MutableComponent base = Component.translatable(MODID + ".description_alt");
+            base.withStyle(ChatFormatting.WHITE);
+            componentList.add(base);
+        }
+        else {
+            for(int i=0;i<localizationString.size();i++)
+            {
+                if(localizationString.contains(MODID))
+                {
+                    MutableComponent base = Component.translatable(localizationString.get(i));
+                    base.withStyle((chatFormatting.size()>=i)?(chatFormatting.get(i)):(chatFormatting.get(0)));
+                    componentList.add(base);
+                }
+                else
+                {
+                    MutableComponent base = Component.literal(localizationString.get(i));
+                    base.withStyle((chatFormatting.size()>=i)?(chatFormatting.get(i)):(chatFormatting.get(0)));
+                    componentList.add(base);
+                }
+
+            }
         }
     }
 

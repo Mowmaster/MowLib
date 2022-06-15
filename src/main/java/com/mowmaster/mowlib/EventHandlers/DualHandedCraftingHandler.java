@@ -46,7 +46,7 @@ public class DualHandedCraftingHandler
                     InWorldDualHandedCrafting getRecipe = getRecipe(level,blockTarget,player.getMainHandItem(),player.getOffhandItem());
                     if(getRecipe != null)
                     {
-                        ItemStack getResultItem = getBlockItemResult(getRecipe).stream().findFirst().get();
+                        ItemStack getResultItem = getBlockItemResult(getRecipe).stream().findFirst().get().copy();
                         if(getResultItem != null)
                         {
                             if(!player.isCreative())
