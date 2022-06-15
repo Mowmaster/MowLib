@@ -1,13 +1,13 @@
 package com.mowmaster.mowlib.MowLibUtils;
 
 
+import com.mowmaster.mowlib.api.IColorable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
@@ -17,11 +17,8 @@ import java.util.Random;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class ColorReference
+public class ColorReference implements IColorable
 {
-    public static final IntegerProperty COLOR_RED = IntegerProperty.create("color_red", 0, 3);
-    public static final IntegerProperty COLOR_GREEN = IntegerProperty.create("color_green", 0, 3);
-    public static final IntegerProperty COLOR_BLUE = IntegerProperty.create("color_blue", 0, 3);
     public static final int DEFAULTCOLOR = 16777215;
     public static final List<Integer> DEFAULTCOLORLIST = Arrays.asList(3,3,3);
 

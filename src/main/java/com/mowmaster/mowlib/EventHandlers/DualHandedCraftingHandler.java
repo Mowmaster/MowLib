@@ -5,6 +5,7 @@ import com.mowmaster.mowlib.MowLibUtils.ColorReference;
 import com.mowmaster.mowlib.MowLibUtils.ContainerUtils;
 import com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils;
 import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
+import com.mowmaster.mowlib.api.IColorableBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -79,7 +80,8 @@ public class DualHandedCraftingHandler
                                 {
                                     if(player.getMainHandItem().getItem() instanceof ColorApplicator)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromItemStackInt(player.getMainHandItem()));
                                     else if(player.getOffhandItem().getItem() instanceof ColorApplicator)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromItemStackInt(player.getOffhandItem()));
-                                //Include options for dyes sometime too???
+                                    else if(state.getBlock() instanceof IColorableBlock)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromStateInt(state));
+                                    //Include options for dyes sometime too???
                                 }
 
                                 if(state.hasProperty(BlockStateProperties.WATERLOGGED) && blockToSet.hasProperty(BlockStateProperties.WATERLOGGED))blockToSet = blockToSet.setValue(BlockStateProperties.WATERLOGGED,state.getValue(BlockStateProperties.WATERLOGGED));
@@ -155,7 +157,6 @@ public class DualHandedCraftingHandler
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
         Player player = event.getPlayer();
-
         if(!level.isClientSide)
         {
             if(player.getMainHandItem() != null)

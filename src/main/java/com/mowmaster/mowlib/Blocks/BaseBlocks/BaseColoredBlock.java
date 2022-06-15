@@ -2,6 +2,7 @@ package com.mowmaster.mowlib.Blocks.BaseBlocks;
 
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.MowLibUtils.ColorReference;
+import com.mowmaster.mowlib.api.IColorableBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -21,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -31,12 +31,8 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MessageUtils.getMowLibComponentLocalized;
 
-public class BaseColoredBlock extends Block
+public class BaseColoredBlock extends Block implements IColorableBlock
 {
-    public static final IntegerProperty COLOR_RED = IntegerProperty.create("color_red", 0, 3);
-    public static final IntegerProperty COLOR_GREEN = IntegerProperty.create("color_green", 0, 3);
-    public static final IntegerProperty COLOR_BLUE = IntegerProperty.create("color_blue", 0, 3);
-
     public BaseColoredBlock(Properties p_152915_)
     {
         super(p_152915_);
@@ -157,6 +153,5 @@ public class BaseColoredBlock extends Block
     @Override
     public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> p_49818_, TooltipFlag p_49819_) {
         super.appendHoverText(p_49816_, p_49817_, p_49818_, p_49819_);
-
     }
 }
