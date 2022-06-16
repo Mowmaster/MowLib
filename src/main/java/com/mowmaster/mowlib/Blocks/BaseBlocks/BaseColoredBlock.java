@@ -31,8 +31,8 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MessageUtils.getMowLibComponentLocalized;
 
-public class BaseColoredBlock extends Block implements IColorableBlock
-{
+public class BaseColoredBlock extends Block implements IColorableBlock {
+
     public BaseColoredBlock(Properties p_152915_)
     {
         super(p_152915_);

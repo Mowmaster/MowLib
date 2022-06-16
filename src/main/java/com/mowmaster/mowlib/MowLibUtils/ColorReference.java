@@ -8,6 +8,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
@@ -17,8 +18,8 @@ import java.util.Random;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class ColorReference implements IColorable
-{
+public class ColorReference implements IColorable {
+
     public static final int DEFAULTCOLOR = 16777215;
     public static final List<Integer> DEFAULTCOLORLIST = Arrays.asList(3,3,3);
 

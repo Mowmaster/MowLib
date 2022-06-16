@@ -5,7 +5,6 @@ import com.mowmaster.mowlib.MowLibUtils.ColorReference;
 import com.mowmaster.mowlib.MowLibUtils.ContainerUtils;
 import com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils;
 import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
-import com.mowmaster.mowlib.api.IColorableBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -80,7 +79,7 @@ public class DualHandedCraftingHandler
                                 {
                                     if(player.getMainHandItem().getItem() instanceof ColorApplicator)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromItemStackInt(player.getMainHandItem()));
                                     else if(player.getOffhandItem().getItem() instanceof ColorApplicator)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromItemStackInt(player.getOffhandItem()));
-                                    else if(state.getBlock() instanceof IColorableBlock)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromStateInt(state));
+                                    else if(state.hasProperty(ColorReference.COLOR_RED) && state.hasProperty(ColorReference.COLOR_GREEN) && state.hasProperty(ColorReference.COLOR_BLUE))blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromStateInt(state));
                                     //Include options for dyes sometime too???
                                 }
 

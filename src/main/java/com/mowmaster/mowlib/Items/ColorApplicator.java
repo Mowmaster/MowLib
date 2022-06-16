@@ -2,7 +2,6 @@ package com.mowmaster.mowlib.Items;
 
 import com.mowmaster.mowlib.Blocks.BaseBlocks.BaseColoredBlock;
 import com.mowmaster.mowlib.MowLibUtils.ColorReference;
-import com.mowmaster.mowlib.api.IColorable;
 import com.mowmaster.mowlib.api.IColorableBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -39,7 +38,7 @@ public class ColorApplicator extends Item {
         InteractionHand hand = p_41434_;
         ItemStack stackInHand = player.getItemInHand(hand);
         //Build Color List from NBT
-        if(stackInHand.getItem() instanceof IColorableBlock)
+        if(stackInHand.getItem() instanceof ColorApplicator)
         {
             List<Integer> list = getColorList(stackInHand);
             HitResult result = player.pick(5,0,false);
@@ -82,7 +81,7 @@ public class ColorApplicator extends Item {
                     BlockHitResult blockResult = world.clip(clipContext);
                     BlockState state = world.getBlockState(blockResult.getBlockPos());
 
-                    if(state.getBlock() instanceof BaseColoredBlock)
+                    if(state.getBlock() instanceof IColorableBlock)
                     {
                         int getColor = ColorReference.getColorFromStateInt(state);
                         ItemStack newStack = ColorReference.addColorToItemStack(player.getItemInHand(hand).copy(),getColor);
