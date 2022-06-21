@@ -31,7 +31,8 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class BaseWorkStationBlock extends BaseColoredBlock{
+public class BaseWorkStationBlock extends BaseColoredBlock
+{
     protected final VoxelShape TABLE;
 
     public BaseWorkStationBlock(Properties p_152915_) {

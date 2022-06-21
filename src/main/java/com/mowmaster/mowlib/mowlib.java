@@ -5,6 +5,7 @@ import com.mowmaster.mowlib.Capabilities.Dust.CapabilityDust;
 import com.mowmaster.mowlib.Capabilities.Experience.CapabilityExperience;
 import com.mowmaster.mowlib.Networking.MowLibPacketHandler;
 import com.mowmaster.mowlib.Registry.DeferredRecipeSerializers;
+import com.mowmaster.mowlib.Registry.DeferredRegisterBlocks;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import com.mowmaster.mowlib.Registry.MowLibClientRegistry;
 import net.minecraft.world.level.block.Block;

@@ -30,7 +30,8 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class BaseMachineBlock extends BaseColoredBlock{
+public class BaseMachineBlock extends BaseColoredBlock
+{
     public BaseMachineBlock(Properties p_152915_) {
         super(p_152915_);
     }
