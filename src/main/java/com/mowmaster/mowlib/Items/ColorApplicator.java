@@ -2,6 +2,7 @@ package com.mowmaster.mowlib.Items;
 
 import com.mowmaster.mowlib.Blocks.BaseBlocks.BaseColoredBlock;
 import com.mowmaster.mowlib.MowLibUtils.ColorReference;
+import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import com.mowmaster.mowlib.api.IColorableBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;

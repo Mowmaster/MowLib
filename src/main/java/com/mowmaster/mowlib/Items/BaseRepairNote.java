@@ -225,7 +225,7 @@ public class BaseRepairNote extends Item {
             boolean localized = getHintLocalization(p_41421_);
             if(localized)
             {
-                TooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.literal(getHintTitle(p_41421_)), ChatFormatting.LIGHT_PURPLE);
+                TooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.translatable(getHintTitle(p_41421_)), ChatFormatting.LIGHT_PURPLE);
             }
             else
             {
@@ -234,7 +234,7 @@ public class BaseRepairNote extends Item {
 
             if(localized)
             {
-                TooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.literal(getHintDescription(p_41421_)), ChatFormatting.WHITE);
+                TooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.translatable(getHintDescription(p_41421_)), ChatFormatting.WHITE);
             }
             else
             {

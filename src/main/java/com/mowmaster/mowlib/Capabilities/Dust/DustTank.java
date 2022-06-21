@@ -162,7 +162,15 @@ public class DustTank implements IDustHandler, IDustTank{
         DustMagic magic = new DustMagic(dustMagic.getDustColor(), drained);
         if (action.execute() && drained > 0)
         {
-            dustMagic.shrink(drained);
+            if(drained>=dustMagic.getDustAmount())
+            {
+                dustMagic.setDustAmount(0);
+                dustMagic.setDustColor(-1);
+            }
+            else
+            {
+                dustMagic.shrink(drained);
+            }
             onContentsChanged();
         }
         return magic;

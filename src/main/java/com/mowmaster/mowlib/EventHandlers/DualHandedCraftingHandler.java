@@ -8,13 +8,17 @@ import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -112,7 +116,14 @@ public class DualHandedCraftingHandler
                                     if(player.getMainHandItem().getItem() instanceof ColorApplicator)ColorReference.addColorToItemStack(getResultItem,ColorReference.getColorFromItemStackInt(player.getMainHandItem()));
                                     else if(player.getOffhandItem().getItem() instanceof ColorApplicator)ColorReference.addColorToItemStack(getResultItem,ColorReference.getColorFromItemStackInt(player.getOffhandItem()));
                                 }
+
+                                /*event.setResult(Event.Result.DENY);
+                                event.setUseItem(Event.Result.DENY);
+                                event.setCancellationResult(InteractionResult.FAIL);
+                                event.setCanceled(true);
+                                cancelEvent = true;*/
                                 MowLibItemUtils.spawnItemStack(level, pos.getX(), pos.getY(), pos.getZ(), getResultItem);
+
                             }
                         }
                     }
