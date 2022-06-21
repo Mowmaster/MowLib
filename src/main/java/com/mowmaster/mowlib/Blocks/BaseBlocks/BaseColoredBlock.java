@@ -132,6 +132,12 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
         return super.use(p_60503_, p_60504_, p_60505_, p_60506_, p_60507_, p_60508_);
     }
 
+    //This only exists because i cant figure out how Mining Gadgets breaks blocks (currently my blocks dont drop when mined with their mod...)
+    @Override
+    public float defaultDestroyTime() {
+        return -0.01F;
+    }
+
     @Override
     public void onRemove(BlockState p_60515_, Level p_60516_, BlockPos p_60517_, BlockState p_60518_, boolean p_60519_) {
         if(!p_60516_.isClientSide() && p_60519_)

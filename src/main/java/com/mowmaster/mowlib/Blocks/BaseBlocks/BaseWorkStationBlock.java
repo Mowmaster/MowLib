@@ -49,6 +49,12 @@ public class BaseWorkStationBlock extends BaseColoredBlock
         return this.TABLE;
     }
 
+    //This only exists because i cant figure out how Mining Gadgets breaks blocks (currently my blocks dont drop when mined with their mod...)
+    @Override
+    public float defaultDestroyTime() {
+        return -0.01F;
+    }
+
     @Nullable
     protected WorkStationBaseTypeRecipe getRecipe(Level level, ItemStack stackIn) {
         Container cont = ContainerUtils.getContainer(1);
