@@ -69,6 +69,7 @@ public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlo
             ItemStack itemInHand = p_60506_.getItemInHand(p_60507_);
             ItemStack itemInMainHand = p_60506_.getMainHandItem();
             ItemStack itemInOffHand = p_60506_.getOffhandItem();
+
             if(itemInMainHand.getItem() instanceof ColorApplicator)
             {
                 int getColor = ColorReference.getColorFromItemStackInt(itemInMainHand);

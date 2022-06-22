@@ -24,11 +24,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MessageUtils.getMowLibComponentLocalized;
@@ -132,10 +134,20 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
         return super.use(p_60503_, p_60504_, p_60505_, p_60506_, p_60507_, p_60508_);
     }
 
-    //This only exists because i cant figure out how Mining Gadgets breaks blocks (currently my blocks dont drop when mined with their mod...)
+    //Should Fix Building Gadgets dropps issues
+    //https://github.com/Direwolf20-MC/MiningGadgets/blob/1.19/src/main/java/com/direwolf20/mininggadgets/common/tiles/RenderBlockTileEntity.java#L444
     @Override
-    public float defaultDestroyTime() {
-        return -0.01F;
+    public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
+        if (p_60537_.getBlock() instanceof BaseColoredBlock) {
+            List<ItemStack> stacks = new ArrayList<>();
+            ItemStack itemstack = new ItemStack(this);
+            int getColor = ColorReference.getColorFromStateInt(p_60537_);
+            ItemStack newStack = ColorReference.addColorToItemStack(itemstack,getColor);
+            newStack.setCount(1);
+            stacks.add(newStack);
+            return stacks;
+        }
+        return super.getDrops(p_60537_, p_60538_);
     }
 
     @Override

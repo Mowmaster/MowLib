@@ -19,8 +19,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -46,12 +44,6 @@ public class BaseMachineBlock extends BaseColoredBlock
 
     protected Collection<ItemStack> getProcessResults(MachineBaseTypeRecipe recipe) {
         return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem()));
-    }
-
-    //This only exists because i cant figure out how Mining Gadgets breaks blocks (currently my blocks dont drop when mined with their mod...)
-    @Override
-    public float defaultDestroyTime() {
-        return -0.01F;
     }
 
     @Override
