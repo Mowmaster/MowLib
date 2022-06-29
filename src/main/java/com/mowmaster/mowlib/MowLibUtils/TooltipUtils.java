@@ -81,7 +81,7 @@ public class TooltipUtils
         else {
             for(int i=0;i<localizationString.size();i++)
             {
-                if(localizationString.contains(MODID))
+                if(localizationString.get(i).contains(MODID))
                 {
                     MutableComponent base = Component.translatable(localizationString.get(i));
                     base.withStyle((chatFormatting.size()>=i)?(chatFormatting.get(i)):(chatFormatting.get(0)));
@@ -176,7 +176,7 @@ public class TooltipUtils
         else {
             for(int i=0;i<localizationString.size();i++)
             {
-                if(localizationString.contains(MODID))
+                if(localizationString.get(i).contains(MODID))
                 {
                     MutableComponent base = Component.translatable(localizationString.get(i));
                     base.withStyle((chatFormatting.size()>=i)?(chatFormatting.get(i)):(chatFormatting.get(0)));
