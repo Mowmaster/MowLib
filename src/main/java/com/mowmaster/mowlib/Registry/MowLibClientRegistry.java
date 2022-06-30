@@ -14,7 +14,13 @@ public class MowLibClientRegistry
     public static void registerItemColor(ColorHandlerEvent.Item event) {
 
         event.getItemColors().register((stack, color) ->
-         {if (color == 1) {return ColorReference.getColorFromItemStackInt(stack);} else {return -1;}}, DeferredRegisterItems.COLOR_APPLICATOR.get());
+        {if (color == 1) {return ColorReference.getColorFromItemStackInt(stack);} else {return -1;}}, DeferredRegisterItems.COLOR_APPLICATOR.get());
+        event.getItemColors().register((stack, color) ->
+        {if (color == 1) {return ColorReference.getColorFromItemStackInt(stack);} else {return -1;}}, DeferredRegisterItems.ICON_DUST.get());
+        event.getItemColors().register((stack, color) ->
+        {if (color == 1) {return ColorReference.getColorFromItemStackInt(stack);} else {return -1;}}, DeferredRegisterItems.ICON_EFFECT.get());
+
+
     }
 
     /*@SubscribeEvent

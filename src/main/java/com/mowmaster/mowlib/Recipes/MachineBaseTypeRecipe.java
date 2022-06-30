@@ -113,7 +113,7 @@ public class MachineBaseTypeRecipe implements Recipe<Container>
     @Override
     public ItemStack getToastSymbol()
     {
-        return new ItemStack(DeferredRegisterItems.COLOR_APPLICATOR.get());
+        return new ItemStack(DeferredRegisterItems.ICON_MACHINEBASE.get());
     }
 
     public Ingredient getPattern()

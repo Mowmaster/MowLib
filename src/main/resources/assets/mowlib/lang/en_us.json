@@ -1,13 +1,25 @@
 {
   "itemGroup.tab_mowlibtab": "MowLib",
 
+  "mowlib.jei.dual_handed_crafting": "Dual Handed Crafting",
+  "mowlib.jei.workstation_crafting": "Workstation Base Crafting",
+  "mowlib.jei.machine_crafting": "Machine Base Crafting",
+  "mowlib.jei.effect_crafting": "Effect Crafting",
+  "mowlib.jei.bad_effect_crafting": "Effect Crafting (Negative)",
+
+  "item.mowlib.icon_dust": "Input Color For Effect",
+  "item.mowlib.icon_effect": "Result Effect",
+  "item.mowlib.icon_hand": "Dual Handed Crafting",
+  "item.mowlib.icon_machinebase": "Machine Base Crafting",
+  "item.mowlib.icon_workstationbase": "Workstation Base Crafting",
+
   "mowlib.recolor.message_sameColor": "Block is Already This Color",
 
   "item.mowlib.applicator": "Color Applicator",
-  "item.mowlib.applicator.description": "§3 Crouch Right Click to Save Color, Right Click to Apply Color, Offhand and Any Placed Colorable blocks will be placed with the currently selected color.",
+  "jei.mowlib.item.applicator.description": "§3 Crouch Right Click to Save Color, Right Click to Apply Color, Offhand and Any Placed Colorable blocks will be placed with the currently selected color.",
 
   "item.mowlib.repair_note": "Repair Order",
-  "item.mowlib.repair_note.description": "§3 Right Click on a Machine or Workstation that is 'smoking' to receive a new repair request. If it is enchanted, right clicking again will just get another repair request unless the first request hasn't been fulfilled.",
+  "jei.mowlib.item.repair_note.description": "§3 Right Click on a Machine or Workstation that is 'smoking' to receive a new repair request. If it is enchanted, right clicking again will just get another repair request unless the first request hasn't been fulfilled.",
 
 
   "mowlib.hint.scroll_made": "A New Repair Order has been Created.",
