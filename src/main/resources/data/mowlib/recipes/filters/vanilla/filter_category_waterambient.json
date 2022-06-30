@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:lapis_block"
+  },
+  "entityString": "water_ambient",
+  "mobType": 0,
+  "isBaby": false
+}

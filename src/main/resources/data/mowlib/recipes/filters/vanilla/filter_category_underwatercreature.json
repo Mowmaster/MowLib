@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:prismarine"
+  },
+  "entityString": "water_creature",
+  "mobType": 0,
+  "isBaby": false
+}
