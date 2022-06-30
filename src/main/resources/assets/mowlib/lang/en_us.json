@@ -7,6 +7,16 @@
   "mowlib.jei.effect_crafting": "Effect Crafting",
   "mowlib.jei.bad_effect_crafting": "Effect Crafting (Negative)",
 
+
+  "mowlib.jei.mob_filter_icon": "Mob Filtering",
+  "mowlib.jei.mob_filter": "Mob Filters",
+  "mowlib.mob_filter_entity": "Entity: ",
+  "mowlib.mob_filter_type": "Entity Type: ",
+  "mowlib.mob_filter_baby": " (baby)",
+
+
+
+
   "item.mowlib.icon_dust": "Input Color For Effect",
   "item.mowlib.icon_effect": "Result Effect",
   "item.mowlib.icon_hand": "Dual Handed Crafting",

@@ -18,6 +18,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
@@ -33,11 +34,11 @@ public class MobFilterCategory implements IRecipeCategory<BaseBlockEntityFilter>
     private final Component localizedName;
     //private final IDrawable overlay;
     private final IDrawable icon;
-    private final ItemStack renderStack = new ItemStack(DeferredRegisterItems.ICON_HAND.get());
+    private final ItemStack renderStack = new ItemStack(Items.SKELETON_SKULL).setHoverName(Component.translatable(MODID + ".jei.mob_filter_icon"));
 
     public MobFilterCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(
-                new ResourceLocation(MODID, "textures/gui/jei/effect.png"), 0, 0, 196, 128);
+                new ResourceLocation(MODID, "textures/gui/jei/effect_crafting.png"), 0, 0, 64, 64);
         this.localizedName = Component.translatable(MODID + ".jei.mob_filter");
         //this.overlay =
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, this.renderStack);
@@ -73,10 +74,14 @@ public class MobFilterCategory implements IRecipeCategory<BaseBlockEntityFilter>
 
         //Result
         int mobType = recipe.getResultMobType();
-        String mobName = (mobType ==0)?(MobCategory.byName(recipe.getEntityString()).getName()):(EntityType.byString(recipe.getEntityString()).get().toString());
-        if(recipe.getResultBaby()) mobName += " Baby";
+        MutableComponent mobName = (mobType ==0)?(Component.literal(MobCategory.byName(recipe.getEntityString()).getName())):(EntityType.byString(recipe.getEntityString()).get().getDescription().copy());
+        if(mobType ==0) mobName = Component.translatable(MODID + ".mob_filter_type").append(mobName);
+        if(mobType ==1) mobName = Component.translatable(MODID + ".mob_filter_entity").append(mobName);
+        if(recipe.getResultBaby()) mobName.append(Component.translatable(MODID + ".mob_filter_baby"));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 43, 24)
-                .addItemStack(new ItemStack(Items.SKELETON_SKULL).setHoverName(Component.literal(mobName)));
+                .addItemStack(new ItemStack(Items.SKELETON_SKULL).setHoverName(mobName));
+
+
     }
 
     @Override

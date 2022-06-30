@@ -98,7 +98,7 @@ public class JeiPlugin implements IModPlugin
                 JEIRecipeTypes.EFFECT_CRAFING);
         registration.addRecipeCatalyst(new ItemStack(DeferredRegisterItems.ICON_DUST.get()),
                 JEIRecipeTypes.BADEFFECT_CRAFING);
-        registration.addRecipeCatalyst(new ItemStack(Items.SKELETON_SKULL),
+        registration.addRecipeCatalyst(new ItemStack(Items.SKELETON_SKULL).setHoverName(Component.translatable(MODID + ".jei.mob_filter_icon")),
                 JEIRecipeTypes.MOB_FILTER);
     }
 
