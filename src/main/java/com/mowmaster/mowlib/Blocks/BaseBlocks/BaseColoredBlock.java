@@ -150,7 +150,7 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
         return super.getDrops(p_60537_, p_60538_);
     }
 
-    @Override
+    /*@Override
     public void onRemove(BlockState p_60515_, Level p_60516_, BlockPos p_60517_, BlockState p_60518_, boolean p_60519_) {
         if(!p_60516_.isClientSide() && p_60519_)
         {
@@ -167,14 +167,14 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
             }
         }
         super.onRemove(p_60515_, p_60516_, p_60517_, p_60518_, p_60519_);
-    }
+    }*/
 
     @Override
     public boolean canDropFromExplosion(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
         return true;
     }
 
-    @Override
+    /*@Override
     public void onBlockExploded(BlockState state, Level level, BlockPos pos, Explosion explosion) {
         if(!level.isClientSide())
         {
@@ -211,7 +211,7 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
             }
         }
         super.playerWillDestroy(p_56212_, p_56213_, p_56214_, p_56215_);
-    }
+    }*/
 
     @Override
     public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> p_49818_, TooltipFlag p_49819_) {
