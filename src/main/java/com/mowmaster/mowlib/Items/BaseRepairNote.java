@@ -29,6 +29,8 @@ import java.util.stream.IntStream;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class BaseRepairNote extends Item {
     public BaseRepairNote(Properties p_41383_) {
         super(p_41383_);

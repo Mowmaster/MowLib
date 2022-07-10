@@ -26,6 +26,8 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ColorApplicator extends Item {
 
     public ColorApplicator(Properties p_41383_) {

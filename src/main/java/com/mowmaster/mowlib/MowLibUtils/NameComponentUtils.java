@@ -10,6 +10,9 @@ import net.minecraft.world.level.block.BedBlock;
 import java.util.List;
 import java.util.Optional;
 
+import net.minecraft.network.chat.FormattedText.ContentConsumer;
+import net.minecraft.network.chat.FormattedText.StyledContentConsumer;
+
 public class NameComponentUtils
 {
     public static Component createComponentName(Component componentStart, String name)

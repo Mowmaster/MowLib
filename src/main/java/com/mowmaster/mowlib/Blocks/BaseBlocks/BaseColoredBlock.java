@@ -35,6 +35,8 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MessageUtils.getMowLibComponentLocalized;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class BaseColoredBlock extends Block implements IColorableBlock {
 
     public BaseColoredBlock(Properties p_152915_)

@@ -28,6 +28,8 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class BaseMachineBlock extends BaseColoredBlock
 {
     public BaseMachineBlock(Properties p_152915_) {

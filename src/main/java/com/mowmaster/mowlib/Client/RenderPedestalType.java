@@ -6,6 +6,9 @@ import net.minecraft.client.renderer.RenderType;
 
 import java.util.OptionalDouble;
 
+//import net.minecraft.client.renderer.RenderStateShard.LineStateShard;
+import net.minecraft.client.renderer.RenderType.CompositeState;
+
 public class RenderPedestalType extends RenderType
 {
 

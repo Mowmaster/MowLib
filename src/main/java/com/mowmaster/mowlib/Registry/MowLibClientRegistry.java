@@ -2,7 +2,7 @@ package com.mowmaster.mowlib.Registry;
 
 import com.mowmaster.mowlib.MowLibUtils.ColorReference;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -11,7 +11,7 @@ public class MowLibClientRegistry
 {
 
     @SubscribeEvent
-    public static void registerItemColor(ColorHandlerEvent.Item event) {
+    public static void registerItemColor(RegisterColorHandlersEvent.Item event) {
 
         event.getItemColors().register((stack, color) ->
         {if (color == 1) {return ColorReference.getColorFromItemStackInt(stack);} else {return -1;}}, DeferredRegisterItems.COLOR_APPLICATOR.get());
