@@ -1,8 +1,9 @@
 package com.mowmaster.mowlib.Items;
 
 import com.mowmaster.mowlib.Blocks.BaseBlocks.BaseColoredBlock;
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
+import com.mowmaster.mowlib.api.IColorable;
 import com.mowmaster.mowlib.api.IColorableBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +29,7 @@ import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
 import net.minecraft.world.item.Item.Properties;
 
-public class ColorApplicator extends Item {
+public class ColorApplicator extends Item implements IColorable {
 
     public ColorApplicator(Properties p_41383_) {
         super(p_41383_);
@@ -51,7 +52,7 @@ public class ColorApplicator extends Item {
 
                 if(result.getType().equals(HitResult.Type.MISS))
                 {
-                    int currentColor = ColorReference.getColorFromItemStackInt(stackInHand);
+                    int currentColor = MowLibColorReference.getColorFromItemStackInt(stackInHand);
                     int currentListPos = list.indexOf(currentColor);
                     //System.out.println("CurrentPos: "+ currentListPos);
                     int setColorPos = currentListPos+1;
@@ -66,7 +67,7 @@ public class ColorApplicator extends Item {
 
                     if(list.size()>0)
                     {
-                        ItemStack newStack = ColorReference.addColorToItemStack(player.getItemInHand(hand).copy(),list.get(setColorPos));
+                        ItemStack newStack = MowLibColorReference.addColorToItemStack(player.getItemInHand(hand).copy(),list.get(setColorPos));
                         player.setItemInHand(hand,newStack);
                     }
                 }
@@ -86,14 +87,14 @@ public class ColorApplicator extends Item {
 
                     if(state.getBlock() instanceof IColorableBlock)
                     {
-                        int getColor = ColorReference.getColorFromStateInt(state);
-                        ItemStack newStack = ColorReference.addColorToItemStack(player.getItemInHand(hand).copy(),getColor);
+                        int getColor = MowLibColorReference.getColorFromStateInt(state);
+                        ItemStack newStack = MowLibColorReference.addColorToItemStack(player.getItemInHand(hand).copy(),getColor);
                         saveColorList(newStack,addSavedColor(stackInHand,getColor));
                         player.setItemInHand(hand,newStack);
                     }
                     else
                     {
-                        int currentColor = ColorReference.getColorFromItemStackInt(stackInHand);
+                        int currentColor = MowLibColorReference.getColorFromItemStackInt(stackInHand);
                         int currentListPos = list.indexOf(currentColor);
                         //System.out.println("CurrentPos: "+ currentListPos);
                         int setColorPos = currentListPos+1;
@@ -108,7 +109,7 @@ public class ColorApplicator extends Item {
 
                         if(list.size()>0)
                         {
-                            ItemStack newStack = ColorReference.addColorToItemStack(player.getItemInHand(hand).copy(),list.get(setColorPos));
+                            ItemStack newStack = MowLibColorReference.addColorToItemStack(player.getItemInHand(hand).copy(),list.get(setColorPos));
                             player.setItemInHand(hand,newStack);
                         }
                     }

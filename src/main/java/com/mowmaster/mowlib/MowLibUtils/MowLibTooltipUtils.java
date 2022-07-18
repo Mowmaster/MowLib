@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 //https://www.youtube.com/watch?v=uOAeHJtZMZM
-public class TooltipUtils
+public class MowLibTooltipUtils
 {
 
     public static void addTooltipMessage(List<Component> componentList, ItemStack stack, MutableComponent translatableComponent)

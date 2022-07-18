@@ -1,7 +1,7 @@
 package com.mowmaster.mowlib.Blocks.BaseBlocks;
 
 import com.mowmaster.mowlib.Items.ColorApplicator;
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.api.IColorableBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -11,7 +11,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +20,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -33,16 +31,14 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mowmaster.mowlib.MowLibUtils.MessageUtils.getMowLibComponentLocalized;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import static com.mowmaster.mowlib.MowLibUtils.MowLibMessageUtils.getMowLibComponentLocalized;
 
 public class BaseColoredBlock extends Block implements IColorableBlock {
 
     public BaseColoredBlock(Properties p_152915_)
     {
         super(p_152915_);
-        this.registerDefaultState(ColorReference.addColorToBlockState(this.defaultBlockState(),ColorReference.DEFAULTCOLOR));
+        this.registerDefaultState(MowLibColorReference.addColorToBlockState(this.defaultBlockState(), MowLibColorReference.DEFAULTCOLOR));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_56120_) {
@@ -54,8 +50,8 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
         BlockState blockstate = p_56089_.getLevel().getBlockState(p_56089_.getClickedPos());
         if (blockstate.is(this))
         {
-            int getColor = ColorReference.getColorFromStateInt(blockstate);
-            return ColorReference.addColorToBlockState(this.defaultBlockState(),getColor);
+            int getColor = MowLibColorReference.getColorFromStateInt(blockstate);
+            return MowLibColorReference.addColorToBlockState(this.defaultBlockState(),getColor);
         }
         else return super.getStateForPlacement(p_56089_);
     }
@@ -63,8 +59,8 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         ItemStack picked = state.getBlock().getCloneItemStack(world, pos, state);
-        int getColor = ColorReference.getColorFromStateInt(state);
-        return ColorReference.addColorToItemStack(picked,getColor);
+        int getColor = MowLibColorReference.getColorFromStateInt(state);
+        return MowLibColorReference.addColorToItemStack(picked,getColor);
     }
 
     @Override
@@ -74,14 +70,14 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
             Player player = ((Player)p_49850_);
             if(player.getOffhandItem().getItem() instanceof ColorApplicator)
             {
-                int getColor = ColorReference.getColorFromItemStackInt(player.getOffhandItem());
-                BlockState newState = ColorReference.addColorToBlockState(p_49849_,getColor);
+                int getColor = MowLibColorReference.getColorFromItemStackInt(player.getOffhandItem());
+                BlockState newState = MowLibColorReference.addColorToBlockState(p_49849_,getColor);
                 p_49847_.setBlock(p_49848_,newState,3);
             }
             else
             {
-                int getColor = ColorReference.getColorFromItemStackInt(p_49851_);
-                BlockState newState = ColorReference.addColorToBlockState(p_49849_,getColor);
+                int getColor = MowLibColorReference.getColorFromItemStackInt(p_49851_);
+                BlockState newState = MowLibColorReference.addColorToBlockState(p_49849_,getColor);
                 p_49847_.setBlock(p_49848_,newState,3);
             }
         }
@@ -103,11 +99,11 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
 
         if(p_60506_.getItemInHand(p_60507_).getItem() instanceof ColorApplicator)
         {
-            getColor = ColorReference.getColorFromItemStackInt(p_60506_.getItemInHand(p_60507_));
-            currentColor = ColorReference.getColorFromStateInt(p_60503_);
+            getColor = MowLibColorReference.getColorFromItemStackInt(p_60506_.getItemInHand(p_60507_));
+            currentColor = MowLibColorReference.getColorFromStateInt(p_60503_);
             if(currentColor != getColor)
             {
-                newState = ColorReference.addColorToBlockState(p_60503_,getColor);
+                newState = MowLibColorReference.addColorToBlockState(p_60503_,getColor);
                 p_60504_.setBlock(p_60505_,newState,3);
                 //p_60504_.markAndNotifyBlock(p_60505_,null,p_60503_,newState,3,1);
                 return InteractionResult.SUCCESS;
@@ -119,10 +115,10 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
         }
         else if(DYES.contains(itemInOffHand.getItem()))
         {
-            getColor = ColorReference.getColorFromDyeInt(itemInOffHand);
-            currentColor = ColorReference.getColorFromStateInt(p_60503_);
+            getColor = MowLibColorReference.getColorFromDyeInt(itemInOffHand);
+            currentColor = MowLibColorReference.getColorFromStateInt(p_60503_);
             if (currentColor != getColor) {
-                newState = ColorReference.addColorToBlockState(p_60503_, getColor);
+                newState = MowLibColorReference.addColorToBlockState(p_60503_, getColor);
                 p_60504_.setBlock(p_60505_, newState, 3);
                 return InteractionResult.SUCCESS;
             } else {
@@ -143,8 +139,8 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
         if (p_60537_.getBlock() instanceof BaseColoredBlock) {
             List<ItemStack> stacks = new ArrayList<>();
             ItemStack itemstack = new ItemStack(this);
-            int getColor = ColorReference.getColorFromStateInt(p_60537_);
-            ItemStack newStack = ColorReference.addColorToItemStack(itemstack,getColor);
+            int getColor = MowLibColorReference.getColorFromStateInt(p_60537_);
+            ItemStack newStack = MowLibColorReference.addColorToItemStack(itemstack,getColor);
             newStack.setCount(1);
             stacks.add(newStack);
             return stacks;
@@ -159,8 +155,8 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
             if (p_60518_.getBlock() instanceof BaseColoredBlock) {
                 if (!p_60516_.isClientSide) {
                     ItemStack itemstack = new ItemStack(this);
-                    int getColor = ColorReference.getColorFromStateInt(p_60518_);
-                    ItemStack newStack = ColorReference.addColorToItemStack(itemstack,getColor);
+                    int getColor = MowLibColorReference.getColorFromStateInt(p_60518_);
+                    ItemStack newStack = MowLibColorReference.addColorToItemStack(itemstack,getColor);
                     newStack.setCount(1);
                     ItemEntity itementity = new ItemEntity(p_60516_, (double)p_60517_.getX() + 0.5D, (double)p_60517_.getY() + 0.5D, (double)p_60517_.getZ() + 0.5D, newStack);
                     itementity.setDefaultPickUpDelay();
@@ -183,8 +179,8 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
             if (state.getBlock() instanceof BaseColoredBlock) {
                 if (!level.isClientSide) {
                     ItemStack itemstack = new ItemStack(this);
-                    int getColor = ColorReference.getColorFromStateInt(state);
-                    ItemStack newStack = ColorReference.addColorToItemStack(itemstack,getColor);
+                    int getColor = MowLibColorReference.getColorFromStateInt(state);
+                    ItemStack newStack = MowLibColorReference.addColorToItemStack(itemstack,getColor);
                     newStack.setCount(1);
                     ItemEntity itementity = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, newStack);
                     itementity.setDefaultPickUpDelay();
@@ -203,8 +199,8 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
             if (p_56214_.getBlock() instanceof BaseColoredBlock) {
                 if (!p_56212_.isClientSide && !p_56215_.isCreative()) {
                     ItemStack itemstack = new ItemStack(this);
-                    int getColor = ColorReference.getColorFromStateInt(p_56214_);
-                    ItemStack newStack = ColorReference.addColorToItemStack(itemstack,getColor);
+                    int getColor = MowLibColorReference.getColorFromStateInt(p_56214_);
+                    ItemStack newStack = MowLibColorReference.addColorToItemStack(itemstack,getColor);
                     newStack.setCount(1);
                     ItemEntity itementity = new ItemEntity(p_56212_, (double)p_56213_.getX() + 0.5D, (double)p_56213_.getY() + 0.5D, (double)p_56213_.getZ() + 0.5D, newStack);
                     itementity.setDefaultPickUpDelay();

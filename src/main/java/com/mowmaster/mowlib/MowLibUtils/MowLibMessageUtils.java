@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class MessageUtils
+public class MowLibMessageUtils
 {
 
     public static Component getMowLibComponentLocalized(String localizedMessage, @Nullable ChatFormatting style)

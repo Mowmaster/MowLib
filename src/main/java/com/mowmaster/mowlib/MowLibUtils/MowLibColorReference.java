@@ -18,7 +18,7 @@ import java.util.Random;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class ColorReference implements IColorable {
+public class MowLibColorReference implements IColorable {
 
     public static final int DEFAULTCOLOR = 16777215;
     public static final List<Integer> DEFAULTCOLORLIST = Arrays.asList(3,3,3);

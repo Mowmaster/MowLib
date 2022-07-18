@@ -1,7 +1,6 @@
 package com.mowmaster.mowlib.Recipes;
 
 import com.google.gson.JsonObject;
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;

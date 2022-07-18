@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.Capabilities.Dust;
 
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -103,7 +103,7 @@ public class DustMagic {
             }
             else if(tag.contains(MODID+"_color"))
             {
-                magic.setDustColor(ColorReference.getColorFromItemStackInt(stack));
+                magic.setDustColor(MowLibColorReference.getColorFromItemStackInt(stack));
                 magic.setDustAmount(stack.getCount());
             }
         }

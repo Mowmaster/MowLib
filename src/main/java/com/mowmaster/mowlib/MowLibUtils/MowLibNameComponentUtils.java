@@ -13,7 +13,7 @@ import java.util.Optional;
 import net.minecraft.network.chat.FormattedText.ContentConsumer;
 import net.minecraft.network.chat.FormattedText.StyledContentConsumer;
 
-public class NameComponentUtils
+public class MowLibNameComponentUtils
 {
     public static Component createComponentName(Component componentStart, String name)
     {

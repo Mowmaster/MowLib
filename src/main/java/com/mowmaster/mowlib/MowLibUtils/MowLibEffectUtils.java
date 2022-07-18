@@ -19,7 +19,7 @@ public class MowLibEffectUtils
 {
     @Nullable
     protected static MobEffectColorRecipe getRecipeMobEffectColor(Level level, ItemStack stackIn) {
-        Container container = ContainerUtils.getContainer(1);
+        Container container = MowLibContainerUtils.getContainer(1);
         container.setItem(-1,stackIn);
         List<MobEffectColorRecipe> recipes = level.getRecipeManager().getRecipesFor(MobEffectColorRecipe.Type.INSTANCE,container,level);
         return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MobEffectColorRecipe.Type.INSTANCE,container,level).get(0) : null;
@@ -30,7 +30,7 @@ public class MowLibEffectUtils
     }
 
     protected static int getProcessResultEffectColorRecipe(MobEffectColorRecipe recipe) {
-        return (recipe == null)?(ColorReference.DEFAULTCOLOR):(recipe.getResultEffectColor());
+        return (recipe == null)?(MowLibColorReference.DEFAULTCOLOR):(recipe.getResultEffectColor());
     }
 
     protected static int getProcessResultEffectInstantDurationRecipe(MobEffectColorRecipe recipe) {
@@ -39,7 +39,7 @@ public class MowLibEffectUtils
 
     @Nullable
     protected static MobEffectColorRecipeCorrupted getRecipeMobEffectColorCorrupted(Level level, ItemStack stackIn) {
-        Container container = ContainerUtils.getContainer(1);
+        Container container = MowLibContainerUtils.getContainer(1);
         container.setItem(-1,stackIn);
         List<MobEffectColorRecipeCorrupted> recipes = level.getRecipeManager().getRecipesFor(MobEffectColorRecipeCorrupted.Type.INSTANCE,container,level);
         return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MobEffectColorRecipeCorrupted.Type.INSTANCE,container,level).get(0) : null;
@@ -50,7 +50,7 @@ public class MowLibEffectUtils
     }
 
     protected static int getProcessResultEffectColorRecipeCorrupted(MobEffectColorRecipeCorrupted recipe) {
-        return (recipe == null)?(ColorReference.DEFAULTCOLOR):(recipe.getResultEffectColor());
+        return (recipe == null)?(MowLibColorReference.DEFAULTCOLOR):(recipe.getResultEffectColor());
     }
 
     protected static int getProcessResultEffectInstantDurationRecipeCorrupted(MobEffectColorRecipeCorrupted recipe) {
@@ -61,13 +61,13 @@ public class MowLibEffectUtils
     {
         if(corruption)
         {
-            ItemStack stack = ColorReference.addColorToItemStack(colorableCrystal,currentColor);
+            ItemStack stack = MowLibColorReference.addColorToItemStack(colorableCrystal,currentColor);
             ResourceLocation location = new ResourceLocation(getProcessResultMobEffectColorRecipeCorrupted(getRecipeMobEffectColorCorrupted(level,stack)));
             if(Registry.MOB_EFFECT.getOptional(location).isPresent())return Registry.MOB_EFFECT.getOptional(location).get();
         }
         else if (!corruption)
         {
-            ItemStack stack = ColorReference.addColorToItemStack(colorableCrystal,currentColor);
+            ItemStack stack = MowLibColorReference.addColorToItemStack(colorableCrystal,currentColor);
             ResourceLocation location = new ResourceLocation(getProcessResultMobEffectColorRecipe(getRecipeMobEffectColor(level,stack)));
             if(Registry.MOB_EFFECT.getOptional(location).isPresent())return Registry.MOB_EFFECT.getOptional(location).get();
         }
@@ -79,33 +79,33 @@ public class MowLibEffectUtils
     {
         if(corruption)
         {
-            ItemStack stack = ColorReference.addColorToItemStack(colorableCrystal,currentColor);
+            ItemStack stack = MowLibColorReference.addColorToItemStack(colorableCrystal,currentColor);
             return getProcessResultEffectColorRecipeCorrupted(getRecipeMobEffectColorCorrupted(level,stack));
         }
         else if (!corruption)
         {
 
-            ItemStack stack = ColorReference.addColorToItemStack(colorableCrystal,currentColor);
+            ItemStack stack = MowLibColorReference.addColorToItemStack(colorableCrystal,currentColor);
             return getProcessResultEffectColorRecipe(getRecipeMobEffectColor(level,stack));
         }
 
-        return ColorReference.DEFAULTCOLOR;
+        return MowLibColorReference.DEFAULTCOLOR;
     }
 
     public static int getInstantDuration(Level level, ItemStack colorableCrystal, boolean corruption, int currentColor)
     {
         if(corruption)
         {
-            ItemStack stack = ColorReference.addColorToItemStack(colorableCrystal,currentColor);
+            ItemStack stack = MowLibColorReference.addColorToItemStack(colorableCrystal,currentColor);
             return getProcessResultEffectInstantDurationRecipeCorrupted(getRecipeMobEffectColorCorrupted(level,stack));
         }
         else if (!corruption)
         {
-            ItemStack stack = ColorReference.addColorToItemStack(colorableCrystal,currentColor);
+            ItemStack stack = MowLibColorReference.addColorToItemStack(colorableCrystal,currentColor);
             return getProcessResultEffectInstantDurationRecipe(getRecipeMobEffectColor(level,stack));
         }
 
-        return ColorReference.DEFAULTCOLOR;
+        return MowLibColorReference.DEFAULTCOLOR;
     }
 
     public static MobEffect getRandomNegativeEffect()

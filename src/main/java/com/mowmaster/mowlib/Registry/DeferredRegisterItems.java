@@ -1,6 +1,7 @@
 package com.mowmaster.mowlib.Registry;
 
 
+import com.mowmaster.mowlib.Items.BaseDustStorageItem;
 import com.mowmaster.mowlib.Items.BaseRepairNote;
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.Items.EffectItemBase;
@@ -33,7 +34,7 @@ public class DeferredRegisterItems
     public static final RegistryObject<Item> ICON_MACHINEBASE = ITEMS.register("icon_machinebase",
             () -> new Item(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ICON_DUST = ITEMS.register("icon_dust",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new BaseDustStorageItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ICON_EFFECT = ITEMS.register("icon_effect",
             () -> new EffectItemBase(new Item.Properties().stacksTo(1)));
 

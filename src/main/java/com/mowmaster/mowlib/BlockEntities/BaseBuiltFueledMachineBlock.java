@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.BlockEntities;
 
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -27,7 +27,7 @@ public class BaseBuiltFueledMachineBlock extends BaseBuiltMachineBlock
 
     public BaseBuiltFueledMachineBlock(BlockBehaviour.Properties p_152915_) {
         super(p_152915_);
-        this.registerDefaultState(ColorReference.addColorToBlockState(this.defaultBlockState(),ColorReference.DEFAULTCOLOR).setValue(SIDED_ROTATION_4, Direction.NORTH));
+        this.registerDefaultState(MowLibColorReference.addColorToBlockState(this.defaultBlockState(), MowLibColorReference.DEFAULTCOLOR).setValue(SIDED_ROTATION_4, Direction.NORTH));
     }
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext p_48689_) {
@@ -35,13 +35,13 @@ public class BaseBuiltFueledMachineBlock extends BaseBuiltMachineBlock
         BlockPos blockpos = p_48689_.getClickedPos();
         Direction direction = p_48689_.getClickedFace();
         BlockState blockstate = levelaccessor.getBlockState(p_48689_.getClickedPos().relative(direction.getOpposite()));
-        int getColor = ColorReference.getColorFromStateInt(blockstate);
+        int getColor = MowLibColorReference.getColorFromStateInt(blockstate);
         return blockstate.is(this) &&
                 blockstate.getValue(SIDED_ROTATION_4) == direction
                 ?
-                ColorReference.addColorToBlockState(this.defaultBlockState(),getColor).setValue(SIDED_ROTATION_4, p_48689_.getHorizontalDirection())
+                MowLibColorReference.addColorToBlockState(this.defaultBlockState(),getColor).setValue(SIDED_ROTATION_4, p_48689_.getHorizontalDirection())
                 :
-                ColorReference.addColorToBlockState(this.defaultBlockState(),getColor).setValue(SIDED_ROTATION_4, p_48689_.getHorizontalDirection().getOpposite());
+                MowLibColorReference.addColorToBlockState(this.defaultBlockState(),getColor).setValue(SIDED_ROTATION_4, p_48689_.getHorizontalDirection().getOpposite());
     }
 
     @Override

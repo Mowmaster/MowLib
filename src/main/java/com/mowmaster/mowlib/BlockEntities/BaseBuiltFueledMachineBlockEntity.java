@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.BlockEntities;
 
-import com.mowmaster.mowlib.MowLibUtils.ContainerUtils;
+import com.mowmaster.mowlib.MowLibUtils.MowLibContainerUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -121,7 +121,7 @@ public class BaseBuiltFueledMachineBlockEntity extends BaseBuiltMachineBlockEnti
     public Recipe<Container> getRecipe(Level world, ItemStack stackIn) {
         if (world == null) return null;
 
-        Container inv = ContainerUtils.getContainer(1);
+        Container inv = MowLibContainerUtils.getContainer(1);
         inv.setItem(-1,stackIn);
 
         RecipeManager recipeManager = world.getRecipeManager();

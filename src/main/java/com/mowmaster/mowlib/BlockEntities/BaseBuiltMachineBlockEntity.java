@@ -4,7 +4,7 @@ package com.mowmaster.mowlib.BlockEntities;
 import com.mowmaster.mowlib.Capabilities.Dust.DustMagic;
 import com.mowmaster.mowlib.Items.BaseDustStorageBlockItem;
 import com.mowmaster.mowlib.Items.BaseDustStorageItem;
-import com.mowmaster.mowlib.MowLibUtils.ContainerUtils;
+import com.mowmaster.mowlib.MowLibUtils.MowLibContainerUtils;
 import com.mowmaster.mowlib.Networking.MowLibPacketHandler;
 import com.mowmaster.mowlib.Networking.MowLibPacketParticles;
 import com.mowmaster.mowlib.Recipes.MachineBlockRenderItemsRecipe;
@@ -251,7 +251,7 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
         {
             if(stackIn.isEmpty()) return new ArrayList<>();
 
-            Container cont = ContainerUtils.getContainer(2);
+            Container cont = MowLibContainerUtils.getContainer(2);
             cont.setItem(-1,stackIn);
             List<MachineBlockRepairItemsRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsRecipe.Type.INSTANCE,cont,level);
             List<ItemStack> stackie = new ArrayList<>();
@@ -267,7 +267,7 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
     public List<String> getListofRepairTags(Level level, ItemStack stackIn) {
         if(stackIn.isEmpty()) return new ArrayList<>();
 
-        Container cont = ContainerUtils.getContainer(2);
+        Container cont = MowLibContainerUtils.getContainer(2);
         cont.setItem(-1,stackIn);
         List<MachineBlockRepairItemsRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsRecipe.Type.INSTANCE,cont,level);
         List<String> stackie = new ArrayList<>();
@@ -449,7 +449,7 @@ public class BaseBuiltMachineBlockEntity extends BlockEntity {
 
     @Nullable
     protected MachineBlockRenderItemsRecipe getRenderRecipe(List<ItemStack> stackIn) {
-        Container cont = ContainerUtils.getContainer(2);
+        Container cont = MowLibContainerUtils.getContainer(2);
         for(int i=0;i<stackIn.size();i++)
         {
             if(cont.canPlaceItem(i,stackIn.get(i))) {

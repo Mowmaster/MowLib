@@ -1,8 +1,8 @@
 package com.mowmaster.mowlib.Blocks.BaseBlocks;
 
 import com.mowmaster.mowlib.Items.ColorApplicator;
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
-import com.mowmaster.mowlib.MowLibUtils.ContainerUtils;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibContainerUtils;
 import com.mowmaster.mowlib.Recipes.MachineBaseTypeRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
@@ -11,7 +11,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -28,8 +27,6 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class BaseMachineBlock extends BaseColoredBlock
 {
     public BaseMachineBlock(Properties p_152915_) {
@@ -38,7 +35,7 @@ public class BaseMachineBlock extends BaseColoredBlock
 
     @Nullable
     protected MachineBaseTypeRecipe getRecipe(Level level, ItemStack stackIn) {
-        Container cont = ContainerUtils.getContainer(1);
+        Container cont = MowLibContainerUtils.getContainer(1);
         cont.setItem(-1,stackIn);
         List<MachineBaseTypeRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBaseTypeRecipe.Type.INSTANCE,cont,level);
         return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MachineBaseTypeRecipe.Type.INSTANCE,cont,level).get(0) : null;
@@ -56,19 +53,19 @@ public class BaseMachineBlock extends BaseColoredBlock
             ItemStack itemInHand = p_60506_.getItemInHand(p_60507_);
             ItemStack itemInMainHand = p_60506_.getMainHandItem();
             ItemStack itemInOffHand = p_60506_.getOffhandItem();
-            int getColor = ColorReference.getColorFromStateInt(p_60503_);
+            int getColor = MowLibColorReference.getColorFromStateInt(p_60503_);
 
             if(itemInMainHand.getItem() instanceof ColorApplicator)
             {
-                getColor = ColorReference.getColorFromItemStackInt(itemInMainHand);
-                BlockState newState = ColorReference.addColorToBlockState(p_60503_,getColor);
+                getColor = MowLibColorReference.getColorFromItemStackInt(itemInMainHand);
+                BlockState newState = MowLibColorReference.addColorToBlockState(p_60503_,getColor);
                 p_60504_.setBlock(p_60505_,newState,3);
                 return InteractionResult.SUCCESS;
             }
             else if(itemInOffHand.getItem() instanceof ColorApplicator)
             {
-                getColor = ColorReference.getColorFromItemStackInt(itemInOffHand);
-                BlockState newState = ColorReference.addColorToBlockState(p_60503_,getColor);
+                getColor = MowLibColorReference.getColorFromItemStackInt(itemInOffHand);
+                BlockState newState = MowLibColorReference.addColorToBlockState(p_60503_,getColor);
                 p_60504_.setBlock(p_60505_,newState,3);
                 return InteractionResult.SUCCESS;
             }
@@ -87,7 +84,7 @@ public class BaseMachineBlock extends BaseColoredBlock
                         block = Block.byItem(returnedRecipe.getItem());
                         blockstate = p_60504_.getBlockState(p_60505_);
 
-                        BlockState blockstate1 = ColorReference.addColorToBlockState(block.defaultBlockState(),getColor);
+                        BlockState blockstate1 = MowLibColorReference.addColorToBlockState(block.defaultBlockState(),getColor);
                         p_60504_.setBlockAndUpdate(p_60505_, blockstate1);
                         itemInHand.shrink(1);
                         return InteractionResult.SUCCESS;
@@ -97,7 +94,7 @@ public class BaseMachineBlock extends BaseColoredBlock
                         //if(returnedRecipe.getItem().getRegistryName().getNamespace().equals(MODID))
                         if(ForgeRegistries.ITEMS.getKey(returnedRecipe.getItem()).getNamespace().equals(MODID))
                         {
-                            ColorReference.addColorToItemStack(returnedRecipe,getColor);
+                            MowLibColorReference.addColorToItemStack(returnedRecipe,getColor);
                         }
                         ItemEntity itemEn = new ItemEntity(p_60504_,p_60505_.getX()+0.5,p_60505_.getY()+0.5,p_60505_.getZ()+0.5,returnedRecipe);
                         itemEn.setInvulnerable(true);

@@ -4,9 +4,9 @@ import com.google.common.collect.Maps;
 import com.mowmaster.mowlib.Blocks.BaseBlocks.BaseColoredBlock;
 import com.mowmaster.mowlib.Items.BaseRepairNote;
 import com.mowmaster.mowlib.Items.ColorApplicator;
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
-import com.mowmaster.mowlib.MowLibUtils.ContainerUtils;
-import com.mowmaster.mowlib.MowLibUtils.MessageUtils;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibContainerUtils;
+import com.mowmaster.mowlib.MowLibUtils.MowLibMessageUtils;
 import com.mowmaster.mowlib.Recipes.MachineBlockRepairItemsHintRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -38,12 +38,12 @@ public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlo
 {
     public BaseBuiltMachineBlock(BlockBehaviour.Properties p_152915_) {
         super(p_152915_);
-        this.registerDefaultState(ColorReference.addColorToBlockState(this.defaultBlockState(),ColorReference.DEFAULTCOLOR));
+        this.registerDefaultState(MowLibColorReference.addColorToBlockState(this.defaultBlockState(),MowLibColorReference.DEFAULTCOLOR));
     }
 
     @Nullable
     public MachineBlockRepairItemsHintRecipe getRecipe(Level level, ItemStack stackIn) {
-        Container cont = ContainerUtils.getContainer(1);
+        Container cont = MowLibContainerUtils.getContainer(1);
         cont.setItem(-1,stackIn);
         List<MachineBlockRepairItemsHintRecipe> recipes = level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsHintRecipe.Type.INSTANCE,cont,level);
         return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(MachineBlockRepairItemsHintRecipe.Type.INSTANCE,cont,level).get(0) : null;
@@ -72,15 +72,15 @@ public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlo
 
             if(itemInMainHand.getItem() instanceof ColorApplicator)
             {
-                int getColor = ColorReference.getColorFromItemStackInt(itemInMainHand);
-                BlockState newState = ColorReference.addColorToBlockState(p_60503_,getColor);
+                int getColor = MowLibColorReference.getColorFromItemStackInt(itemInMainHand);
+                BlockState newState = MowLibColorReference.addColorToBlockState(p_60503_,getColor);
                 p_60504_.setBlock(p_60505_,newState,3);
                 return InteractionResult.SUCCESS;
             }
             else if(itemInOffHand.getItem() instanceof ColorApplicator)
             {
-                int getColor = ColorReference.getColorFromItemStackInt(itemInOffHand);
-                BlockState newState = ColorReference.addColorToBlockState(p_60503_,getColor);
+                int getColor = MowLibColorReference.getColorFromItemStackInt(itemInOffHand);
+                BlockState newState = MowLibColorReference.addColorToBlockState(p_60503_,getColor);
                 p_60504_.setBlock(p_60505_,newState,3);
                 return InteractionResult.SUCCESS;
             }
@@ -103,7 +103,7 @@ public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlo
                             scroll.setHintDescription(itemInMainHand,description);
                             scroll.setHintLocalization(itemInMainHand,isLocalized);
                             if(scroll.getItemFound(itemInMainHand))scroll.setItemFound(itemInMainHand,false);
-                            MessageUtils.messagePopup(p_60506_, ChatFormatting.GOLD,MODID + ".hint.scroll_made");
+                            MowLibMessageUtils.messagePopup(p_60506_, ChatFormatting.GOLD,MODID + ".hint.scroll_made");
                         }
                         return InteractionResult.SUCCESS;
                     }
@@ -140,8 +140,8 @@ public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlo
                                 }
                             }
 
-                            if(table.isFullyRepaired()) { MessageUtils.messagePopup(p_60506_, ChatFormatting.GREEN,MODID + ".hint.repair_finished"); }
-                            else { MessageUtils.messagePopup(p_60506_, ChatFormatting.GOLD,MODID + ".hint.repair_made"); }
+                            if(table.isFullyRepaired()) { MowLibMessageUtils.messagePopup(p_60506_, ChatFormatting.GREEN,MODID + ".hint.repair_finished"); }
+                            else { MowLibMessageUtils.messagePopup(p_60506_, ChatFormatting.GOLD,MODID + ".hint.repair_made"); }
 
                             return InteractionResult.SUCCESS;
                         }

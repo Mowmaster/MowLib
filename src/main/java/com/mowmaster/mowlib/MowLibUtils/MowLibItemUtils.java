@@ -1,11 +1,13 @@
 package com.mowmaster.mowlib.MowLibUtils;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
@@ -119,5 +121,11 @@ public class MowLibItemUtils
         }
 
         return stackList;
+    }
+
+    public static void dropInventoryItems(Level worldIn, BlockPos pos, IItemHandler h) {
+        for(int i = 0; i < h.getSlots(); ++i) {
+            MowLibItemUtils.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), h.getStackInSlot(i));
+        }
     }
 }

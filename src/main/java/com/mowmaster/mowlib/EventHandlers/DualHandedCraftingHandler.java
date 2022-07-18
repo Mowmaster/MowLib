@@ -1,24 +1,20 @@
 package com.mowmaster.mowlib.EventHandlers;
 
 import com.mowmaster.mowlib.Items.ColorApplicator;
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
-import com.mowmaster.mowlib.MowLibUtils.ContainerUtils;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibContainerUtils;
 import com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils;
 import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -35,10 +31,10 @@ public class DualHandedCraftingHandler
     @SubscribeEvent()
     public static void dualHandedCrafting(PlayerInteractEvent.RightClickBlock event) {
 
-        Level level = event.getWorld();
+        Level level = event.getLevel();
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
 
         if(!level.isClientSide())
         {
@@ -79,11 +75,11 @@ public class DualHandedCraftingHandler
                             if(Block.byItem(getResultItem.getItem()) != null && Block.byItem(getResultItem.getItem()) != Blocks.AIR)
                             {
                                 BlockState blockToSet = Block.byItem(getResultItem.getItem()).defaultBlockState();
-                                if(blockToSet.hasProperty(ColorReference.COLOR_RED) && blockToSet.hasProperty(ColorReference.COLOR_GREEN) && blockToSet.hasProperty(ColorReference.COLOR_BLUE))
+                                if(blockToSet.hasProperty(MowLibColorReference.COLOR_RED) && blockToSet.hasProperty(MowLibColorReference.COLOR_GREEN) && blockToSet.hasProperty(MowLibColorReference.COLOR_BLUE))
                                 {
-                                    if(player.getMainHandItem().getItem() instanceof ColorApplicator)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromItemStackInt(player.getMainHandItem()));
-                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator)blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromItemStackInt(player.getOffhandItem()));
-                                    else if(state.hasProperty(ColorReference.COLOR_RED) && state.hasProperty(ColorReference.COLOR_GREEN) && state.hasProperty(ColorReference.COLOR_BLUE))blockToSet = ColorReference.addColorToBlockState(blockToSet,ColorReference.getColorFromStateInt(state));
+                                    if(player.getMainHandItem().getItem() instanceof ColorApplicator)blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromItemStackInt(player.getMainHandItem()));
+                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator)blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromItemStackInt(player.getOffhandItem()));
+                                    else if(state.hasProperty(MowLibColorReference.COLOR_RED) && state.hasProperty(MowLibColorReference.COLOR_GREEN) && state.hasProperty(MowLibColorReference.COLOR_BLUE))blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromStateInt(state));
                                     //Include options for dyes sometime too???
                                 }
 
@@ -111,10 +107,12 @@ public class DualHandedCraftingHandler
                             else
                             {
                                 level.setBlockAndUpdate(pos,Blocks.AIR.defaultBlockState());
-                                if(ColorReference.isColorItem(getResultItem))
+                                if(MowLibColorReference.isColorItem(getResultItem))
                                 {
-                                    if(player.getMainHandItem().getItem() instanceof ColorApplicator)ColorReference.addColorToItemStack(getResultItem,ColorReference.getColorFromItemStackInt(player.getMainHandItem()));
-                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator)ColorReference.addColorToItemStack(getResultItem,ColorReference.getColorFromItemStackInt(player.getOffhandItem()));
+                                    if(player.getMainHandItem().getItem() instanceof ColorApplicator)
+                                        MowLibColorReference.addColorToItemStack(getResultItem, MowLibColorReference.getColorFromItemStackInt(player.getMainHandItem()));
+                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator)
+                                        MowLibColorReference.addColorToItemStack(getResultItem, MowLibColorReference.getColorFromItemStackInt(player.getOffhandItem()));
                                 }
 
                                 /*event.setResult(Event.Result.DENY);
@@ -137,7 +135,7 @@ public class DualHandedCraftingHandler
 
     @Nullable
     protected static InWorldDualHandedCrafting getRecipe(Level level, ItemStack targetBlockItem, ItemStack mainHandItem, ItemStack offHandItem) {
-        Container cont = ContainerUtils.getContainer(3);
+        Container cont = MowLibContainerUtils.getContainer(3);
         cont.setItem(-1,targetBlockItem);
         cont.setItem(-1,mainHandItem);
         cont.setItem(-1,offHandItem);

@@ -1,9 +1,9 @@
 package com.mowmaster.mowlib.Items;
 
 import com.google.common.collect.Maps;
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils;
-import com.mowmaster.mowlib.MowLibUtils.TooltipUtils;
+import com.mowmaster.mowlib.MowLibUtils.MowLibTooltipUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -29,8 +29,6 @@ import java.util.stream.IntStream;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class BaseRepairNote extends Item {
     public BaseRepairNote(Properties p_41383_) {
         super(p_41383_);
@@ -38,12 +36,12 @@ public class BaseRepairNote extends Item {
 
     public int getColor(ItemStack stack)
     {
-        return ColorReference.getColorFromItemStackInt(stack);
+        return MowLibColorReference.getColorFromItemStackInt(stack);
     }
 
     public int getColorRibbon(ItemStack stack)
     {
-        return ColorReference.getSecondColorFromItemStackInt(stack);
+        return MowLibColorReference.getSecondColorFromItemStackInt(stack);
     }
 
     public int getType(ItemStack stack)
@@ -227,25 +225,25 @@ public class BaseRepairNote extends Item {
             boolean localized = getHintLocalization(p_41421_);
             if(localized)
             {
-                TooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.translatable(getHintTitle(p_41421_)), ChatFormatting.LIGHT_PURPLE);
+                MowLibTooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.translatable(getHintTitle(p_41421_)), ChatFormatting.LIGHT_PURPLE);
             }
             else
             {
-                TooltipUtils.addTooltipMessageWithStyle(p_41423_,getHintTitle(p_41421_), ChatFormatting.LIGHT_PURPLE);
+                MowLibTooltipUtils.addTooltipMessageWithStyle(p_41423_,getHintTitle(p_41421_), ChatFormatting.LIGHT_PURPLE);
             }
 
             if(localized)
             {
-                TooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.translatable(getHintDescription(p_41421_)), ChatFormatting.WHITE);
+                MowLibTooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.translatable(getHintDescription(p_41421_)), ChatFormatting.WHITE);
             }
             else
             {
-                TooltipUtils.addTooltipMessageWithStyle(p_41423_,getHintDescription(p_41421_), ChatFormatting.WHITE);
+                MowLibTooltipUtils.addTooltipMessageWithStyle(p_41423_,getHintDescription(p_41421_), ChatFormatting.WHITE);
             }
 
             if(getItemFound(p_41421_))
             {
-                TooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.translatable(MODID + ".hint.found"), ChatFormatting.GOLD);
+                MowLibTooltipUtils.addTooltipMessageWithStyle(p_41423_,Component.translatable(MODID + ".hint.found"), ChatFormatting.GOLD);
             }
         }
     }

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class OwnerUtil
+public class MowLibOwnerUtils
 {
     public static void removePlayerFromStack(ItemStack stack)
     {

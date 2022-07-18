@@ -94,7 +94,7 @@ public class JeiPlugin implements IModPlugin
                 JEIRecipeTypes.MACHINEBASE_CRAFING);
         registration.addRecipeCatalyst(new ItemStack(DeferredRegisterItems.ICON_WORKSTATIONBASE.get()),
                 JEIRecipeTypes.WORKSTATIONBASE_CRAFING);
-        registration.addRecipeCatalyst(new ItemStack(DeferredRegisterItems.ICON_DUST.get()),
+        registration.addRecipeCatalyst(VanillaTypes.ITEM_STACK,new ItemStack(DeferredRegisterItems.ICON_DUST.get()),
                 JEIRecipeTypes.EFFECT_CRAFING);
         registration.addRecipeCatalyst(new ItemStack(DeferredRegisterItems.ICON_DUST.get()),
                 JEIRecipeTypes.BADEFFECT_CRAFING);

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mowmaster.mowlib.Compat.JEI.JEIRecipeTypes;
 import com.mowmaster.mowlib.Items.EffectItemBase;
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.Recipes.MobEffectColorRecipeCorrupted;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import mezz.jei.api.constants.VanillaTypes;
@@ -96,10 +96,10 @@ public class BadEffectCraftingRecipeCategory implements IRecipeCategory<MobEffec
 
         //Input Color
         builder.addSlot(RecipeIngredientRole.INPUT, 5, 24)
-                .addItemStack(ColorReference.addColorToItemStack(new ItemStack(DeferredRegisterItems.ICON_DUST.get()),recipe.getResultEffectColor()));
+                .addItemStack(MowLibColorReference.addColorToItemStack(new ItemStack(DeferredRegisterItems.ICON_DUST.get()),recipe.getResultEffectColor()));
 
         //Result
-        ItemStack returner = ColorReference.addColorToItemStack(new ItemStack(DeferredRegisterItems.ICON_EFFECT.get()),recipe.getResultEffectColor());
+        ItemStack returner = MowLibColorReference.addColorToItemStack(new ItemStack(DeferredRegisterItems.ICON_EFFECT.get()),recipe.getResultEffectColor());
         MobEffectInstance effect = (recipe.getResultEffectName() == "")?(new MobEffectInstance(getRandomNegativeEffect())):(new MobEffectInstance(Registry.MOB_EFFECT.getOptional(new ResourceLocation(recipe.getResultEffectName())).get()));
         EffectItemBase.setEffectToItem(returner,effect);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 43, 24)

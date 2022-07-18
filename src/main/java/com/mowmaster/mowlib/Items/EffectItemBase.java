@@ -1,24 +1,13 @@
 package com.mowmaster.mowlib.Items;
 
-import com.mowmaster.mowlib.MowLibUtils.NameComponentUtils;
-import com.mowmaster.mowlib.MowLibUtils.TooltipUtils;
-import net.minecraft.ChatFormatting;
+import com.mowmaster.mowlib.MowLibUtils.MowLibNameComponentUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class EffectItemBase extends Item
 {
@@ -63,7 +52,7 @@ public class EffectItemBase extends Item
         MobEffectInstance getEffect = getEffectFromItem(p_41458_);
         if(getEffect != null)
         {
-            return NameComponentUtils.createComponentName(getEffect.getEffect().getDisplayName(), Component.translatable(MODID + ".effect_scroll.text").getString());
+            return MowLibNameComponentUtils.createComponentName(getEffect.getEffect().getDisplayName(), Component.translatable(MODID + ".effect_scroll.text").getString());
         }
 
         return super.getName(p_41458_);

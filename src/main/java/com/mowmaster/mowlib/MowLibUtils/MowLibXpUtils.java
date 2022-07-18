@@ -1,6 +1,11 @@
 package com.mowmaster.mowlib.MowLibUtils;
 
-public class MowLibXpUtil
+import com.mowmaster.mowlib.Capabilities.Experience.IExperienceStorage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.level.Level;
+
+public class MowLibXpUtils
 {
     public static int getExpCountByLevel(int level)
     {
@@ -48,5 +53,14 @@ public class MowLibXpUtil
         }
 
         return Math.abs(i);
+    }
+
+    public static void dropXPInWorld(Level level, BlockPos pos, IExperienceStorage xpStorage) {
+        if(xpStorage.getExperienceStored()>0)
+        {
+            ExperienceOrb xpEntity = new ExperienceOrb(level,pos.getX(), pos.getY(), pos.getZ(),xpStorage.getExperienceStored());
+            xpEntity.lerpMotion(0D,0D,0D);
+            level.addFreshEntity(xpEntity);
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.mowmaster.mowlib.Recipes;
 
 import com.google.gson.JsonObject;
-import com.mowmaster.mowlib.MowLibUtils.ColorReference;
+import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -175,7 +175,7 @@ public class MobEffectColorRecipeCorrupted implements Recipe<Container>
         {
             String group = GsonHelper.getAsString(json, "group", "");
             Ingredient input = json.has("input") ? CraftingHelper.getIngredient(json.get("input")) : null;
-            int color = json.has("color") ? GsonHelper.getAsInt(json,"color") : (ColorReference.DEFAULTCOLOR);
+            int color = json.has("color") ? GsonHelper.getAsInt(json,"color") : (MowLibColorReference.DEFAULTCOLOR);
             String mobEffect = json.has("mobEffect") ? GsonHelper.getAsString(json,"mobEffect") : "";
             int instaTickDuration = json.has("instaTickDuration") ? GsonHelper.getAsInt(json,"instaTickDuration") : 1;
             return createRecipe(recipeId, group, input, color, mobEffect, instaTickDuration);

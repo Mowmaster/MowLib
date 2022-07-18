@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerUtils {
+public class MowLibContainerUtils {
 
     public static Container getContainer(int size)
     {
