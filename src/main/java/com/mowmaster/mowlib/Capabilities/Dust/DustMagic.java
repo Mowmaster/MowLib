@@ -3,6 +3,8 @@ package com.mowmaster.mowlib.Capabilities.Dust;
 import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.fluids.FluidStack;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
@@ -17,14 +19,18 @@ public class DustMagic {
         this.dustAmount = amount;
     }
 
+    public static final DustMagic EMPTY = new DustMagic(-1, 0);
+
     public boolean isEmpty() { return this.getDustColor() == -1; }
+
+    public DustMagic copy() { return new DustMagic(this.dustColor,this.dustAmount); }
 
     public int getDustColor() {
         return this.dustColor;
     }
 
     public int getDustAmount() {
-        return dustAmount;
+        return this.dustAmount;
     }
 
     public void setDustColor(int dustColor) {
@@ -39,6 +45,16 @@ public class DustMagic {
 
     public void shrink(int amount) {
         setDustAmount(this.dustAmount - amount);
+    }
+
+    @Override
+    public final boolean equals(Object o)
+    {
+        if (!(o instanceof DustMagic))
+        {
+            return false;
+        }
+        return isDustEqual((DustMagic) o);
     }
 
     public boolean isDustEqual(DustMagic magicIn)
@@ -66,7 +82,13 @@ public class DustMagic {
         ItemStack copyStack = stackToSet.copy();
         CompoundTag copyStackTag = stackToSet.getOrCreateTag();
         copyStackTag.putInt(MODID + "_dustMagicColor",magicIn.getDustColor());
-        copyStackTag.putInt(MODID + "_dustMagicAmount",magicIn.getDustAmount());
+        int dustAmount = magicIn.getDustAmount();
+        if(stackToSet.getCount() > 1)
+        {
+            double maths = magicIn.getDustAmount()/stackToSet.getCount();
+            dustAmount = (int)Math.floor(maths);
+        }
+        copyStackTag.putInt(MODID + "_dustMagicAmount",dustAmount);
         copyStack.setTag(copyStackTag);
         return copyStack;
     }

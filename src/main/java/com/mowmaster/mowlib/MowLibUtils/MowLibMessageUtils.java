@@ -27,6 +27,13 @@ public class MowLibMessageUtils
         return Component.translatable(contents);
     }
 
+    public static void messagePopup(Player player, Component componentMessage, @Nullable ChatFormatting style)
+    {
+        MutableComponent message = componentMessage.copy();
+        if(style != null) { message.withStyle(style); }
+        player.displayClientMessage(message, true);
+    }
+
     public static void messagePopup(Player player, ChatFormatting color, String localizedMessage)
     {
         MutableComponent message = Component.translatable(localizedMessage);

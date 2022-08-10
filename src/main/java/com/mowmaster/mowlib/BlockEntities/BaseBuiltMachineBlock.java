@@ -34,7 +34,7 @@ import java.util.stream.IntStream;
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
 
-public class BaseBuiltMachineBlock extends BaseColoredBlock implements EntityBlock
+public class BaseBuiltMachineBlock extends MowLibBaseEntityBlock
 {
     public BaseBuiltMachineBlock(BlockBehaviour.Properties p_152915_) {
         super(p_152915_);

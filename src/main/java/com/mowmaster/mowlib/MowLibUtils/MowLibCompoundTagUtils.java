@@ -90,5 +90,4 @@ public class MowLibCompoundTagUtils
     }
 
     public static void removeIntegerFromNBT(String ModID, CompoundTag inputNBT, String intName) { if(inputNBT.contains(ModID + intName)) { inputNBT.remove(ModID + intName); } }
-
 }

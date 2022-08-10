@@ -38,7 +38,7 @@ import java.util.*;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils.spawnItemStack;
 
-public class BaseBuiltMachineBlockEntity extends BlockEntity {
+public class BaseBuiltMachineBlockEntity extends MowLibBaseBlockEntity {
 
     private LazyOptional<IItemHandler> repairItemsHandler = LazyOptional.of(this::createRepairItemsHandler);
     private List<ItemStack> stacksList = new ArrayList<>();
