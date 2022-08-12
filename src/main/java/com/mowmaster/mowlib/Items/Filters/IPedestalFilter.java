@@ -59,11 +59,11 @@ public interface IPedestalFilter extends IItemMode
      * @return ItemStack count allowed to be insert
      * When this pedestal is going to receive an ItemStack this is called.
      */
-    int canAcceptCountItems(MowLibBaseBlockEntity filterableBlockEntity, ItemStack itemStackIncoming);
-    int canAcceptCountFluids(MowLibBaseBlockEntity filterableBlockEntity, FluidStack incomingFluidStack);
-    int canAcceptCountEnergy(MowLibBaseBlockEntity filterableBlockEntity, int incomingEnergyAmount);
-    int canAcceptCountExperience(MowLibBaseBlockEntity filterableBlockEntity, int incomingExperienceAmount);
-    int canAcceptCountDust(MowLibBaseBlockEntity filterableBlockEntity, DustMagic incomingDust);
+    int canAcceptCountItems(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, ItemStack itemStackIncoming);
+    int canAcceptCountFluids(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, FluidStack incomingFluidStack);
+    int canAcceptCountEnergy(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, int incomingEnergyAmount);
+    int canAcceptCountExperience(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, int incomingExperienceAmount);
+    int canAcceptCountDust(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, DustMagic incomingDust);
 
     /**
      * @param pedestal pedestal tile filter is in
@@ -131,7 +131,7 @@ public interface IPedestalFilter extends IItemMode
      * When a player right clicks the FilterTool item on a pedestal, this is called.
      * Generally this will output filter info to the players chat in game.
      */
-    void chatDetails(Player player, MowLibBaseBlockEntity filterableBlockEntity);
+    void chatDetails(Player player, MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack);
 
     public static enum FilterDirection {
         INSERT,

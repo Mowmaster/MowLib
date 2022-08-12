@@ -71,17 +71,6 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
         return ItemHandlerHelper.canItemStacksStack(stackPedestal,itemStackIn);
     }
 
-    public FluidStack getFluidStackFromItemStack(ItemStack stackIn)
-    {
-        if(stackIn.getItem() instanceof BucketItem bucket)
-        {
-            Fluid bucketFluid = bucket.getFluid();
-            return new FluidStack(bucketFluid,1000);
-        }
-
-        return FluidStack.EMPTY;
-    }
-
     public boolean canModeUseInventoryAsFilter(ItemTransferMode mode)
     {
         return mode.ordinal()<=1;
@@ -266,27 +255,27 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
 
     //Change for new Modes
     @Override
-    public int canAcceptCountItems(MowLibBaseBlockEntity filterableBlockEntity, ItemStack itemStackIncoming) {
+    public int canAcceptCountItems(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, ItemStack itemStackIncoming) {
         return 0;
     }
 
     @Override
-    public int canAcceptCountFluids(MowLibBaseBlockEntity filterableBlockEntity, FluidStack incomingFluidStack) {
+    public int canAcceptCountFluids(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, FluidStack incomingFluidStack) {
         return 0;
     }
 
     @Override
-    public int canAcceptCountEnergy(MowLibBaseBlockEntity filterableBlockEntity, int incomingEnergyAmount) {
+    public int canAcceptCountEnergy(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, int incomingEnergyAmount) {
         return 0;
     }
 
     @Override
-    public int canAcceptCountExperience(MowLibBaseBlockEntity filterableBlockEntity, int incomingExperienceAmount) {
+    public int canAcceptCountExperience(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, int incomingExperienceAmount) {
         return 0;
     }
 
     @Override
-    public int canAcceptCountDust(MowLibBaseBlockEntity filterableBlockEntity, DustMagic incomingDust) {
+    public int canAcceptCountDust(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, DustMagic incomingDust) {
         return 0;
     }
 
@@ -409,7 +398,7 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
 
 
     @Override
-    public void chatDetails(Player player, MowLibBaseBlockEntity pedestal) {
+    public void chatDetails(Player player, MowLibBaseBlockEntity pedestal, ItemStack filterStack) {
 
     }
 
