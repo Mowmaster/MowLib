@@ -59,11 +59,11 @@ public interface IPedestalFilter extends IItemMode
      * @return ItemStack count allowed to be insert
      * When this pedestal is going to receive an ItemStack this is called.
      */
-    int canAcceptCountItems(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, ItemStack itemStackIncoming);
-    int canAcceptCountFluids(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, FluidStack incomingFluidStack);
-    int canAcceptCountEnergy(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, int incomingEnergyAmount);
-    int canAcceptCountExperience(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, int incomingExperienceAmount);
-    int canAcceptCountDust(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, DustMagic incomingDust);
+    int canAcceptCountItems(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, ItemStack itemStackIncoming);
+    int canAcceptCountFluids(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, FluidStack incomingFluidStack);
+    int canAcceptCountEnergy(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, int incomingEnergyAmount);
+    int canAcceptCountExperience(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, int incomingExperienceAmount);
+    int canAcceptCountDust(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, DustMagic incomingDust);
 
     /**
      * @param pedestal pedestal tile filter is in

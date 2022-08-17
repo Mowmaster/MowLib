@@ -255,27 +255,27 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
 
     //Change for new Modes
     @Override
-    public int canAcceptCountItems(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, ItemStack itemStackIncoming) {
+    public int canAcceptCountItems(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, ItemStack itemStackIncoming) {
         return 0;
     }
 
     @Override
-    public int canAcceptCountFluids(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, FluidStack incomingFluidStack) {
+    public int canAcceptCountFluids(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, FluidStack incomingFluidStack) {
         return 0;
     }
 
     @Override
-    public int canAcceptCountEnergy(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, int incomingEnergyAmount) {
+    public int canAcceptCountEnergy(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, int incomingEnergyAmount) {
         return 0;
     }
 
     @Override
-    public int canAcceptCountExperience(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, int incomingExperienceAmount) {
+    public int canAcceptCountExperience(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, int incomingExperienceAmount) {
         return 0;
     }
 
     @Override
-    public int canAcceptCountDust(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int spaceAvailable, DustMagic incomingDust) {
+    public int canAcceptCountDust(MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack, int maxSpaceSize, int spaceAvailable, DustMagic incomingDust) {
         return 0;
     }
 
@@ -395,6 +395,11 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
         return filterType;
     }
 
+    public boolean showFilterDirection()
+    {
+        return true;
+    }
+
 
 
     @Override
@@ -425,10 +430,9 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
     public Component filterModeTooltip(ItemTransferMode mode, boolean filterType)
     {
         MutableComponent changed = Component.translatable(MODID + ".tooltip_mode");
-        String typeString = mode.stringTransferMode();
+        Component modeComponent = mode.componentTransferMode();
         changed.withStyle(ChatFormatting.GOLD);
-        MutableComponent type = Component.translatable(MODID + typeString);
-        changed.append(type);
+        changed.append(modeComponent);
 
         return changed;
     }
@@ -438,9 +442,12 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
 
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
 
-        MutableComponent filterDirection = Component.translatable(MODID + ".filter.tooltip_filterdirection");
-        filterDirection.append(getFilterDirection().componentDirection());
-        p_41423_.add(filterDirection);
+        if(showFilterDirection())
+        {
+            MutableComponent filterDirection = Component.translatable(MODID + ".filter.tooltip_filterdirection");
+            filterDirection.append(getFilterDirection().componentDirection());
+            p_41423_.add(filterDirection);
+        }
 
         boolean filterType = getFilterType(p_41421_,getItemTransportMode(p_41421_));
         if(canSetFilterType(getItemTransportMode(p_41421_)))p_41423_.add(filterTypeTooltip(getItemTransportMode(p_41421_), filterType));

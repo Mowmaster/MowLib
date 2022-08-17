@@ -9,9 +9,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 
-public class MowLibBaseEntityBlock extends BaseColoredBlock implements EntityBlock
+public class MowLibBaseBlock extends BaseColoredBlock implements EntityBlock
 {
-    public MowLibBaseEntityBlock(Properties p_152915_) {
+    public MowLibBaseBlock(Properties p_152915_) {
         super(p_152915_);
         this.registerDefaultState(MowLibColorReference.addColorToBlockState(this.defaultBlockState(),MowLibColorReference.DEFAULTCOLOR));
     }

@@ -102,7 +102,7 @@ public class MowLibFluidUtils
         }
     }
 
-    public FluidStack getFluidStackFromItemStack(ItemStack stackIn)
+    public static FluidStack getFluidStackFromItemStack(ItemStack stackIn)
     {
         if(stackIn.getItem() instanceof BucketItem bucket)
         {

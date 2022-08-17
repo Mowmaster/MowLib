@@ -3,6 +3,8 @@ package com.mowmaster.mowlib;
 import com.mojang.logging.LogUtils;
 import com.mowmaster.mowlib.Capabilities.Dust.CapabilityDust;
 import com.mowmaster.mowlib.Capabilities.Experience.CapabilityExperience;
+import com.mowmaster.mowlib.Client.ClientItemTooltipComponent;
+import com.mowmaster.mowlib.Client.ItemTooltipComponent;
 import com.mowmaster.mowlib.Networking.MowLibPacketHandler;
 import com.mowmaster.mowlib.Registry.DeferredRecipeSerializers;
 import com.mowmaster.mowlib.Registry.DeferredRegisterBlocks;
@@ -12,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -28,6 +31,8 @@ import org.slf4j.Logger;
 
 import java.util.stream.Collectors;
 
+import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODNAME;
+
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("mowlib")
 public class mowlib
@@ -39,6 +44,7 @@ public class mowlib
     {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClientTooltips);
         // Register the enqueueIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         // Register the processIMC method for modloading
@@ -61,6 +67,12 @@ public class mowlib
         //LOGGER.info("HELLO FROM PREINIT");
         //LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
         MowLibPacketHandler.registerMessages();
+    }
+
+    private void setupClientTooltips(final RegisterClientTooltipComponentFactoriesEvent event)
+    {
+        LOGGER.info("Initialize "+MODNAME+" Tooltip Renders");
+        event.register(ItemTooltipComponent.class, ClientItemTooltipComponent::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

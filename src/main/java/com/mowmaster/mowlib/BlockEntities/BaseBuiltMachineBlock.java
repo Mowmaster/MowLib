@@ -1,7 +1,6 @@
 package com.mowmaster.mowlib.BlockEntities;
 
 import com.google.common.collect.Maps;
-import com.mowmaster.mowlib.Blocks.BaseBlocks.BaseColoredBlock;
 import com.mowmaster.mowlib.Items.BaseRepairNote;
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
@@ -20,7 +19,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,7 +32,7 @@ import java.util.stream.IntStream;
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
 
-public class BaseBuiltMachineBlock extends MowLibBaseEntityBlock
+public class BaseBuiltMachineBlock extends MowLibBaseBlock
 {
     public BaseBuiltMachineBlock(BlockBehaviour.Properties p_152915_) {
         super(p_152915_);

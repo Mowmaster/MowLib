@@ -15,16 +15,4 @@ public class ItemTooltipComponent implements TooltipComponent
     public NonNullList<ItemStack> getItems() {
         return this.items;
     }
-
-
-
-    /*private final ItemStack displayStack;
-
-    public ItemTooltipComponent(ItemStack stack){
-        this.displayStack = stack;
-    }
-
-    public ItemStack getDisplayStack(){
-        return this.displayStack;
-    }*/
 }

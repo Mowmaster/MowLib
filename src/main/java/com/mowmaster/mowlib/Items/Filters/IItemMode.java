@@ -48,6 +48,7 @@ public interface IItemMode
             return Component.translatable(MODID + ".enum.filtertransfermode_default");
         }
 
+        // These are needed for saving stuff to NBT and NOTHING ELSE
         public String stringTransferMode()
         {
             switch (this)
