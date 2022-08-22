@@ -8,12 +8,20 @@
   "mowlib.jei.bad_effect_crafting": "Effect Crafting (Negative)",
 
 
+
   "mowlib.jei.mob_filter_icon": "Mob Filtering",
   "mowlib.jei.mob_filter": "Mob Filters",
   "mowlib.mob_filter_entity": "Entity: ",
   "mowlib.mob_filter_type": "Entity Type: ",
   "mowlib.mob_filter_baby": " (baby)",
-
+  "mowlib.mob_filter.ambient": "Ambient Mobs",
+  "mowlib.mob_filter.axolotls": "Axolotls",
+  "mowlib.mob_filter.creature": "Passive Mobs",
+  "mowlib.mob_filter.misc": "Misc",
+  "mowlib.mob_filter.monster": "Hostile Mobs",
+  "mowlib.mob_filter.underground_water_creature": "Underground Water Mob",
+  "mowlib.mob_filter.water_creature": "Water Mobs",
+  "mowlib.mob_filter.water_ambient": "Ambient Water Mobs",
 
 
 

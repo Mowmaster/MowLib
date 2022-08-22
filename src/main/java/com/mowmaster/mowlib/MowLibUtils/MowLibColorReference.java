@@ -524,10 +524,10 @@ public class MowLibColorReference implements IColorable {
         List<Item> BLACK_DYE = ForgeRegistries.ITEMS.tags().getTag(ItemTags.create(new ResourceLocation("forge", "dyes/black"))).stream().toList();
 
         if(WHITE_DYE.contains(itemStack.getItem()))return Arrays.asList(3,3,3);
-        else if(ORANGE_DYE.contains(itemStack.getItem()))return Arrays.asList(3,1,0);
+        else if(ORANGE_DYE.contains(itemStack.getItem()))return Arrays.asList(3,2,0);
         else if(MAGENTA_DYE.contains(itemStack.getItem()))return Arrays.asList(3,1,3);
         else if(LBLUE_DYE.contains(itemStack.getItem()))return Arrays.asList(0,2,3);
-        else if(YELLOW_DYE.contains(itemStack.getItem()))return Arrays.asList(3,2,0);
+        else if(YELLOW_DYE.contains(itemStack.getItem()))return Arrays.asList(3,3,0);
         else if(LIME_DYE.contains(itemStack.getItem()))return Arrays.asList(1,2,0);
         else if(PINK_DYE.contains(itemStack.getItem()))return Arrays.asList(3,1,2);
         else if(GRAY_DYE.contains(itemStack.getItem()))return Arrays.asList(0,0,0);
@@ -563,10 +563,10 @@ public class MowLibColorReference implements IColorable {
         List<Item> BLACK_DYE = ForgeRegistries.ITEMS.tags().getTag(ItemTags.create(new ResourceLocation("forge", "dyes/black"))).stream().toList();
 
         if(WHITE_DYE.contains(itemStack.getItem()))return 16777215;
-        else if(ORANGE_DYE.contains(itemStack.getItem()))return 16733440;
+        else if(ORANGE_DYE.contains(itemStack.getItem()))return 16755200;
         else if(MAGENTA_DYE.contains(itemStack.getItem()))return 16733695;
         else if(LBLUE_DYE.contains(itemStack.getItem()))return 43775;
-        else if(YELLOW_DYE.contains(itemStack.getItem()))return 16755200;
+        else if(YELLOW_DYE.contains(itemStack.getItem()))return 16776960;
         else if(LIME_DYE.contains(itemStack.getItem()))return 5614080;
         else if(PINK_DYE.contains(itemStack.getItem()))return 16733610;
         else if(GRAY_DYE.contains(itemStack.getItem()))return 2763306;
