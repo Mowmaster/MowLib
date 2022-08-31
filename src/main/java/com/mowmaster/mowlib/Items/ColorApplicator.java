@@ -167,9 +167,10 @@ public class ColorApplicator extends Item implements IColorable {
         List<Integer> list = getColorList(p_41421_);
         super.getTooltipImage(p_41421_);
         p_41423_.add((Component.translatable("item.minecraft.bundle.fullness", list.size(), 8)).withStyle(ChatFormatting.GRAY));
+        int currentColor = MowLibColorReference.getColorFromItemStackInt(p_41421_);
         for(int i=0;i<list.size();i++)
         {
-            Component minNeeded = Component.translatable(list.get(i).toString()).withStyle(ChatFormatting.WHITE);
+            Component minNeeded = Component.translatable(MODID + "." + MowLibColorReference.getColorName(list.get(i))).withStyle((currentColor==list.get(i))?(ChatFormatting.GOLD):(ChatFormatting.WHITE));
             p_41423_.add(minNeeded);
         }
 

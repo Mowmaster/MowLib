@@ -48,45 +48,40 @@ public class MowLibCompoundTagUtils
 
     public static void removeItemStackFromNBT(String ModID, CompoundTag inputNBT) { if(inputNBT.contains(ModID + "_stacksStored")) { inputNBT.remove(ModID + "_stacksStored"); } }
 
-    public static CompoundTag writeFluidStackToNBT(String ModID, @Nullable CompoundTag inputNBT, FluidStack fluidStack)
-    {
-        CompoundTag compound = (inputNBT != null)?(inputNBT):(new CompoundTag());
-        if(fluidStack.isEmpty())return compound;
-
-        CompoundTag compoundStorage = new CompoundTag();
-        compound.put(ModID + "_storedFluid",fluidStack.writeToNBT(compoundStorage));
-        return compound;
+    public static CompoundTag writeFluidStackToNBT(String ModID, @Nullable CompoundTag inputNBT, FluidStack fluidStack) {
+        CompoundTag compound = inputNBT != null ? inputNBT : new CompoundTag();
+        if (fluidStack.isEmpty()) {
+            return compound;
+        } else {
+            compound.put(ModID + "_storedFluid", fluidStack.writeToNBT(new CompoundTag()));
+            return compound;
+        }
     }
 
-    public static FluidStack readFluidStackFromNBT(String ModID, CompoundTag inputNBT)
-    {
+    public static FluidStack readFluidStackFromNBT(String ModID, CompoundTag inputNBT) {
         FluidStack fluidStack = FluidStack.EMPTY;
-        if(inputNBT.contains(ModID + "_storedFluid"))
-        {
-            CompoundTag compound = inputNBT.getCompound(ModID + "_storedFluid");
-            return FluidStack.loadFluidStackFromNBT(compound.getCompound("storedFluid"));
+        if (inputNBT.contains(ModID + "_storedFluid")) {
+            return FluidStack.loadFluidStackFromNBT(inputNBT.getCompound(ModID + "_storedFluid"));
+        } else {
+            return fluidStack;
         }
-
-        return fluidStack;
     }
 
     public static void removeFluidStackFromNBT(String ModID, CompoundTag inputNBT) { if(inputNBT.contains(ModID + "_storedFluid")) { inputNBT.remove(ModID + "_storedFluid"); } }
 
-    public static CompoundTag writeIntegerToNBT(String ModID, @Nullable CompoundTag inputNBT, int input, String intName)
-    {
-        CompoundTag compound = (inputNBT != null)?(inputNBT):(new CompoundTag());
-        compound.putInt(ModID + intName,input);
+    public static CompoundTag writeIntegerToNBT(String ModID, @Nullable CompoundTag inputNBT, int input, String intName) {
+        CompoundTag compound = inputNBT != null ? inputNBT : new CompoundTag();
+        compound.putInt(ModID + intName, input);
         return compound;
     }
 
-    public static Integer readIntegerFromNBT(String ModID, CompoundTag inputNBT, String intName)
+    public static int readIntegerFromNBT(String ModID, CompoundTag inputNBT, String intName)
     {
         if(inputNBT.contains(ModID + intName))
         {
             return inputNBT.getInt(ModID + intName);
         }
-
-        return null;
+        return 0;
     }
 
     public static void removeIntegerFromNBT(String ModID, CompoundTag inputNBT, String intName) { if(inputNBT.contains(ModID + intName)) { inputNBT.remove(ModID + intName); } }
