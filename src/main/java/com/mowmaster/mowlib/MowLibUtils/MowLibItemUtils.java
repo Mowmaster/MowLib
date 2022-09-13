@@ -8,20 +8,18 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RailBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.extensions.IForgeAbstractMinecart;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +34,7 @@ public class MowLibItemUtils
         BlockEntity neighbourTile = world.getBlockEntity(pos);
         if(neighbourTile!=null)
         {
-            LazyOptional<IItemHandler> cap = neighbourTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+            LazyOptional<IItemHandler> cap = neighbourTile.getCapability(ForgeCapabilities.ITEM_HANDLER);
             if(cap.isPresent())
                 return cap;
         }
@@ -47,7 +45,7 @@ public class MowLibItemUtils
                 List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos), entity -> entity instanceof IForgeAbstractMinecart);
                 if(!list.isEmpty())
                 {
-                    LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+                    LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.ITEM_HANDLER);
                     if(cap.isPresent())
                         return cap;
                 }
@@ -59,7 +57,7 @@ public class MowLibItemUtils
                 List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos.above()), entity -> entity instanceof Boat);
                 if(!list.isEmpty())
                 {
-                    LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+                    LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.ITEM_HANDLER);
                     if(cap.isPresent())
                         return cap;
                 }
@@ -73,7 +71,7 @@ public class MowLibItemUtils
         BlockEntity neighbourTile = world.getBlockEntity(pos);
         if(neighbourTile!=null)
         {
-            LazyOptional<IItemHandler> cap = neighbourTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
+            LazyOptional<IItemHandler> cap = neighbourTile.getCapability(ForgeCapabilities.ITEM_HANDLER, side);
             if(cap.isPresent())
                 return cap;
         }
@@ -82,7 +80,7 @@ public class MowLibItemUtils
             List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos), entity -> entity instanceof ContainerEntity);
             if(!list.isEmpty())
             {
-                LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+                LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.ITEM_HANDLER);
                 if(cap.isPresent())
                     return cap;
             }
@@ -91,7 +89,7 @@ public class MowLibItemUtils
                 List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos), entity -> entity instanceof IForgeAbstractMinecart);
                 if(!list.isEmpty())
                 {
-                    LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+                    LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.ITEM_HANDLER);
                     if(cap.isPresent())
                         return cap;
                 }
@@ -103,7 +101,7 @@ public class MowLibItemUtils
                 System.out.println(list);
                 if(!list.isEmpty())
                 {
-                    LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+                    LazyOptional<IItemHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.ITEM_HANDLER);
                     if(cap.isPresent())
                         return cap;
                 }

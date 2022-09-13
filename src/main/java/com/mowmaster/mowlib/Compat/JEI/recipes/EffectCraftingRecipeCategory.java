@@ -96,7 +96,7 @@ public class EffectCraftingRecipeCategory implements IRecipeCategory<MobEffectCo
 
         //Input Color
         builder.addSlot(RecipeIngredientRole.INPUT, 5, 24)
-                .addItemStack(MowLibColorReference.addColorToItemStack(new ItemStack(DeferredRegisterItems.ICON_DUST.get()),recipe.getResultEffectColor()).setHoverName(Component.translatable(MowLibColorReference.getColorName(recipe.getResultEffectColor()))));
+                .addItemStack(MowLibColorReference.addColorToItemStack(new ItemStack(DeferredRegisterItems.ICON_DUST.get()),recipe.getResultEffectColor()).setHoverName(Component.translatable(MODID + MowLibColorReference.getColorName(recipe.getResultEffectColor()))));
 
         //Result
         ItemStack returner = MowLibColorReference.addColorToItemStack(new ItemStack(DeferredRegisterItems.ICON_EFFECT.get()),recipe.getResultEffectColor());

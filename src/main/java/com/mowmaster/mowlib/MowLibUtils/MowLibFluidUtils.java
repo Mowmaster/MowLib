@@ -15,8 +15,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class MowLibFluidUtils
         BlockEntity neighbourTile = world.getBlockEntity(pos);
         if(neighbourTile!=null)
         {
-            LazyOptional<IFluidHandler> cap = neighbourTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+            LazyOptional<IFluidHandler> cap = neighbourTile.getCapability(ForgeCapabilities.FLUID_HANDLER, side);
             if(cap.isPresent())
                 return cap;
         }
@@ -36,7 +37,7 @@ public class MowLibFluidUtils
             List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos), entity -> entity instanceof ContainerEntity);
             if(!list.isEmpty())
             {
-                LazyOptional<IFluidHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+                LazyOptional<IFluidHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.FLUID_HANDLER);
                 if(cap.isPresent())
                     return cap;
             }
@@ -45,7 +46,7 @@ public class MowLibFluidUtils
                 List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos), entity -> entity instanceof IForgeAbstractMinecart);
                 if(!list.isEmpty())
                 {
-                    LazyOptional<IFluidHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+                    LazyOptional<IFluidHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.FLUID_HANDLER);
                     if(cap.isPresent())
                         return cap;
                 }
@@ -56,7 +57,7 @@ public class MowLibFluidUtils
                 List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos), entity -> entity instanceof Boat);
                 if(!list.isEmpty())
                 {
-                    LazyOptional<IFluidHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+                    LazyOptional<IFluidHandler> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.FLUID_HANDLER);
                     if(cap.isPresent())
                         return cap;
                 }

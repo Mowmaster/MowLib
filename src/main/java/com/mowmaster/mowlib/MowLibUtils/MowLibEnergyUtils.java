@@ -13,8 +13,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.util.List;
 import java.util.Random;
@@ -25,7 +26,7 @@ public class MowLibEnergyUtils {
         BlockEntity neighbourTile = world.getBlockEntity(pos);
         if(neighbourTile!=null)
         {
-            LazyOptional<IEnergyStorage> cap = neighbourTile.getCapability(CapabilityEnergy.ENERGY, side);
+            LazyOptional<IEnergyStorage> cap = neighbourTile.getCapability(ForgeCapabilities.ENERGY, side);
             if(cap.isPresent())
                 return cap;
         }
@@ -34,7 +35,7 @@ public class MowLibEnergyUtils {
             List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos), entity -> entity instanceof ContainerEntity);
             if(!list.isEmpty())
             {
-                LazyOptional<IEnergyStorage> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityEnergy.ENERGY);
+                LazyOptional<IEnergyStorage> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.ENERGY);
                 if(cap.isPresent())
                     return cap;
             }
@@ -43,7 +44,7 @@ public class MowLibEnergyUtils {
                 List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos), entity -> entity instanceof IForgeAbstractMinecart);
                 if(!list.isEmpty())
                 {
-                    LazyOptional<IEnergyStorage> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityEnergy.ENERGY);
+                    LazyOptional<IEnergyStorage> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.ENERGY);
                     if(cap.isPresent())
                         return cap;
                 }
@@ -54,7 +55,7 @@ public class MowLibEnergyUtils {
                 List<Entity> list = world.getEntitiesOfClass(Entity.class, new AABB(pos), entity -> entity instanceof Boat);
                 if(!list.isEmpty())
                 {
-                    LazyOptional<IEnergyStorage> cap = list.get(world.random.nextInt(list.size())).getCapability(CapabilityEnergy.ENERGY);
+                    LazyOptional<IEnergyStorage> cap = list.get(world.random.nextInt(list.size())).getCapability(ForgeCapabilities.ENERGY);
                     if(cap.isPresent())
                         return cap;
                 }
