@@ -46,7 +46,7 @@ public class ColorApplicator extends Item implements IColorable {
         {
             List<Integer> list = getColorList(stackInHand);
             HitResult result = player.pick(5,0,false);
-            if(player.isCrouching() || player.getAbilities().flying)
+            if(player.isShiftKeyDown() || player.getAbilities().flying)
             {
                 //System.out.println(result.getType());
 
