@@ -1,7 +1,7 @@
 {
   "type": "mowlib:entity_filter",
   "input": {
-    "item": "minecraft:iron_block"
+    "item": "minecraft:stone"
   },
   "entityString": "ambient",
   "mobType": 0,

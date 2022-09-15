@@ -1,9 +1,9 @@
 {
   "type": "mowlib:entity_filter",
   "input": {
-    "item": "minecraft:amethyst_block"
+    "item": "minecraft:snow_block"
   },
-  "entityString": "minecraft:player",
+  "entityString": "minecraft:snow_golem",
   "mobType": 1,
   "isBaby": false
 }

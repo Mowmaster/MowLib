@@ -1,9 +1,9 @@
 {
   "type": "mowlib:entity_filter",
   "input": {
-    "item": "minecraft:amethyst_block"
+    "item": "minecraft:iron_block"
   },
-  "entityString": "minecraft:player",
+  "entityString": "minecraft:iron_golem",
   "mobType": 1,
   "isBaby": false
 }

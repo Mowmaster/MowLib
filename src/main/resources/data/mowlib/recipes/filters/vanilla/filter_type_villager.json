@@ -1,9 +1,9 @@
 {
   "type": "mowlib:entity_filter",
   "input": {
-    "item": "minecraft:amethyst_block"
+    "item": "minecraft:emerald_block"
   },
-  "entityString": "minecraft:player",
+  "entityString": "minecraft:villager",
   "mobType": 1,
   "isBaby": false
 }
