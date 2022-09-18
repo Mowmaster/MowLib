@@ -5,6 +5,8 @@ import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.MowLibUtils.MowLibContainerUtils;
 import com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils;
 import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
+import com.mowmaster.mowlib.api.IColorable;
+import com.mowmaster.mowlib.api.IDustStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -77,8 +79,8 @@ public class DualHandedCraftingHandler
                                 BlockState blockToSet = Block.byItem(getResultItem.getItem()).defaultBlockState();
                                 if(blockToSet.hasProperty(MowLibColorReference.COLOR_RED) && blockToSet.hasProperty(MowLibColorReference.COLOR_GREEN) && blockToSet.hasProperty(MowLibColorReference.COLOR_BLUE))
                                 {
-                                    if(player.getMainHandItem().getItem() instanceof ColorApplicator)blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromItemStackInt(player.getMainHandItem()));
-                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator)blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromItemStackInt(player.getOffhandItem()));
+                                    if(player.getMainHandItem().getItem() instanceof ColorApplicator || player.getMainHandItem().getItem() instanceof IDustStorage)blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromItemStackInt(player.getMainHandItem()));
+                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator || player.getMainHandItem().getItem() instanceof IDustStorage)blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromItemStackInt(player.getOffhandItem()));
                                     else if(state.hasProperty(MowLibColorReference.COLOR_RED) && state.hasProperty(MowLibColorReference.COLOR_GREEN) && state.hasProperty(MowLibColorReference.COLOR_BLUE))blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromStateInt(state));
                                     //Include options for dyes sometime too???
                                 }
@@ -109,9 +111,9 @@ public class DualHandedCraftingHandler
                                 level.setBlockAndUpdate(pos,Blocks.AIR.defaultBlockState());
                                 if(MowLibColorReference.isColorItem(getResultItem))
                                 {
-                                    if(player.getMainHandItem().getItem() instanceof ColorApplicator)
+                                    if(player.getMainHandItem().getItem() instanceof ColorApplicator || player.getMainHandItem().getItem() instanceof IDustStorage)
                                         MowLibColorReference.addColorToItemStack(getResultItem, MowLibColorReference.getColorFromItemStackInt(player.getMainHandItem()));
-                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator)
+                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator || player.getMainHandItem().getItem() instanceof IDustStorage)
                                         MowLibColorReference.addColorToItemStack(getResultItem, MowLibColorReference.getColorFromItemStackInt(player.getOffhandItem()));
                                 }
 
