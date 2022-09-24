@@ -80,7 +80,7 @@ public class DualHandedCraftingHandler
                                 if(blockToSet.hasProperty(MowLibColorReference.COLOR_RED) && blockToSet.hasProperty(MowLibColorReference.COLOR_GREEN) && blockToSet.hasProperty(MowLibColorReference.COLOR_BLUE))
                                 {
                                     if(player.getMainHandItem().getItem() instanceof ColorApplicator || player.getMainHandItem().getItem() instanceof IDustStorage)blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromItemStackInt(player.getMainHandItem()));
-                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator || player.getMainHandItem().getItem() instanceof IDustStorage)blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromItemStackInt(player.getOffhandItem()));
+                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator || player.getOffhandItem().getItem() instanceof IDustStorage)blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromItemStackInt(player.getOffhandItem()));
                                     else if(state.hasProperty(MowLibColorReference.COLOR_RED) && state.hasProperty(MowLibColorReference.COLOR_GREEN) && state.hasProperty(MowLibColorReference.COLOR_BLUE))blockToSet = MowLibColorReference.addColorToBlockState(blockToSet, MowLibColorReference.getColorFromStateInt(state));
                                     //Include options for dyes sometime too???
                                 }
@@ -113,7 +113,7 @@ public class DualHandedCraftingHandler
                                 {
                                     if(player.getMainHandItem().getItem() instanceof ColorApplicator || player.getMainHandItem().getItem() instanceof IDustStorage)
                                         MowLibColorReference.addColorToItemStack(getResultItem, MowLibColorReference.getColorFromItemStackInt(player.getMainHandItem()));
-                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator || player.getMainHandItem().getItem() instanceof IDustStorage)
+                                    else if(player.getOffhandItem().getItem() instanceof ColorApplicator || player.getOffhandItem().getItem() instanceof IDustStorage)
                                         MowLibColorReference.addColorToItemStack(getResultItem, MowLibColorReference.getColorFromItemStackInt(player.getOffhandItem()));
                                 }
 
