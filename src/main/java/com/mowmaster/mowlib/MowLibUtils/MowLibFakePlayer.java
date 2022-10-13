@@ -40,6 +40,4 @@ public class MowLibFakePlayer extends FakePlayer {
     {
         player.setItemInHand(hand,getTool);
     }
-
-
 }

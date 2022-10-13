@@ -97,4 +97,83 @@ public class MowLibMessageUtils
         message.withStyle(color);
         player.displayClientMessage(message,false);
     }
+
+
+
+    public static Component getMowLibComponentLocalizedWithoutStyle(String localizedMessage)
+    {
+        return Component.translatable(MODID + localizedMessage);
+    }
+
+
+    public static Component makeComponentWithoutStyle(String contents)
+    {
+        return Component.translatable(contents);
+    }
+
+    public static void messagePopupWithoutStyle(Player player, Component componentMessage)
+    {
+        MutableComponent message = componentMessage.copy();
+        player.displayClientMessage(message, true);
+    }
+
+    public static void messagePopupWithoutStyle(Player player, String localizedMessage)
+    {
+        MutableComponent message = Component.translatable(localizedMessage);
+        player.displayClientMessage(message,true);
+    }
+
+    public static void messagePopupTextWithoutStyle(Player player, String unlocMessage)
+    {
+        MutableComponent message = Component.literal(unlocMessage);
+        player.displayClientMessage(message,true);
+    }
+
+    public static void messagePopupWithAppendWithoutStyle(String MODID, Player player, String localizedMessage, List<String> appendedMessage)
+    {
+        MutableComponent message = (localizedMessage.contains(MODID))?(Component.translatable(localizedMessage)):(Component.literal(localizedMessage));
+        for(int i = 0; i<appendedMessage.size(); i++)
+        {
+            if(appendedMessage.get(i).contains(MODID))
+            {
+                message.append(Component.translatable(appendedMessage.get(i)));
+            }
+            else
+            {
+                message.append(appendedMessage.get(i));
+            }
+        }
+        player.displayClientMessage(message,true);
+    }
+
+    public static void messagePlayerChatWithoutStyle(Player player, String localizedMessage)
+    {
+        MutableComponent message = Component.translatable(localizedMessage);
+        player.displayClientMessage(message,false);
+    }
+
+    public static void messagePlayerChatTextWithoutStyle(Player player, String unlocMessage)
+    {
+        MutableComponent message = Component.literal(unlocMessage);
+        player.displayClientMessage(message,false);
+    }
+
+    public static void messagePlayerChatWithAppendWithoutStyle(String MODID, Player player, String localizedMessage, List<String> appendedMessage)
+    {
+        MutableComponent message = (localizedMessage.contains(MODID))?(Component.translatable(localizedMessage)):(Component.literal(localizedMessage));
+        for(int i = 0; i<appendedMessage.size(); i++)
+        {
+            if(appendedMessage.get(i).contains(MODID))
+            {
+                message.append(Component.translatable(appendedMessage.get(i)));
+            }
+            else
+            {
+                message.append(appendedMessage.get(i));
+            }
+        }
+        player.displayClientMessage(message,false);
+    }
+
+
 }

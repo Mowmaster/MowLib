@@ -32,6 +32,18 @@ public class MowLibTooltipUtils
         componentList.add(base);
     }
 
+    public static void addTooltipMessage(List<Component> componentList, MutableComponent translatableComponent)
+    {
+        MutableComponent base = translatableComponent;
+        componentList.add(base);
+    }
+
+    public static void addTooltipMessage(List<Component> componentList, String localizationString)
+    {
+        MutableComponent base = Component.translatable(localizationString);
+        componentList.add(base);
+    }
+
     public static void addTooltipShiftMessage(String MODID, List<Component> componentList, ItemStack stack, MutableComponent translatableComponent)
     {
         if(!Screen.hasShiftDown())
@@ -108,6 +120,67 @@ public class MowLibTooltipUtils
         else {
             MutableComponent base = translatableComponent;
             base.withStyle(chatFormatting);
+            componentList.add(base);
+        }
+    }
+
+    public static void addTooltipShiftMessage(String MODID, List<Component> componentList, String localizationString)
+    {
+        if(!Screen.hasShiftDown())
+        {
+            MutableComponent base = Component.translatable(MODID + ".description_shift");
+            base.withStyle(ChatFormatting.WHITE);
+            componentList.add(base);
+        }
+        else {
+            if(localizationString.contains(MODID))
+            {
+                MutableComponent base = Component.translatable(localizationString);
+                componentList.add(base);
+            }
+            else
+            {
+                MutableComponent base = Component.literal(localizationString);
+                componentList.add(base);
+            }
+        }
+    }
+
+    public static void addTooltipShiftMessageMulti(String MODID, List<Component> componentList, List<String> localizationString)
+    {
+        if(!Screen.hasShiftDown())
+        {
+            MutableComponent base = Component.translatable(MODID + ".description_shift");
+            base.withStyle(ChatFormatting.WHITE);
+            componentList.add(base);
+        }
+        else {
+            for(int i=0;i<localizationString.size();i++)
+            {
+                if(localizationString.get(i).contains(MODID))
+                {
+                    MutableComponent base = Component.translatable(localizationString.get(i));
+                    componentList.add(base);
+                }
+                else
+                {
+                    MutableComponent base = Component.literal(localizationString.get(i));
+                    componentList.add(base);
+                }
+            }
+        }
+    }
+
+    public static void addTooltipShiftMessage(String MODID, List<Component> componentList, MutableComponent translatableComponent)
+    {
+        if(!Screen.hasShiftDown())
+        {
+            MutableComponent base = Component.translatable(MODID + ".description_shift");
+            base.withStyle(ChatFormatting.WHITE);
+            componentList.add(base);
+        }
+        else {
+            MutableComponent base = translatableComponent;
             componentList.add(base);
         }
     }
