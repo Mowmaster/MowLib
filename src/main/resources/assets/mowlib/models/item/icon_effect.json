@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "mowlib:items/effect",
-		"particle": "mowlib:items/effect"
+		"0": "mowlib:item/effect",
+		"particle": "mowlib:item/effect"
 	},
 	"elements": [
 		{

@@ -21,6 +21,7 @@ public class MowLibFakePlayer extends FakePlayer {
         super(world, new GameProfile((getPlayerUUID != null)?(getPlayerUUID):(Util.NIL_UUID),(getPlayerName != null)?(getPlayerName):(defaultName)));
         this.fakePos = (setPos !=null)?(setPos):(BlockPos.ZERO);
         this.setItemInHand(InteractionHand.MAIN_HAND,toolHeld);
+
     }
 
     //Set all sounds to silent???

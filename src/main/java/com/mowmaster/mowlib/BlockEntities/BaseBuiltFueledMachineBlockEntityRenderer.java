@@ -1,7 +1,8 @@
 package com.mowmaster.mowlib.BlockEntities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mowmaster.mowlib.MowLibUtils.MowLibRenderUtils;
+import org.joml.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -31,7 +32,8 @@ public class BaseBuiltFueledMachineBlockEntityRenderer
             long time = System.currentTimeMillis();
             float angle = (time/50) % 360;
             //float angle = (worldIn.getGameTime()) / 20.0F * (180F / (float) Math.PI);
-            p_112309_.mulPose(Vector3f.YP.rotationDegrees(angle));
+            //p_112309_.mulPose(new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), angle, true));
+            p_112309_.mulPose(new Quaternionf(new AxisAngle4f (angle, MowLibRenderUtils.YP)));
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
             BakedModel baked = renderer.getModel(itemStack,worldIn,null,0);
             renderer.render(itemStack, ItemTransforms.TransformType.GROUND,true,p_112309_,p_112310_,p_112311_,p_112312_,baked);
@@ -58,11 +60,12 @@ public class BaseBuiltFueledMachineBlockEntityRenderer
             p_112309_.scale(scaleX, scaleY, scaleZ);
             switch(axis)
             {
-                case 1: p_112309_.mulPose(Vector3f.XP.rotationDegrees(angle));
+
+                case 1: p_112309_.mulPose(new Quaternionf(new AxisAngle4f (angle, MowLibRenderUtils.XP)));
                     break;
-                case 2: p_112309_.mulPose(Vector3f.ZP.rotationDegrees(angle));
+                case 2: p_112309_.mulPose(new Quaternionf(new AxisAngle4f (angle, MowLibRenderUtils.ZP)));
                     break;
-                default: p_112309_.mulPose(Vector3f.YP.rotationDegrees(angle));
+                default: p_112309_.mulPose(new Quaternionf(new AxisAngle4f (angle, MowLibRenderUtils.YP)));
                     break;
             }
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();

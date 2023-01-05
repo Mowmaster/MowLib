@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "mowlib:items/hand"
+    "layer0": "mowlib:item/hand"
   }
 }

@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "mowlib:items/scroll/ribbons",
-		"1": "mowlib:items/scroll/scroll_1",
-		"2": "mowlib:items/scroll/sticks",
-		"particle": "mowlib:items/scroll/ribbons"
+		"0": "mowlib:item/scroll/ribbons",
+		"1": "mowlib:item/scroll/scroll_1",
+		"2": "mowlib:item/scroll/sticks",
+		"particle": "mowlib:item/scroll/ribbons"
 	},
 	"elements": [
 		{

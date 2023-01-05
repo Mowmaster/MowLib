@@ -3,8 +3,9 @@ package com.mowmaster.mowlib.Client;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mowmaster.mowlib.MowLibUtils.MowLibRenderUtils;
+import org.joml.AxisAngle4f;
+import org.joml.Quaternionf;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
@@ -50,12 +51,13 @@ public class EntityWidget extends AbstractWidget {
         renderEntity(stack, this.entity,
                 this.rotationSpeed != 0 ? new Vec3(this.defaultRotation.x(), this.rotation, this.defaultRotation.z())
                         : this.defaultRotation,
-                this.scale, this.offset, this.x, this.y);
+                this.scale, this.offset, this.getX(), this.getY());
     }
 
+
     @Override
-    public void updateNarration(NarrationElementOutput narration) {
-        defaultButtonNarrationText(narration);
+    protected void updateWidgetNarration(NarrationElementOutput p_259858_) {
+
     }
 
     public static class Builder {
@@ -105,10 +107,10 @@ public class EntityWidget extends AbstractWidget {
         stack.scale(1.0F, 1.0F, -1.0F);
         stack.translate(0.0D, 0.0D, 1000.0D);
         stack.scale((float) scale.x(), (float) scale.y(), (float) scale.z());
-        final Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
+        final Quaternionf quaternion = new Quaternionf(new AxisAngle4f(180, MowLibRenderUtils.ZP));
         stack.mulPose(quaternion);
         stack.translate(offset.x(), offset.y(), offset.z());
-        stack.mulPose(new Quaternion((float) -rotation.x(), (float) -rotation.y(), (float) -rotation.z(), true));
+        stack.mulPose(new Quaternionf((float) -rotation.x(), (float) -rotation.y(), (float) -rotation.z(),0.0F));
         final EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         final MultiBufferSource.BufferSource buffer = MultiBufferSource
                 .immediate(Tesselator.getInstance().getBuilder());

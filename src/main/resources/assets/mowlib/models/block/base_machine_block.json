@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "mowlib:blocks/block_crystal_stone",
-		"particle": "mowlib:blocks/block_crystal_stone"
+		"0": "mowlib:block/block_crystal_stone",
+		"particle": "mowlib:block/block_crystal_stone"
 	},
 	"elements": [
 		{
