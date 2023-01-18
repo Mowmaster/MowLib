@@ -6,18 +6,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-//https://github.com/AppliedEnergistics/Applied-Energistics-2/blob/80a9cbade143008baaa00635d7ac315b192d583c/src/main/java/appeng/core/AppEngBase.java#L116
-//https://github.com/AppliedEnergistics/Applied-Energistics-2/blob/80a9cbade143008baaa00635d7ac315b192d583c/src/main/java/appeng/core/MainCreativeTab.java#L41
-@Mod.EventBusSubscriber
-public class CreativeTabEvent {
 
-    /*@SubscribeEvent
-    public void buildContents(CreativeModeTabEvent.Register event) {
+@Mod.EventBusSubscriber(modid = MowLibReferences.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public final class CreativeTabEvent {
+
+    @SubscribeEvent
+    public static void buildContents(CreativeModeTabEvent.Register event) {
         event.registerCreativeModeTab(new ResourceLocation(MowLibReferences.MODID, "mowlib_tab"), builder ->
                 // Set name of tab to display
                 builder.title(Component.translatable("item_group." + MowLibReferences.MODID + ".mowlib_tab"))
@@ -30,15 +28,16 @@ public class CreativeTabEvent {
                             //populator.accept(BLOCK.get());
                         })
         );
-    }*/
+    }
 
     // Registered on the MOD event bus
 // Assume we have RegistryObject<Item> and RegistryObject<Block> called ITEM and BLOCK
-    @SubscribeEvent
-    public void buildContents(CreativeModeTabEvent.BuildContents event) {
+    /*@SubscribeEvent
+    public static void buildContents(CreativeModeTabEvent.BuildContents event) {
         // Add to ingredients tab
 
         if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+
             event.accept(DeferredRegisterItems.COLOR_APPLICATOR.get());
             event.accept(DeferredRegisterItems.SCROLL_T2_REPAIR.get());
 
@@ -46,5 +45,5 @@ public class CreativeTabEvent {
             //event.accept(BLOCK);
         }
 
-    }
+    }*/
 }
