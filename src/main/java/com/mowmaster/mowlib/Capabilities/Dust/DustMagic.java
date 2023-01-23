@@ -10,6 +10,11 @@ import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
 public class DustMagic {
 
+    //Should Probably consider making a registry for this
+    //https://github.com/hjake123/reactive/blob/main/src/main/java/com/hyperlynx/reactive/alchemy/Power.java
+    //https://github.com/hjake123/reactive/blob/main/src/main/java/com/hyperlynx/reactive/alchemy/Powers.java
+    //
+
     private int dustColor;
     private int dustAmount;
 
