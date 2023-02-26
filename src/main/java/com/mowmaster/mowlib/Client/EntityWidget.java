@@ -3,9 +3,8 @@ package com.mowmaster.mowlib.Client;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mowmaster.mowlib.MowLibUtils.MowLibRenderUtils;
-import org.joml.AxisAngle4f;
-import org.joml.Quaternionf;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
@@ -30,10 +29,8 @@ public class EntityWidget extends AbstractWidget {
     private float rotation = 135;
     private float rotationSpeed;
     private Vec3 defaultRotation, scale, offset;
-
     private EntityWidget(Builder builder) {
         super(builder.xPos, builder.yPos, builder.width, builder.height, Component.nullToEmpty(""));
-
         this.minecraft = Minecraft.getInstance();
         this.entity = builder.entity;
         this.rotationSpeed = builder.rotationSpeed;
@@ -41,23 +38,20 @@ public class EntityWidget extends AbstractWidget {
         this.scale = builder.scale;
         this.offset = builder.offset;
     }
-
     @Override
     public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         if (this.rotationSpeed != 0) {
             this.rotation += partialTicks * this.rotationSpeed;
         }
-
         renderEntity(stack, this.entity,
                 this.rotationSpeed != 0 ? new Vec3(this.defaultRotation.x(), this.rotation, this.defaultRotation.z())
                         : this.defaultRotation,
-                this.scale, this.offset, this.getX(), this.getY());
+                this.scale, this.offset, this.x, this.y);
     }
 
-
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput p_259858_) {
-
+    public void updateNarration(NarrationElementOutput narration) {
+        defaultButtonNarrationText(narration);
     }
 
     public static class Builder {
@@ -66,7 +60,6 @@ public class EntityWidget extends AbstractWidget {
                 offset = new Vec3(-1.25f, -1.75f, 0);
         private Entity entity;
         private int xPos, yPos, width, height;
-
         public Builder(Entity entity, int xPos, int yPos, int width, int height) {
             this.entity = entity;
             this.xPos = xPos;
@@ -74,32 +67,26 @@ public class EntityWidget extends AbstractWidget {
             this.width = width;
             this.height = height;
         }
-
         public EntityWidget build() {
             return new EntityWidget(this);
         }
-
         public Builder defaultRotation(float x, float y, float z) {
             this.defaultRotation = new Vec3(x, y, z);
             return this;
         }
-
         public Builder offset(float x, float y, float z) {
             this.offset = new Vec3(-x, y, z);
             return this;
         }
-
         public Builder rotationSpeed(float rotationSpeed) {
             this.rotationSpeed = rotationSpeed;
             return this;
         }
-
         public Builder scale(float x, float y, float z) {
             this.scale = new Vec3(x, y, z);
             return this;
         }
     }
-
     public static void renderEntity(PoseStack stack, Entity entity, Vec3 rotation, Vec3 scale, Vec3 offset, int xPos,
                                     int yPos) {
         stack.pushPose();
@@ -107,10 +94,10 @@ public class EntityWidget extends AbstractWidget {
         stack.scale(1.0F, 1.0F, -1.0F);
         stack.translate(0.0D, 0.0D, 1000.0D);
         stack.scale((float) scale.x(), (float) scale.y(), (float) scale.z());
-        final Quaternionf quaternion = new Quaternionf(new AxisAngle4f(180, MowLibRenderUtils.ZP));
+        final Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
         stack.mulPose(quaternion);
         stack.translate(offset.x(), offset.y(), offset.z());
-        stack.mulPose(new Quaternionf((float) -rotation.x(), (float) -rotation.y(), (float) -rotation.z(),0.0F));
+        stack.mulPose(new Quaternion((float) -rotation.x(), (float) -rotation.y(), (float) -rotation.z(), true));
         final EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         final MultiBufferSource.BufferSource buffer = MultiBufferSource
                 .immediate(Tesselator.getInstance().getBuilder());
@@ -118,13 +105,11 @@ public class EntityWidget extends AbstractWidget {
         buffer.endBatch();
         stack.popPose();
     }
-
     @SuppressWarnings("resource")
     private static <E extends Entity> void render(EntityRenderDispatcher renderManager, E entity, double xPos,
                                                   double yPos, double zPos, float rotation, float delta, PoseStack poseStack, MultiBufferSource buffer,
                                                   int packedLight) {
         final EntityRenderer<? super E> entityRenderer = renderManager.getRenderer(entity);
-
         try {
             final Vec3 renderOffset = entityRenderer.getRenderOffset(entity, delta);
             final double finalX = xPos + renderOffset.x();
@@ -133,11 +118,9 @@ public class EntityWidget extends AbstractWidget {
             poseStack.pushPose();
             poseStack.translate(finalX, finalY, finalZ);
             entityRenderer.render(entity, rotation, delta, poseStack, buffer, packedLight);
-
             // if (entity.displayFireAnimation()) {
             //     renderManager.renderFlame(poseStack, buffer, entity);
             // }
-
             poseStack.translate(-renderOffset.x(), -renderOffset.y(), -renderOffset.z());
             poseStack.popPose();
         } catch (final Exception exception) {

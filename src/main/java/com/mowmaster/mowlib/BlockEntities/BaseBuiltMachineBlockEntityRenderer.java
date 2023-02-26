@@ -1,10 +1,7 @@
 package com.mowmaster.mowlib.BlockEntities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mowmaster.mowlib.MowLibUtils.MowLibRenderUtils;
-import org.joml.AxisAngle4f;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -28,7 +25,6 @@ public class BaseBuiltMachineBlockEntityRenderer implements BlockEntityRenderer<
             Level world = p_112307_.getLevel();
             Direction facing = p_112307_.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
             List<ItemStack> stacksList = p_112307_.getListOfInsertedItemsToDisplay();
-
             if(!(stacksList.size() == 0))
             {
                 if(facing == Direction.SOUTH) {
@@ -41,7 +37,7 @@ public class BaseBuiltMachineBlockEntityRenderer implements BlockEntityRenderer<
                     }
                 }
                 if(facing == Direction.NORTH) {
-                    p_112309_.mulPose(new Quaternionf(new AxisAngle4f(180, MowLibRenderUtils.YP)));
+                    p_112309_.mulPose(Vector3f.YP.rotationDegrees(180));
                     p_112309_.translate(-1, 0, -1);
                     for(int i=0;i<stacksList.size();i++)
                     {
@@ -50,7 +46,7 @@ public class BaseBuiltMachineBlockEntityRenderer implements BlockEntityRenderer<
                     }
                 }
                 if(facing == Direction.EAST) {
-                    p_112309_.mulPose(new Quaternionf(new AxisAngle4f(90, MowLibRenderUtils.YP)));
+                    p_112309_.mulPose(Vector3f.YP.rotationDegrees(90));
                     p_112309_.translate(-1, 0, 0);
                     for(int i=0;i<stacksList.size();i++)
                     {
@@ -59,7 +55,7 @@ public class BaseBuiltMachineBlockEntityRenderer implements BlockEntityRenderer<
                     }
                 }
                 if(facing == Direction.WEST) {
-                    p_112309_.mulPose(new Quaternionf(new AxisAngle4f(270, MowLibRenderUtils.YP)));
+                    p_112309_.mulPose(Vector3f.YP.rotationDegrees(270));
                     p_112309_.translate(0, 0, -1);
                     for(int i=0;i<stacksList.size();i++)
                     {
@@ -70,7 +66,6 @@ public class BaseBuiltMachineBlockEntityRenderer implements BlockEntityRenderer<
             }
         }
     }
-
     public static void renderItemRotating(Level worldIn, PoseStack p_112309_, MultiBufferSource p_112310_, ItemStack itemStack, int p_112311_, int p_112312_)
     {
         if (!itemStack.isEmpty()) {
@@ -81,16 +76,14 @@ public class BaseBuiltMachineBlockEntityRenderer implements BlockEntityRenderer<
             long time = System.currentTimeMillis();
             float angle = (time/50) % 360;
             //float angle = (worldIn.getGameTime()) / 20.0F * (180F / (float) Math.PI);
-            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angle, MowLibRenderUtils.YP)));
+            p_112309_.mulPose(Vector3f.YP.rotationDegrees(angle));
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
             BakedModel baked = renderer.getModel(itemStack,worldIn,null,0);
             renderer.render(itemStack, ItemTransforms.TransformType.GROUND,true,p_112309_,p_112310_,p_112311_,p_112312_,baked);
-
             //Minecraft.getInstance().getItemRenderer().renderItem(itemStack, ItemCameraTransforms.TransformType.GROUND, p_112311_, p_112312_, p_112309_, p_112310_);
             p_112309_.popPose();
         }
     }
-
     public static void renderItem(Level worldIn, PoseStack p_112309_, MultiBufferSource p_112310_, ItemStack itemStack, int p_112311_, int p_112312_, float x, float y, float z, float scaleX, float scaleY, float scaleZ, float angle,int axis, boolean renderAsBlock)
     {
         if (!itemStack.isEmpty()) {
@@ -99,11 +92,11 @@ public class BaseBuiltMachineBlockEntityRenderer implements BlockEntityRenderer<
             p_112309_.scale(scaleX, scaleY, scaleZ);
             switch(axis)
             {
-                case 1: p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angle, MowLibRenderUtils.XP)));
+                case 1: p_112309_.mulPose(Vector3f.XP.rotationDegrees(angle));
                     break;
-                case 2: p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angle, MowLibRenderUtils.ZP)));
+                case 2: p_112309_.mulPose(Vector3f.ZP.rotationDegrees(angle));
                     break;
-                default: p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angle, MowLibRenderUtils.YP)));
+                default: p_112309_.mulPose(Vector3f.YP.rotationDegrees(angle));
                     break;
             }
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
@@ -117,7 +110,6 @@ public class BaseBuiltMachineBlockEntityRenderer implements BlockEntityRenderer<
             p_112309_.popPose();
         }
     }
-
     public static void renderItemStacked(Level worldIn, PoseStack p_112309_, MultiBufferSource p_112310_, ItemStack itemStack, int p_112311_, int p_112312_, float x, float y, float z, float scaleX, float scaleY, float scaleZ, float angle)
     {
         if (!itemStack.isEmpty()) {
@@ -132,7 +124,6 @@ public class BaseBuiltMachineBlockEntityRenderer implements BlockEntityRenderer<
             p_112309_.popPose();
         }
     }
-
     @Override
     public boolean shouldRenderOffScreen(BaseBuiltMachineBlockEntity p_112306_) {
         return true;

@@ -64,13 +64,13 @@ public class MowLibEffectUtils
         {
             ItemStack stack = MowLibColorReference.addColorToItemStack(colorableCrystal,currentColor);
             ResourceLocation location = new ResourceLocation(getProcessResultMobEffectColorRecipeCorrupted(getRecipeMobEffectColorCorrupted(level,stack)));
-            if(ForgeRegistries.MOB_EFFECTS.containsKey(location))return ForgeRegistries.MOB_EFFECTS.getValue(location);
+            if(Registry.MOB_EFFECT.getOptional(location).isPresent())return Registry.MOB_EFFECT.getOptional(location).get();
         }
         else if (!corruption)
         {
             ItemStack stack = MowLibColorReference.addColorToItemStack(colorableCrystal,currentColor);
             ResourceLocation location = new ResourceLocation(getProcessResultMobEffectColorRecipe(getRecipeMobEffectColor(level,stack)));
-            if(ForgeRegistries.MOB_EFFECTS.containsKey(location))return ForgeRegistries.MOB_EFFECTS.getValue(location);
+            if(Registry.MOB_EFFECT.getOptional(location).isPresent())return Registry.MOB_EFFECT.getOptional(location).get();
         }
 
         return getRandomNegativeEffect();

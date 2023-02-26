@@ -1,3 +1,4 @@
+/*
 package com.mowmaster.mowlib.EventHandlers;
 
 import com.mowmaster.mowlib.MowLibUtils.MowLibReferences;
@@ -32,7 +33,8 @@ public final class CreativeTabEvent {
 
     // Registered on the MOD event bus
 // Assume we have RegistryObject<Item> and RegistryObject<Block> called ITEM and BLOCK
-    /*@SubscribeEvent
+    */
+/*@SubscribeEvent
     public static void buildContents(CreativeModeTabEvent.BuildContents event) {
         // Add to ingredients tab
 
@@ -45,5 +47,7 @@ public final class CreativeTabEvent {
             //event.accept(BLOCK);
         }
 
-    }*/
+    }*//*
+
 }
+*/

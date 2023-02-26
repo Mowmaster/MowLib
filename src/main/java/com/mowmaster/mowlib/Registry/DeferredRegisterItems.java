@@ -5,12 +5,12 @@ import com.mowmaster.mowlib.Items.BaseDustStorageItem;
 import com.mowmaster.mowlib.Items.BaseRepairNote;
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.Items.EffectItemBase;
+import com.mowmaster.mowlib.Tabs.MowLibTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
 
@@ -20,10 +20,10 @@ public class DeferredRegisterItems
             DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
     public static final RegistryObject<Item> COLOR_APPLICATOR = ITEMS.register("applicator",
-            () -> new ColorApplicator(new Item.Properties().stacksTo(1)));
+            () -> new ColorApplicator(new Item.Properties().stacksTo(1).tab(MowLibTab.TAB_ITEMS)));
 
     public static final RegistryObject<Item> SCROLL_T2_REPAIR = ITEMS.register("repair_note",
-            () -> new BaseRepairNote(new Item.Properties().stacksTo(1)));
+            () -> new BaseRepairNote(new Item.Properties().stacksTo(1).tab(MowLibTab.TAB_ITEMS)));
 
 
     public static final RegistryObject<Item> ICON_HAND = ITEMS.register("icon_hand",
@@ -36,9 +36,6 @@ public class DeferredRegisterItems
             () -> new BaseDustStorageItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ICON_EFFECT = ITEMS.register("icon_effect",
             () -> new EffectItemBase(new Item.Properties().stacksTo(1)));
-
-
-
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

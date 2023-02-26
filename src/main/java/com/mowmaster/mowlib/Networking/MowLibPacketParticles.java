@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.Networking;
 
-import org.joml.Vector3f;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;

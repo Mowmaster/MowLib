@@ -16,15 +16,13 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 import java.util.Random;
@@ -102,7 +100,7 @@ public class BadEffectCraftingRecipeCategory implements IRecipeCategory<MobEffec
 
         //Result
         ItemStack returner = MowLibColorReference.addColorToItemStack(new ItemStack(DeferredRegisterItems.ICON_EFFECT.get()),recipe.getResultEffectColor());
-        MobEffectInstance effect = (recipe.getResultEffectName() == "")?(new MobEffectInstance(getRandomNegativeEffect())):(new MobEffectInstance(ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(recipe.getResultEffectName()))));
+        MobEffectInstance effect = (recipe.getResultEffectName() == "")?(new MobEffectInstance(getRandomNegativeEffect())):(new MobEffectInstance(Registry.MOB_EFFECT.getOptional(new ResourceLocation(recipe.getResultEffectName())).get()));
         EffectItemBase.setEffectToItem(returner,effect);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 43, 24)
                 .addItemStack(returner);
