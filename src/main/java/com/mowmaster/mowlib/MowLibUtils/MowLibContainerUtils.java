@@ -243,11 +243,13 @@ public class MowLibContainerUtils {
 
             @Override
             public ItemStack getItem(int p_18941_) {
+                if(p_18941_ >= getContainerSize())return ItemStack.EMPTY;
                 return stack.get(p_18941_);
             }
 
             @Override
             public ItemStack removeItem(int p_18942_, int p_18943_) {
+                if(p_18942_ >= getContainerSize())return ItemStack.EMPTY;
                 ItemStack oldStack = stack.get(p_18942_).copy();
                 stack.remove(p_18942_);
                 return oldStack;
@@ -255,6 +257,7 @@ public class MowLibContainerUtils {
 
             @Override
             public ItemStack removeItemNoUpdate(int p_18951_) {
+                if(p_18951_ >= getContainerSize())return ItemStack.EMPTY;
                 ItemStack oldStack = stack.get(p_18951_).copy();
                 stack.remove(p_18951_);
                 return oldStack;
@@ -262,6 +265,7 @@ public class MowLibContainerUtils {
 
             @Override
             public void setItem(int p_18944_, ItemStack p_18945_) {
+                if(p_18944_ >= getContainerSize())return;
                 if(p_18944_ == -1)stack.add(p_18945_);
                 else stack.set(p_18944_,p_18945_);
             }
