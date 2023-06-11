@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MowLibBlockPosUtils {
     // Returns true if `posOne` and `posTwo` are at most `range` blocks apart.
-    public boolean arePositionsInRange(BlockPos posOne, BlockPos posTwo, int range) {
+    public static boolean arePositionsInRange(BlockPos posOne, BlockPos posTwo, int range) {
         BlockPos distanceVector = posOne.subtract(posTwo);
         return Math.abs(distanceVector.getX()) <= range &&
             Math.abs(distanceVector.getY()) <= range &&
