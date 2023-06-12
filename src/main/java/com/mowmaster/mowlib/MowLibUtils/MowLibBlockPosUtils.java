@@ -7,14 +7,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MowLibBlockPosUtils
-{
+public class MowLibBlockPosUtils {
+    // Returns true if `posOne` and `posTwo` are at most `range` blocks apart.
+    public static boolean arePositionsInRange(BlockPos posOne, BlockPos posTwo, int range) {
+        BlockPos distanceVector = posOne.subtract(posTwo);
+        return Math.abs(distanceVector.getX()) <= range &&
+            Math.abs(distanceVector.getY()) <= range &&
+            Math.abs(distanceVector.getZ()) <= range;
+    }
+
     public BlockPos getPosOfBlockBelow(Level level, BlockPos posOfPedestal, int numBelow)
     {
         BlockState state = level.getBlockState(posOfPedestal);
