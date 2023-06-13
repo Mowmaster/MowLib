@@ -1,0 +1,16 @@
+{
+  "type": "mowlib:dualhandedcrafting",
+  "blockTarget": {
+    "tag": "minecraft:logs_that_burn"
+  },
+  "mainhandTool": {
+    "item": "minecraft:stick"
+  },
+  "offhandTool": {
+    "item": "mowlib:filter_base"
+  },
+  "result": {
+    "item": "mowlib:tag_getter",
+    "count": 8
+  }
+}

@@ -1,0 +1,8 @@
+{
+"parent": "mowlib:item/filter_enchantedexact",
+  "textures": {
+    "0": "mowlib:item/models/filters/filteritemdefault_xp",
+    "1": "mowlib:item/models/filters/filterbase",
+    "particle": "mowlib:item/models/filters/filteritemdefault_xp"
+  }
+}

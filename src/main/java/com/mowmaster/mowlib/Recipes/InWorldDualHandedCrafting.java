@@ -1,15 +1,15 @@
 package com.mowmaster.mowlib.Recipes;
 
 import com.google.gson.JsonObject;
-import com.mowmaster.mowlib.Registry.DeferredRecipeSerializers;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -96,13 +96,18 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
     }
 
     @Override
-    public ItemStack assemble(Container inv)
+    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_)
     {
-        return getResultItem().copy();
+        return getResultItem(p_267165_).copy();
     }
 
     @Override
-    public ItemStack getResultItem()
+    public ItemStack getResultItem(RegistryAccess p_267052_)
+    {
+        return resultBlock;
+    }
+
+    public ItemStack getResultItemJEI()
     {
         return resultBlock;
     }
@@ -158,10 +163,10 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
         public InWorldDualHandedCrafting fromJson(ResourceLocation recipeId, JsonObject json)
         {
             String group = GsonHelper.getAsString(json, "group", "");
-            Ingredient blockTarget = json.has("blockTarget") ? CraftingHelper.getIngredient(json.get("blockTarget")) : null;
-            Ingredient mainhandTool = json.has("mainhandTool") ? CraftingHelper.getIngredient(json.get("mainhandTool")) : null;
+            Ingredient blockTarget = json.has("blockTarget") ? CraftingHelper.getIngredient(json.get("blockTarget"),false) : null;
+            Ingredient mainhandTool = json.has("mainhandTool") ? CraftingHelper.getIngredient(json.get("mainhandTool"),false) : null;
             Boolean consumeMainhandItem = json.has("consumeMainhandItem") ? GsonHelper.getAsBoolean(json,"consumeMainhandItem") : true;
-            Ingredient offhandTool = json.has("offhandTool") ? CraftingHelper.getIngredient(json.get("offhandTool")) : null;
+            Ingredient offhandTool = json.has("offhandTool") ? CraftingHelper.getIngredient(json.get("offhandTool"),false) : null;
             Boolean consumeOffhandItem = json.has("consumeOffhandItem") ? GsonHelper.getAsBoolean(json,"consumeOffhandItem") : true;
             ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
             return createRecipe(recipeId, group, blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, result);

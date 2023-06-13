@@ -15,6 +15,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -144,7 +145,7 @@ public class BaseBuiltFueledMachineBlockEntity extends BaseBuiltMachineBlockEnti
     }
 
     public ItemStack getProcessResults(Recipe<Container> recipe) {
-        return (recipe == null)?(ItemStack.EMPTY):(recipe.getResultItem());
+        return (recipe == null)?(ItemStack.EMPTY):(recipe.getResultItem(level.registryAccess()));
     }
 
     public float getProcessResultsXP(Recipe<Container> recipe) {
@@ -364,11 +365,12 @@ public class BaseBuiltFueledMachineBlockEntity extends BaseBuiltMachineBlockEnti
         while(!stack.isEmpty()) {
             ItemEntity itementity = new ItemEntity(worldIn, d3, d4, d5, stack.split(RANDOM.nextInt(21) + 10));
             float f = 0.05F;
-            itementity.lerpMotion(0.1D*RANDOM.nextInt(-5, 5 + 1),0.1D*RANDOM.nextInt( 5 ),0.1D*RANDOM.nextInt(-5, 5 + 1));
+            itementity.lerpMotion(0.1D*RANDOM.ints(-5, 5 + 1).findFirst().getAsInt(),0.1D*RANDOM.nextInt( 5 ),0.1D*RANDOM.ints(-5, 5 + 1).findFirst().getAsInt());
             //itementity.lerpMotion(RANDOM.nextGaussian() * 0.05000000074505806D, RANDOM.nextGaussian() * 0.05000000074505806D + 0.20000000298023224D, RANDOM.nextGaussian() * 0.05000000074505806D);
             worldIn.addFreshEntity(itementity);
         }
     }
+
 
     @Override
     public void tick()

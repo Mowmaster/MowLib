@@ -3,12 +3,12 @@ package com.mowmaster.mowlib.Client;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mowmaster.mowlib.MowLibUtils.MowLibRenderUtils;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,6 +17,8 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.joml.AxisAngle4f;
+import org.joml.Quaternionf;
 
 /* EntityWidget Class by DaRealTurtyWurty:
  * https://github.com/DaRealTurtyWurty/TurtyLib/blob/main/src/main/java/io/github/darealturtywurty/turtylib/client/ui/components/EntityWidget.java
@@ -38,20 +40,22 @@ public class EntityWidget extends AbstractWidget {
         this.scale = builder.scale;
         this.offset = builder.offset;
     }
+
+
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics p_282139_, int p_268034_, int p_268009_, float p_268085_) {
         if (this.rotationSpeed != 0) {
-            this.rotation += partialTicks * this.rotationSpeed;
+            this.rotation += p_268085_ * this.rotationSpeed;
         }
-        renderEntity(stack, this.entity,
+        renderEntity(p_282139_, this.entity,
                 this.rotationSpeed != 0 ? new Vec3(this.defaultRotation.x(), this.rotation, this.defaultRotation.z())
                         : this.defaultRotation,
-                this.scale, this.offset, this.x, this.y);
+                this.scale, this.offset, this.getX(), this.getY());
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narration) {
-        defaultButtonNarrationText(narration);
+    protected void updateWidgetNarration(NarrationElementOutput p_259858_) {
+        defaultButtonNarrationText(p_259858_);
     }
 
     public static class Builder {
@@ -87,24 +91,24 @@ public class EntityWidget extends AbstractWidget {
             return this;
         }
     }
-    public static void renderEntity(PoseStack stack, Entity entity, Vec3 rotation, Vec3 scale, Vec3 offset, int xPos,
-                                    int yPos) {
-        stack.pushPose();
-        stack.translate(xPos, yPos, 1050.0F);
-        stack.scale(1.0F, 1.0F, -1.0F);
-        stack.translate(0.0D, 0.0D, 1000.0D);
-        stack.scale((float) scale.x(), (float) scale.y(), (float) scale.z());
-        final Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-        stack.mulPose(quaternion);
-        stack.translate(offset.x(), offset.y(), offset.z());
-        stack.mulPose(new Quaternion((float) -rotation.x(), (float) -rotation.y(), (float) -rotation.z(), true));
+
+    public static void renderEntity(GuiGraphics stack, Entity entity, Vec3 rotation, Vec3 scale, Vec3 offset, int xPos, int yPos) {
+
+        stack.pose().translate(xPos, yPos, 1050.0F);
+        stack.pose().scale(1.0F, 1.0F, -1.0F);
+        stack.pose().translate(0.0D, 0.0D, 1000.0D);
+        stack.pose().scale((float) scale.x(), (float) scale.y(), (float) scale.z());
+
+        stack.pose().mulPose(new Quaternionf(new AxisAngle4f(180F, MowLibRenderUtils.ZP)));
+        stack.pose().translate(offset.x(), offset.y(), offset.z());
         final EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         final MultiBufferSource.BufferSource buffer = MultiBufferSource
                 .immediate(Tesselator.getInstance().getBuilder());
-        render(renderManager, entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, stack, buffer, 15728880);
+        render(renderManager, entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, stack.pose(), buffer, 15728880);
         buffer.endBatch();
-        stack.popPose();
+        stack.pose().popPose();
     }
+
     @SuppressWarnings("resource")
     private static <E extends Entity> void render(EntityRenderDispatcher renderManager, E entity, double xPos,
                                                   double yPos, double zPos, float rotation, float delta, PoseStack poseStack, MultiBufferSource buffer,

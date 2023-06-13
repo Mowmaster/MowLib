@@ -3,13 +3,10 @@ package com.mowmaster.mowlib;
 import com.mojang.logging.LogUtils;
 import com.mowmaster.mowlib.Capabilities.Dust.CapabilityDust;
 import com.mowmaster.mowlib.Capabilities.Experience.CapabilityExperience;
-import com.mowmaster.mowlib.Client.ClientItemTooltipComponent;
+//import com.mowmaster.mowlib.Client.ClientItemTooltipComponent;
 import com.mowmaster.mowlib.Client.ItemTooltipComponent;
 import com.mowmaster.mowlib.Networking.MowLibPacketHandler;
-import com.mowmaster.mowlib.Registry.DeferredRecipeSerializers;
-import com.mowmaster.mowlib.Registry.DeferredRegisterBlocks;
-import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
-import com.mowmaster.mowlib.Registry.MowLibClientRegistry;
+import com.mowmaster.mowlib.Registry.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -59,6 +56,7 @@ public class mowlib
         DeferredRegisterItems.ITEMS.register(eventBus);
         //DeferredRegisterBlocks.BLOCKS.register(eventBus);
         DeferredRecipeSerializers.register(eventBus);
+        DeferredCreativeTabRegistry.DEF_REG.register(eventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event)
@@ -71,8 +69,8 @@ public class mowlib
 
     private void setupClientTooltips(final RegisterClientTooltipComponentFactoriesEvent event)
     {
-        LOGGER.info("Initialize "+MODNAME+" Tooltip Renders");
-        event.register(ItemTooltipComponent.class, ClientItemTooltipComponent::new);
+        //LOGGER.info("Initialize "+MODNAME+" Tooltip Renders");
+        //event.register(ItemTooltipComponent.class, ClientItemTooltipComponent::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

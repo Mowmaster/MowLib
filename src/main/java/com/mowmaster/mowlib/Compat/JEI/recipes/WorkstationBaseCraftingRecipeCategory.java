@@ -14,6 +14,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -62,6 +63,7 @@ public class WorkstationBaseCraftingRecipeCategory implements IRecipeCategory<Wo
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, WorkStationBaseTypeRecipe recipe, IFocusGroup focuses) {
 
+
         //Mainhand
         builder.addSlot(RecipeIngredientRole.INPUT, 76, 33)
                 .addIngredients(recipe.getIngredients().get(0));
@@ -70,12 +72,11 @@ public class WorkstationBaseCraftingRecipeCategory implements IRecipeCategory<Wo
                 .addItemStack(new ItemStack(DeferredRegisterItems.ICON_WORKSTATIONBASE.get()));
         //Result
         builder.addSlot(RecipeIngredientRole.OUTPUT, 22, 95)
-                .addItemStack(recipe.getResultItem());
+                .addItemStack(recipe.getResultItemJEI());
     }
 
     @Override
-    public void draw(WorkStationBaseTypeRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(WorkStationBaseTypeRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         RenderSystem.enableBlend();
-        //this.overlay.draw(stack, 48, 0);
     }
 }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mowlib:filter_base"
+    },
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    }
+  ],
+  "result": {
+    "item": "mowlib:filter_enchantedcount"
+  }
+}

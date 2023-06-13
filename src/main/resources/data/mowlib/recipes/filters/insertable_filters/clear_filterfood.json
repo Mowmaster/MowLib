@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mowlib:filter_food"
+    }
+  ],
+  "result": {
+    "item": "mowlib:filter_food"
+  }
+}

@@ -1,0 +1,8 @@
+{
+"parent": "mowlib:item/filter_mod",
+  "textures": {
+    "0": "mowlib:item/models/filters/filteritemdefault_item",
+    "1": "mowlib:item/models/filters/filtermod",
+    "particle": "mowlib:item/models/filters/filteritemdefault_item"
+  }
+}

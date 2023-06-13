@@ -1,0 +1,8 @@
+{
+"parent": "mowlib:item/filter_durability",
+  "textures": {
+    "0": "mowlib:item/models/filters/filteritemdefault_dust",
+    "1": "mowlib:item/models/filters/filterblockfuzzy",
+    "particle": "mowlib:item/models/filters/filteritemdefault_dust"
+  }
+}

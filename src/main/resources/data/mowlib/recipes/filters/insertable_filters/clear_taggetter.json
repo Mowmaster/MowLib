@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mowlib:tag_getter"
+    }
+  ],
+  "result": {
+    "item": "mowlib:tag_getter"
+  }
+}

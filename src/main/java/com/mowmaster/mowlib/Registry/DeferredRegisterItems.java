@@ -5,12 +5,13 @@ import com.mowmaster.mowlib.Items.BaseDustStorageItem;
 import com.mowmaster.mowlib.Items.BaseRepairNote;
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.Items.EffectItemBase;
-import com.mowmaster.mowlib.Tabs.MowLibTab;
+import com.mowmaster.mowlib.Items.Filters.*;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
 
@@ -20,10 +21,10 @@ public class DeferredRegisterItems
             DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
     public static final RegistryObject<Item> COLOR_APPLICATOR = ITEMS.register("applicator",
-            () -> new ColorApplicator(new Item.Properties().stacksTo(1).tab(MowLibTab.TAB_ITEMS)));
+            () -> new ColorApplicator(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> SCROLL_T2_REPAIR = ITEMS.register("repair_note",
-            () -> new BaseRepairNote(new Item.Properties().stacksTo(1).tab(MowLibTab.TAB_ITEMS)));
+            () -> new BaseRepairNote(new Item.Properties().stacksTo(1)));
 
 
     public static final RegistryObject<Item> ICON_HAND = ITEMS.register("icon_hand",
@@ -36,6 +37,47 @@ public class DeferredRegisterItems
             () -> new BaseDustStorageItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ICON_EFFECT = ITEMS.register("icon_effect",
             () -> new EffectItemBase(new Item.Properties().stacksTo(1)));
+
+    public static final RegistryObject<Item> FILTER_BASE = ITEMS.register("filter_base",
+            () -> new FilterBaseItem(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_ITEM = ITEMS.register("filter_item",
+            () -> new FilterItem(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_ITEMSTACK = ITEMS.register("filter_itemstack",
+            () -> new FilterItemStack(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_DURABILITY = ITEMS.register("filter_durability",
+            () -> new FilterDurability(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_ENCHANTED = ITEMS.register("filter_enchanted",
+            () -> new FilterEnchanted(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_ENCHANTED_COUNT = ITEMS.register("filter_enchantedcount",
+            () -> new FilterEnchantCount(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_ENCHANTED_EXACT = ITEMS.register("filter_enchantedexact",
+            () -> new FilterEnchantedExact(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_ENCHANTED_FUZZY = ITEMS.register("filter_enchantedfuzzy",
+            () -> new FilterEnchantedFuzzy(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_FOOD = ITEMS.register("filter_food",
+            () -> new FilterFood(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_MOD = ITEMS.register("filter_mod",
+            () -> new FilterMod(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_RESTRICTED = ITEMS.register("filter_restricted",
+            () -> new FilterRestricted(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_TAG = ITEMS.register("filter_tag",
+            () -> new FilterTag(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_TAG_MACHINE = ITEMS.register("filter_tag_machine",
+            () -> new FilterTagMachine(new Item.Properties()));
+    public static final RegistryObject<Item> TAG_GETTER = ITEMS.register("tag_getter",
+            () -> new TagGetterItem(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_ITEM_MACHINE = ITEMS.register("filter_item_machine",
+            () -> new FilterItemMachine(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_ITEMSTACK_MACHINE = ITEMS.register("filter_itemstack_machine",
+            () -> new FilterItemStackMachine(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_BLOCKS_ON_CLICK_EXACT = ITEMS.register("filter_blocksonclickexact",
+            () -> new FilterBlocksByClickExact(new Item.Properties()));
+    public static final RegistryObject<Item> FILTER_BLOCKS_ON_CLICK_FUZZY = ITEMS.register("filter_blocksonclickfuzzy",
+            () -> new FilterBlocksByClickFuzzy(new Item.Properties()));
+
+
+
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

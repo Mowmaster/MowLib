@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,10 +20,12 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -134,19 +137,23 @@ public class BaseColoredBlock extends Block implements IColorableBlock {
 
     //Should Fix Building Gadgets dropps issues
     //https://github.com/Direwolf20-MC/MiningGadgets/blob/1.19/src/main/java/com/direwolf20/mininggadgets/common/tiles/RenderBlockTileEntity.java#L444
+
     @Override
-    public List<ItemStack> getDrops(BlockState p_60537_, LootContext.Builder p_60538_) {
-        if (p_60537_.getBlock() instanceof BaseColoredBlock) {
+    public List<ItemStack> getDrops(BlockState p_287732_, LootParams.Builder p_287596_) {
+        if (p_287732_.getBlock() instanceof BaseColoredBlock) {
             List<ItemStack> stacks = new ArrayList<>();
             ItemStack itemstack = new ItemStack(this);
-            int getColor = MowLibColorReference.getColorFromStateInt(p_60537_);
+            int getColor = MowLibColorReference.getColorFromStateInt(p_287732_);
             ItemStack newStack = MowLibColorReference.addColorToItemStack(itemstack,getColor);
             newStack.setCount(1);
             stacks.add(newStack);
             return stacks;
         }
-        return super.getDrops(p_60537_, p_60538_);
+        return super.getDrops(p_287732_, p_287596_);
     }
+
+
+
 
     /*@Override
     public void onRemove(BlockState p_60515_, Level p_60516_, BlockPos p_60517_, BlockState p_60518_, boolean p_60519_) {

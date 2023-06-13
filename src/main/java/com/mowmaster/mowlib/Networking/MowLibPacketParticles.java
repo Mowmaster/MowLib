@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.Networking;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -125,7 +125,7 @@ public class MowLibPacketParticles
                                 double z3 = z2 - z1;
 
                                 //Currently particles go from the block being ticked(in grower) to the pedestal [this needs reversed somehow]
-                                BlockPos pos = new BlockPos(x1,y1,z1);
+                                BlockPos pos = new BlockPos((int)x1,(int)y1,(int)z1);
                                 Random rand = new Random();
                                 world.addParticle(ParticleTypes.ENCHANT, (double)pos.getX() + 0.5d, (double)pos.getY()+1.25d, (double)pos.getZ() + 0.5d, (double)((float)x3 + rand.nextFloat()) - 0.5D, (double)((float)y3 - rand.nextFloat()), (double)((float)z3 + rand.nextFloat()) - 0.5D);
                                 //EnchantmentTableParticle

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mowmaster.mowlib.Compat.JEI.JEIRecipeTypes;
 import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
+import com.mowmaster.mowlib.Recipes.MobEffectColorRecipeCorrupted;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -14,6 +15,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -70,12 +72,12 @@ public class DualHandedCraftingRecipeCategory implements IRecipeCategory<InWorld
                 .addIngredients(recipe.getIngredients().get(0));
         //Result
         builder.addSlot(RecipeIngredientRole.OUTPUT, 90, 95)
-                .addItemStack(recipe.getResultItem());
+                .addItemStack(recipe.getResultItemJEI());
     }
 
+
     @Override
-    public void draw(InWorldDualHandedCrafting recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(InWorldDualHandedCrafting recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         RenderSystem.enableBlend();
-        //this.overlay.draw(stack, 48, 0);
     }
 }

@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -68,7 +69,12 @@ public class MobEffectColorRecipe implements Recipe<Container>
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
+        return new ItemStack(Items.BARRIER);
+    }
+
+    public ItemStack getResultItemJEI()
+    {
         return new ItemStack(Items.BARRIER);
     }
 
@@ -96,9 +102,9 @@ public class MobEffectColorRecipe implements Recipe<Container>
     }
 
     @Override
-    public ItemStack assemble(Container inv)
+    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_)
     {
-        return getResultItem().copy();
+        return getResultItem(p_267165_).copy();
     }
 
     public int getResultEffectColor() { return getEffectColor(); }
@@ -172,7 +178,7 @@ public class MobEffectColorRecipe implements Recipe<Container>
         public MobEffectColorRecipe fromJson(ResourceLocation recipeId, JsonObject json)
         {
             String group = GsonHelper.getAsString(json, "group", "");
-            Ingredient input = json.has("input") ? CraftingHelper.getIngredient(json.get("input")) : null;
+            Ingredient input = json.has("input") ? CraftingHelper.getIngredient(json.get("input"),false) : null;
             int color = json.has("color") ? GsonHelper.getAsInt(json,"color") : (MowLibColorReference.DEFAULTCOLOR);
             String mobEffect = json.has("mobEffect") ? GsonHelper.getAsString(json,"mobEffect") : "";
             int instaTickDuration = json.has("instaTickDuration") ? GsonHelper.getAsInt(json,"instaTickDuration") : 1;

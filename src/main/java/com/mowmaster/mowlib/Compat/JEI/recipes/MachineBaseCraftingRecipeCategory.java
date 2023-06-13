@@ -14,6 +14,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -68,12 +69,11 @@ public class MachineBaseCraftingRecipeCategory implements IRecipeCategory<Machin
                 .addItemStack(new ItemStack(DeferredRegisterItems.ICON_MACHINEBASE.get()));
         //Result
         builder.addSlot(RecipeIngredientRole.OUTPUT, 22, 95)
-                .addItemStack(recipe.getResultItem());
+                .addItemStack(recipe.getResultItemJEI());
     }
 
     @Override
-    public void draw(MachineBaseTypeRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(MachineBaseTypeRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         RenderSystem.enableBlend();
-        //this.overlay.draw(stack, 48, 0);
     }
 }

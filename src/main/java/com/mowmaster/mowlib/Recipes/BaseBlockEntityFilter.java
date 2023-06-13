@@ -2,6 +2,7 @@ package com.mowmaster.mowlib.Recipes;
 
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -67,7 +68,12 @@ public class BaseBlockEntityFilter implements Recipe<Container>
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
+        return new ItemStack(Items.BARRIER);
+    }
+
+    public ItemStack getResultItemJEI()
+    {
         return new ItemStack(Items.BARRIER);
     }
 
@@ -87,9 +93,8 @@ public class BaseBlockEntityFilter implements Recipe<Container>
     }
 
     @Override
-    public ItemStack assemble(Container inv)
-    {
-        return getResultItem().copy();
+    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
+        return getResultItem(p_267165_).copy();
     }
 
     public String getResultEntityString()
@@ -170,7 +175,7 @@ public class BaseBlockEntityFilter implements Recipe<Container>
         public BaseBlockEntityFilter fromJson(ResourceLocation recipeId, JsonObject json)
         {
             String group = GsonHelper.getAsString(json, "group", "");
-            Ingredient input = json.has("input") ? CraftingHelper.getIngredient(json.get("input")) : null;
+            Ingredient input = json.has("input") ? CraftingHelper.getIngredient(json.get("input"),false) : null;
             String entityString = json.has("entityString") ? GsonHelper.getAsString(json,"entityString") : "";
             //most people will be setting up mobtype and not mob category so default to 1
             int mobType = json.has("mobType") ? GsonHelper.getAsInt(json,"mobType") : (1);

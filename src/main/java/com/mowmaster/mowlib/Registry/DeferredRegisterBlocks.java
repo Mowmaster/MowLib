@@ -1,22 +1,20 @@
 package com.mowmaster.mowlib.Registry;
 
 import com.mojang.serialization.Codec;
-import com.mowmaster.mowlib.Blocks.BaseBlocks.BaseWorkStationBlock;
-import com.mowmaster.mowlib.Tabs.MowLibTab;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
 import java.util.function.Supplier;
+
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
 public class DeferredRegisterBlocks
@@ -37,7 +35,7 @@ public class DeferredRegisterBlocks
 
     private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
         DeferredRegisterItems.ITEMS.register(name, () -> new BlockItem(block.get(),
-                new Item.Properties().tab(MowLibTab.TAB_ITEMS)));
+                new Item.Properties()));
     }
 
     public static void register(IEventBus eventBus) {
@@ -46,7 +44,7 @@ public class DeferredRegisterBlocks
 
     //For Geodes
     private static <P extends PlacementModifier> PlacementModifierType<P> register(String name, Codec<P> codec) {
-        return Registry.register(Registry.PLACEMENT_MODIFIERS, name, () -> {
+        return Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, name, () -> {
             return codec;
         });
     }

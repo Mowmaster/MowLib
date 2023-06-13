@@ -3,6 +3,7 @@ package com.mowmaster.mowlib.Recipes;
 import com.google.gson.JsonObject;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -78,13 +79,18 @@ public class WorkStationBaseTypeRecipe implements Recipe<Container>
     }
 
     @Override
-    public ItemStack assemble(Container inv)
+    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_)
     {
-        return getResultItem().copy();
+        return getResultItem(p_267165_).copy();
     }
 
     @Override
-    public ItemStack getResultItem()
+    public ItemStack getResultItem(RegistryAccess p_267052_)
+    {
+        return output;
+    }
+
+    public ItemStack getResultItemJEI()
     {
         return output;
     }
@@ -139,7 +145,7 @@ public class WorkStationBaseTypeRecipe implements Recipe<Container>
         public WorkStationBaseTypeRecipe fromJson(ResourceLocation recipeId, JsonObject json)
         {
             String group = GsonHelper.getAsString(json, "group", "");
-            Ingredient input = json.has("input") ? CraftingHelper.getIngredient(json.get("input")) : null;
+            Ingredient input = json.has("input") ? CraftingHelper.getIngredient(json.get("input"),false) : null;
             ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
             return createRecipe(recipeId, group, input, result);
         }

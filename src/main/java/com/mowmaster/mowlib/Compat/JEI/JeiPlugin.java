@@ -74,16 +74,53 @@ public class JeiPlugin implements IModPlugin
 
         this.registerIngredientInfo(registration, DeferredRegisterItems.COLOR_APPLICATOR.get());
         this.registerIngredientInfo(registration, DeferredRegisterItems.SCROLL_T2_REPAIR.get());
+
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_BASE.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_BASE.get());
+        this.registerIngredientBase(registration, DeferredRegisterItems.FILTER_BASE.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_ITEM.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ITEM.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_ITEMSTACK.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ITEMSTACK.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_DURABILITY.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_DURABILITY.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_ENCHANTED.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ENCHANTED.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_ENCHANTED_COUNT.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ENCHANTED_COUNT.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_ENCHANTED_FUZZY.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ENCHANTED_FUZZY.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_ENCHANTED_EXACT.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ENCHANTED_EXACT.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_FOOD.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_FOOD.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_MOD.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_MOD.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_RESTRICTED.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_RESTRICTED.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_TAG.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_TAG.get());
+
+        this.registerIngredientDescription(registration, DeferredRegisterItems.TAG_GETTER.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.TAG_GETTER.get());
+
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_TAG_MACHINE.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_TAG_MACHINE.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_BLOCKS_ON_CLICK_EXACT.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_BLOCKS_ON_CLICK_EXACT.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_BLOCKS_ON_CLICK_FUZZY.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_BLOCKS_ON_CLICK_FUZZY.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_ITEM_MACHINE.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ITEM_MACHINE.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_ITEMSTACK_MACHINE.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ITEMSTACK_MACHINE.get());
     }
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        IModPlugin.super.registerRecipeTransferHandlers(registration);
         IStackHelper stackHelper = registration.getJeiHelpers().getStackHelper();
         IRecipeTransferHandlerHelper handlerHelper = registration.getTransferHelper();
-        /*
-        registration.addUniversalRecipeTransferHandler(new StorageControllerRecipeTransferHandler<>(
-                StorageControllerContainer.class, handlerHelper));
-        */
     }
 
     @Override
@@ -111,6 +148,26 @@ public class JeiPlugin implements IModPlugin
     public void registerIngredientInfo(IRecipeRegistration registration, ItemLike ingredient) {
         registration.addIngredientInfo(new ItemStack(ingredient.asItem()), VanillaTypes.ITEM_STACK,
                 Component.translatable("jei." + MODID + ".item." + ForgeRegistries.ITEMS.getKey(ingredient.asItem()).getPath() + ".description"));
+    }
+
+    public void registerIngredientBase(IRecipeRegistration registration, ItemLike ingredient) {
+        registration.addIngredientInfo(new ItemStack(ingredient.asItem()), VanillaTypes.ITEM_STACK,
+                Component.translatable("jei." + MODID + "." + ForgeRegistries.ITEMS.getKey(ingredient.asItem()).getPath() + ".base_description"));
+    }
+
+    public void registerIngredientDescription(IRecipeRegistration registration, ItemLike ingredient) {
+        registration.addIngredientInfo(new ItemStack(ingredient.asItem()), VanillaTypes.ITEM_STACK,
+                Component.translatable("jei." + MODID + "." + ForgeRegistries.ITEMS.getKey(ingredient.asItem()).getPath() + ".description"));
+    }
+
+    public void registerIngredientInteraction(IRecipeRegistration registration, ItemLike ingredient) {
+        registration.addIngredientInfo(new ItemStack(ingredient.asItem()), VanillaTypes.ITEM_STACK,
+                Component.translatable("jei." + MODID + "." + ForgeRegistries.ITEMS.getKey(ingredient.asItem()).getPath() + ".interaction"));
+    }
+
+    public void registerIngredientCrafting(IRecipeRegistration registration, ItemLike ingredient) {
+        registration.addIngredientInfo(new ItemStack(ingredient.asItem()), VanillaTypes.ITEM_STACK,
+                Component.translatable("jei." + MODID + "." + ForgeRegistries.ITEMS.getKey(ingredient.asItem()).getPath() + ".crafting"));
     }
 
 }

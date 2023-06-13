@@ -57,8 +57,8 @@ public class BaseWorkStationBlock extends BaseColoredBlock
         return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(WorkStationBaseTypeRecipe.Type.INSTANCE,cont,level).get(0) : null;
     }
 
-    protected Collection<ItemStack> getProcessResults(WorkStationBaseTypeRecipe recipe) {
-        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem()));
+    protected Collection<ItemStack> getProcessResults(Level level,WorkStationBaseTypeRecipe recipe) {
+        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem(level.registryAccess())));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class BaseWorkStationBlock extends BaseColoredBlock
             }
             else
             {
-                Collection<ItemStack> jsonResults = getProcessResults(getRecipe(p_60504_,itemInHand));
+                Collection<ItemStack> jsonResults = getProcessResults(p_60504_, getRecipe(p_60504_,itemInHand));
                 ItemStack returnedRecipe = ItemStack.EMPTY;
                 returnedRecipe = (jsonResults.iterator().next().isEmpty())?(ItemStack.EMPTY):(jsonResults.iterator().next());
                 if(!jsonResults.iterator().next().isEmpty())

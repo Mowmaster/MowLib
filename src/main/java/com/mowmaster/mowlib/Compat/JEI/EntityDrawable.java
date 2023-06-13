@@ -3,6 +3,7 @@ package com.mowmaster.mowlib.Compat.JEI;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mowmaster.mowlib.Client.EntityWidget;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
@@ -31,8 +32,8 @@ public class EntityDrawable implements IDrawableAnimated
     }
 
     @Override
-    public void draw(PoseStack poseStack, int xOffset, int yOffset) {
-        EntityWidget.renderEntity(poseStack, livingEntity, new Vec3(15, -225, 0),
+    public void draw(GuiGraphics guiGraphics, int xOffset, int yOffset) {
+        EntityWidget.renderEntity(guiGraphics, livingEntity, new Vec3(15, -225, 0),
                 new Vec3(32, 32, 32), Vec3.ZERO, xOffset, yOffset);
     }
 }

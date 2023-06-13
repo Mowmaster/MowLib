@@ -5,7 +5,6 @@ import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.MowLibUtils.MowLibContainerUtils;
 import com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils;
 import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
-import com.mowmaster.mowlib.api.IColorable;
 import com.mowmaster.mowlib.api.IDustStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
@@ -48,7 +47,7 @@ public class DualHandedCraftingHandler
                     InWorldDualHandedCrafting getRecipe = getRecipe(level,blockTarget,player.getMainHandItem(),player.getOffhandItem());
                     if(getRecipe != null)
                     {
-                        ItemStack getResultItem = getBlockItemResult(getRecipe).stream().findFirst().get().copy();
+                        ItemStack getResultItem = getBlockItemResult(level,getRecipe).stream().findFirst().get().copy();
                         if(getResultItem != null)
                         {
                             if(!player.isCreative())
@@ -145,8 +144,8 @@ public class DualHandedCraftingHandler
         return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(InWorldDualHandedCrafting.Type.INSTANCE,cont,level).get(0) : null;
     }
 
-    protected static Collection<ItemStack> getBlockItemResult(InWorldDualHandedCrafting recipe) {
-        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem()));
+    protected static Collection<ItemStack> getBlockItemResult(Level level, InWorldDualHandedCrafting recipe) {
+        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem(level.registryAccess())));
     }
 
     protected static Boolean consumeMainHandItemOrDurability(InWorldDualHandedCrafting recipe) {

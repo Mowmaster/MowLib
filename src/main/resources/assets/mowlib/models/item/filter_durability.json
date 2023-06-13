@@ -1,0 +1,15 @@
+{
+"parent": "mowlib:item/filters/itemfilter",
+  "textures": {
+    "0": "mowlib:item/models/filters/filteritemdefault_item",
+    "1": "mowlib:item/models/filters/filterdurability",
+    "particle": "mowlib:item/models/filters/filteritemdefault_item"
+  },
+  "overrides": [
+    { "predicate": { "mowlib:filter_mode": 0}, "model": "mowlib:item/filters/durability/filter_item"},
+    { "predicate": { "mowlib:filter_mode": 1}, "model": "mowlib:item/filters/durability/filter_fluid"},
+    { "predicate": { "mowlib:filter_mode": 2}, "model": "mowlib:item/filters/durability/filter_energy"},
+    { "predicate": { "mowlib:filter_mode": 3}, "model": "mowlib:item/filters/durability/filter_xp"},
+    { "predicate": { "mowlib:filter_mode": 4}, "model": "mowlib:item/filters/durability/filter_dust"}
+  ]
+}

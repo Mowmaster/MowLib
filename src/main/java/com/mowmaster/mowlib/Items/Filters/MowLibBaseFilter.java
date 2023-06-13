@@ -10,11 +10,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -37,6 +39,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
@@ -412,8 +415,7 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
         List<ItemStack> stackCurrent = readFilterQueueFromNBT(stack,getItemTransportMode(stack));
         NonNullList<ItemStack> nonnulllist = NonNullList.create();
         stackCurrent.forEach(nonnulllist::add);
-
-        return Optional.of(new ItemTooltipComponent(nonnulllist));
+        return Optional.of(new BundleTooltip(nonnulllist, nonnulllist.size()-1));
     }
 
     public Component filterTypeTooltip(ItemTransferMode mode, boolean filterType)

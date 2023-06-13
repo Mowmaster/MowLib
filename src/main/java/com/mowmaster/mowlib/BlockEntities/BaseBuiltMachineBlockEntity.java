@@ -257,7 +257,7 @@ public class BaseBuiltMachineBlockEntity extends MowLibBaseBlockEntity {
             List<ItemStack> stackie = new ArrayList<>();
             for(MachineBlockRepairItemsRecipe recipe : recipes)
             {
-                if(!recipe.getResultItem().isEmpty()) stackie.add(recipe.getResultItem());
+                if(!recipe.getResultItem(level.registryAccess()).isEmpty()) stackie.add(recipe.getResultItem(level.registryAccess()));
             }
             return recipes.size() > 0 ? stackie : new ArrayList<>();
         }
@@ -273,7 +273,7 @@ public class BaseBuiltMachineBlockEntity extends MowLibBaseBlockEntity {
         List<String> stackie = new ArrayList<>();
         for(MachineBlockRepairItemsRecipe recipe : recipes)
         {
-            if(!recipe.getResultItem().isEmpty()) stackie.add(recipe.getResultTag());
+            if(!recipe.getResultItem(level.registryAccess()).isEmpty()) stackie.add(recipe.getResultTag());
         }
         return recipes.size() > 0 ? stackie : new ArrayList<>();
     }
@@ -473,7 +473,7 @@ public class BaseBuiltMachineBlockEntity extends MowLibBaseBlockEntity {
     }
 
     protected Collection<ItemStack> getProcessResultRenderItem(MachineBlockRenderItemsRecipe recipe) {
-        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem()));
+        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem(level.registryAccess())));
     }
 
     public Block getBlockForThisBlockEntity()
