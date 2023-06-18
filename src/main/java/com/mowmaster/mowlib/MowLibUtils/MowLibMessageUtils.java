@@ -175,5 +175,17 @@ public class MowLibMessageUtils
         player.displayClientMessage(message,false);
     }
 
+    public static void modeBasedTextOutputPopup(Player player, int mode, boolean localized, String modid, List<String> modeTextList, List<ChatFormatting> modeColorList)
+    {
+        modeTextList.add(".error");
+        modeColorList.add(ChatFormatting.DARK_RED);
+        int getMode = (mode>=modeTextList.size())?(modeTextList.size()-1):(mode);
+        MutableComponent type;
+        if(localized) { type = Component.translatable(modid + modeTextList.get(getMode)); }
+        else { type = Component.literal(modeTextList.get(getMode)); }
+        type.withStyle(modeColorList.get(getMode));
+        player.displayClientMessage(type, true);
+    }
+
 
 }

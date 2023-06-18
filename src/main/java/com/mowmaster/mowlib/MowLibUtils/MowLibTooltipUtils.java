@@ -266,6 +266,17 @@ public class MowLibTooltipUtils
         }
     }
 
+    public static void modeBasedTextOutputTooltip(int mode, boolean localized, String modid, List<String> modeTextList, ChatFormatting textColor, List<Component> comp)
+    {
+        modeTextList.add(".error");
+        int getMode = (mode>=modeTextList.size())?(modeTextList.size()-1):(mode);
+        MutableComponent type;
+        if(localized) { type = Component.translatable(modid + modeTextList.get(getMode)); }
+        else { type = Component.literal(modeTextList.get(getMode)); }
+        type.withStyle(textColor);
+        comp.add(type);
+    }
+
     public static String getEnchantRomanNumeral(int value)
     {
         switch(value)

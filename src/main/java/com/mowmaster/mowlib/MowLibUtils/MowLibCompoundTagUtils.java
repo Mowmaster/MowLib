@@ -181,6 +181,48 @@ public class MowLibCompoundTagUtils
     =================================================================
     =================================================================
     ===============================================================*/
+
+    //Is this basically the same as below? why yes, yes it is, but you know what? Sometimes my brain is dumb and needs the extra help...
+    public static ItemStack writeIntegerCompoundTagToItemStack(ItemStack stackIn, String ModID, String compoundIntString, int intValue)
+    {
+        CompoundTag tagOnStack = stackIn.getOrCreateTag();
+        tagOnStack.putInt(ModID + compoundIntString,intValue);
+        stackIn.setTag(tagOnStack);
+        return stackIn;
+    }
+
+    public static int getCompoundTagFromItemStack(ItemStack stackIn, String ModID, String compoundIntString)
+    {
+        CompoundTag tagOnStack = stackIn.getOrCreateTag();
+        if(tagOnStack.contains(ModID + compoundIntString))
+        {
+            int intValue = tagOnStack.getInt(ModID + compoundIntString);
+            return intValue;
+        }
+
+        return 0;
+    }
+
+    public static ItemStack writeIntegerCompoundTagToItemStack(ItemStack stackIn, String compoundIntStringWithModID, int intValue)
+    {
+        CompoundTag tagOnStack = stackIn.getOrCreateTag();
+        tagOnStack.putInt(compoundIntStringWithModID,intValue);
+        stackIn.setTag(tagOnStack);
+        return stackIn;
+    }
+
+    public static int getCompoundTagFromItemStack(ItemStack stackIn, String compoundIntStringWithModID)
+    {
+        CompoundTag tagOnStack = stackIn.getOrCreateTag();
+        if(tagOnStack.contains(compoundIntStringWithModID))
+        {
+            int intValue = tagOnStack.getInt(compoundIntStringWithModID);
+            return intValue;
+        }
+
+        return 0;
+    }
+
     public static CompoundTag writeIntegerToNBT(String ModID, @Nullable CompoundTag inputNBT, int input, String intName) {
         CompoundTag compound = inputNBT != null ? inputNBT : new CompoundTag();
         compound.putInt(ModID + intName, input);

@@ -51,6 +51,11 @@ public class MowLibBaseBlockEntity extends BlockEntity {
 
     }
 
+    public ItemStack getWorkCard()
+    {
+        return ItemStack.EMPTY;
+    }
+
     @Override
     public void load(CompoundTag p_155245_) {
         super.load(p_155245_);
