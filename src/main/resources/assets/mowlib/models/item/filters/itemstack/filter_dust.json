@@ -2,7 +2,7 @@
 "parent": "mowlib:item/filter_durability",
   "textures": {
     "0": "mowlib:item/models/filters/filteritemdefault_dust",
-    "1": "mowlib:item/models/filters/filteritemtack",
+    "1": "mowlib:item/models/filters/filteritemstack",
     "particle": "mowlib:item/models/filters/filteritemdefault_dust"
   }
 }

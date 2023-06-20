@@ -1,45 +1,29 @@
 package com.mowmaster.mowlib.BlockEntities;
 
 
-import com.mowmaster.mowlib.Capabilities.Dust.DustMagic;
-import com.mowmaster.mowlib.Items.BaseDustStorageBlockItem;
-import com.mowmaster.mowlib.Items.BaseDustStorageItem;
-import com.mowmaster.mowlib.MowLibUtils.MowLibContainerUtils;
-import com.mowmaster.mowlib.Networking.MowLibPacketHandler;
-import com.mowmaster.mowlib.Networking.MowLibPacketParticles;
-import com.mowmaster.mowlib.Recipes.MachineBlockRenderItemsRecipe;
-import com.mowmaster.mowlib.Recipes.MachineBlockRepairItemsRecipe;
+import com.mowmaster.mowlib.MowLibUtils.MowLibFakePlayer;
+import com.mowmaster.mowlib.MowLibUtils.MowLibOwnerUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.common.util.FakePlayer;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
-
-import static com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils.spawnItemStack;
+import java.lang.ref.WeakReference;
 
 public class MowLibBaseBlockEntity extends BlockEntity {
 
+    private WeakReference<FakePlayer> basePlayer;
+    private MowLibBaseBlockEntity getBaseBlockEntity() { return this; }
     public BlockPos getPos() { return this.worldPosition; }
 
     public MowLibBaseBlockEntity(BlockEntityType<?> p_155228_, BlockPos p_155229_, BlockState p_155230_) {
@@ -55,6 +39,74 @@ public class MowLibBaseBlockEntity extends BlockEntity {
     {
         return ItemStack.EMPTY;
     }
+    
+    /*==========================================================
+    ============================================================
+    =====                Fake Player Start                ======
+    ============================================================
+    ==========================================================*/
+
+    public WeakReference<FakePlayer> getFakePlayer()
+    {
+        return basePlayer;
+    }
+
+    public void setFakePlayer()
+    {
+        basePlayer = fakeBasePlayer(getBaseBlockEntity());
+        if(basePlayer.get() != null)
+        {
+            basePlayer.get().setPos(getPos().getX(),getPos().getY(),getPos().getZ());
+            basePlayer.get().setRespawnPosition(basePlayer.get().getRespawnDimension(), getPos(),0F,false,false);
+        }
+    }
+
+    public WeakReference<FakePlayer> getBasePlayer(MowLibBaseBlockEntity baseBlockEntity) {
+        if(baseBlockEntity.getFakePlayer() == null || baseBlockEntity.getFakePlayer().get() == null)
+        {
+            baseBlockEntity.setFakePlayer();
+        }
+
+        return baseBlockEntity.getFakePlayer();
+    }
+
+    public void updatePedestalPlayer(MowLibBaseBlockEntity baseBlockEntity)
+    {
+        if(baseBlockEntity.getFakePlayer() != null)
+        {
+            baseBlockEntity.setFakePlayer();
+        }
+    }
+
+    //This will assign base params to a new fake player unless overwritten
+    public WeakReference<FakePlayer> fakeBasePlayer(MowLibBaseBlockEntity baseBlockEntity)
+    {
+        Level level = baseBlockEntity.getLevel();
+        if(level instanceof ServerLevel slevel)
+        {
+            return new WeakReference<FakePlayer>(new MowLibFakePlayer(slevel , null, null,getPos(),null,"[FakePlayer_"+ getPos().getX() + "x " + getPos().getY() + "y " + getPos().getZ() + "z]"));
+        }
+        else return null;
+    }
+
+    /*==========================================================
+    ============================================================
+    =====                 Fake Player End                 ======
+    ============================================================
+    ==========================================================*/
+
+    public void actionOnNeighborBelowChange(BlockPos belowBlock) {}
+
+    public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, MowLibBaseBlockEntity e) {
+        e.tick();
+    }
+
+    public static <E extends BlockEntity> void clientTick(Level level, BlockPos blockPos, BlockState blockState, MowLibBaseBlockEntity e) {
+        e.tickClient();
+    }
+
+    public void tick() {}
+    public void tickClient(){}
 
     @Override
     public void load(CompoundTag p_155245_) {

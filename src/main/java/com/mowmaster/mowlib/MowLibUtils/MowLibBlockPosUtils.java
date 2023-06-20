@@ -456,4 +456,75 @@ public class MowLibBlockPosUtils {
 
         return Math.max(Math.max(xF,yF),zF);
     }
+
+    public static BlockPos offsetBasedOnDirection(Direction enumfacing, BlockPos posOfPedestal, double x, double y, double z)
+    {
+        BlockPos blockBelow = posOfPedestal;
+        switch (enumfacing)
+        {
+            case UP:
+                return new BlockPos((int)(blockBelow.getX() + x), (int)(blockBelow.getY() + y), (int)(blockBelow.getZ() + z));
+            case DOWN:
+                return new BlockPos((int)(blockBelow.getX() + x), (int)(blockBelow.getY() + y + 1D), (int)(blockBelow.getZ() + z));
+            case NORTH:
+                return new BlockPos((int)(blockBelow.getX() + x), (int)(blockBelow.getY() + z), (int)(blockBelow.getZ() + y));
+            case SOUTH:
+                return new BlockPos((int)(blockBelow.getX() + x), (int)(blockBelow.getY() + z), (int)(blockBelow.getZ() + y));
+            case EAST:
+                return new BlockPos((int)(blockBelow.getX() + y), (int)(blockBelow.getY() + x), (int)(blockBelow.getZ() + z));
+            case WEST:
+                return new BlockPos((int)(blockBelow.getX() + y), (int)(blockBelow.getY() + x), (int)(blockBelow.getZ() + z));
+            default:
+                return blockBelow;
+        }
+    }
+
+
+    public static BlockPos getPosBelowBlockEntity(Level world, BlockPos pos, int numBelow)
+    {
+        BlockState state = world.getBlockState(pos);
+
+        Direction enumfacing = (state.hasProperty(BlockStateProperties.FACING))?(state.getValue(BlockStateProperties.FACING)):(Direction.UP);
+        BlockPos blockBelow = pos;
+        switch (enumfacing)
+        {
+            case UP:
+                return blockBelow.offset(0,-numBelow,0);
+            case DOWN:
+                return blockBelow.offset(0,numBelow,0);
+            case NORTH:
+                return blockBelow.offset(0,0,numBelow);
+            case SOUTH:
+                return blockBelow.offset(0,0,-numBelow);
+            case EAST:
+                return blockBelow.offset(-numBelow,0,0);
+            case WEST:
+                return blockBelow.offset(numBelow,0,0);
+            default:
+                return blockBelow;
+        }
+    }
+
+    public static BlockPos getPosBelowBlockEntity(BlockState state, BlockPos pos, int numBelow)
+    {
+        Direction enumfacing = (state.hasProperty(BlockStateProperties.FACING))?(state.getValue(BlockStateProperties.FACING)):(Direction.UP);
+        BlockPos blockBelow = pos;
+        switch (enumfacing)
+        {
+            case UP:
+                return blockBelow.offset(0,-numBelow,0);
+            case DOWN:
+                return blockBelow.offset(0,numBelow,0);
+            case NORTH:
+                return blockBelow.offset(0,0,numBelow);
+            case SOUTH:
+                return blockBelow.offset(0,0,-numBelow);
+            case EAST:
+                return blockBelow.offset(-numBelow,0,0);
+            case WEST:
+                return blockBelow.offset(numBelow,0,0);
+            default:
+                return blockBelow;
+        }
+    }
 }

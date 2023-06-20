@@ -6,6 +6,10 @@ import com.mowmaster.mowlib.Items.BaseRepairNote;
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.Items.EffectItemBase;
 import com.mowmaster.mowlib.Items.Filters.*;
+import com.mowmaster.mowlib.Items.Tools.DevTool;
+import com.mowmaster.mowlib.Items.Tools.FilterTool;
+import com.mowmaster.mowlib.Items.Tools.TagTool;
+import com.mowmaster.mowlib.Items.Tools.WorkCardTool;
 import com.mowmaster.mowlib.Items.WorkCards.WorkCardArea;
 import com.mowmaster.mowlib.Items.WorkCards.WorkCardLocations;
 import com.mowmaster.mowlib.Items.WorkCards.WorkCardBE;
@@ -84,6 +88,16 @@ public class DeferredRegisterItems
             () -> new WorkCardArea(new Item.Properties()));
     public static final RegistryObject<Item> WORKCARD_BLOCKENTITY_LOCATIONS = ITEMS.register("workcard_belocations",
             () -> new WorkCardBE(new Item.Properties()));
+
+
+    public static final RegistryObject<Item> TOOL_FILTERTOOL = ITEMS.register("tool_filter",
+            () -> new FilterTool(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> TOOL_WORKTOOL = ITEMS.register("tool_work",
+            () -> new WorkCardTool(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> TOOL_TAGTOOL = ITEMS.register("tool_tag",
+            () -> new TagTool(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> TOOL_DEVTOOL = ITEMS.register("tool_dev",
+            () -> new DevTool(new Item.Properties().stacksTo(1)));
 
 
 
