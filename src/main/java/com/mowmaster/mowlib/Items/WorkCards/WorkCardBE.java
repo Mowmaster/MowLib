@@ -1,18 +1,16 @@
 package com.mowmaster.mowlib.Items.WorkCards;
 
 import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlockEntity;
+import com.mowmaster.mowlib.MowLibUtils.MowLibBlockPosUtils;
+import com.mowmaster.mowlib.api.DefineLocations.ISelectablePoints;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class WorkCardPedestals extends WorkCardBase implements ISelectablePoints {
+public class WorkCardBE extends WorkCardBase implements ISelectablePoints {
 
-    //Locations in PedestalBlock class
-    //Ln486
-    //Ln883
-
-    public WorkCardPedestals(Properties p_41383_) {
+    public WorkCardBE(Properties p_41383_) {
         super(p_41383_);
     }
 
@@ -26,12 +24,8 @@ public class WorkCardPedestals extends WorkCardBase implements ISelectablePoints
     // that upgrades don't have to verify the list every time it is used (as the blocks at those positions could change
     // at any point after this is cached).
     public static List<BlockPos> getPositionsInRangeOfUpgrade(ItemStack workCardStack, MowLibBaseBlockEntity baseBlockEntity, int rangeFromBlock) {
-        if (workCardStack.getItem() instanceof WorkCardPedestals workCard) {
-            return WorkCardBase.readBlockPosListFromNBT(workCardStack).stream()
-                    .filter(blockPos -> workCard.selectedPointWithinRange(baseBlockEntity, blockPos, rangeFromBlock))
-                    .toList();
-        } else {
-            return List.of();
-        }
+        return MowLibBlockPosUtils.readBlockPosListFromNBT(workCardStack).stream()
+                .filter(blockPos -> MowLibBlockPosUtils.selectedPointWithinRange(baseBlockEntity, blockPos, rangeFromBlock))
+                .toList();
     }
 }

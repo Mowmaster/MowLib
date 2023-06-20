@@ -1,15 +1,13 @@
 package com.mowmaster.mowlib.MowLibUtils;
 
 
-import com.mowmaster.mowlib.api.IColorable;
+import com.mowmaster.mowlib.api.Coloring.IColorable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;

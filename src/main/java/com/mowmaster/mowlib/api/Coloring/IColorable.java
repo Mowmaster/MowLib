@@ -1,4 +1,4 @@
-package com.mowmaster.mowlib.api;
+package com.mowmaster.mowlib.api.Coloring;
 
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 

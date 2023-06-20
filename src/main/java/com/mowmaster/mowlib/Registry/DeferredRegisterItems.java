@@ -6,6 +6,9 @@ import com.mowmaster.mowlib.Items.BaseRepairNote;
 import com.mowmaster.mowlib.Items.ColorApplicator;
 import com.mowmaster.mowlib.Items.EffectItemBase;
 import com.mowmaster.mowlib.Items.Filters.*;
+import com.mowmaster.mowlib.Items.WorkCards.WorkCardArea;
+import com.mowmaster.mowlib.Items.WorkCards.WorkCardLocations;
+import com.mowmaster.mowlib.Items.WorkCards.WorkCardBE;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -74,6 +77,13 @@ public class DeferredRegisterItems
             () -> new FilterBlocksByClickExact(new Item.Properties()));
     public static final RegistryObject<Item> FILTER_BLOCKS_ON_CLICK_FUZZY = ITEMS.register("filter_blocksonclickfuzzy",
             () -> new FilterBlocksByClickFuzzy(new Item.Properties()));
+
+    public static final RegistryObject<Item> WORKCARD_LOCATIONS = ITEMS.register("workcard_locations",
+            () -> new WorkCardLocations(new Item.Properties()));
+    public static final RegistryObject<Item> WORKCARD_AREA = ITEMS.register("workcard_area",
+            () -> new WorkCardArea(new Item.Properties()));
+    public static final RegistryObject<Item> WORKCARD_BLOCKENTITY_LOCATIONS = ITEMS.register("workcard_belocations",
+            () -> new WorkCardBE(new Item.Properties()));
 
 
 

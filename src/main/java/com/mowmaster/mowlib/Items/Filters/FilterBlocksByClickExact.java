@@ -3,6 +3,7 @@ package com.mowmaster.mowlib.Items.Filters;
 import com.mowmaster.mowlib.Capabilities.Dust.DustMagic;
 import com.mowmaster.mowlib.MowLibUtils.MowLibFluidUtils;
 import com.mowmaster.mowlib.MowLibUtils.MowLibMessageUtils;
+import com.mowmaster.mowlib.api.TransportAndStorage.IFilterItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -53,7 +54,7 @@ public class FilterBlocksByClickExact extends BaseFilter {
         ItemStack itemInOffhand = p_41433_.getOffhandItem();
         HitResult result = p_41433_.pick(5.0D, 0.0F, false);
         if (!p_41432_.isClientSide()) {
-            if (itemInOffhand.getItem() instanceof IPedestalFilter && !(itemInMainhand.getItem() instanceof IPedestalFilter)) {
+            if (itemInOffhand.getItem() instanceof IFilterItem && !(itemInMainhand.getItem() instanceof IFilterItem)) {
                 if (result.getType().equals(HitResult.Type.MISS)) {
                     if (p_41433_.isCrouching()) {
                         setFilterMode(p_41433_, itemInOffhand, InteractionHand.OFF_HAND);
@@ -73,7 +74,7 @@ public class FilterBlocksByClickExact extends BaseFilter {
                         writeFilterQueueToNBT(itemInOffhand, adjustedQueue, getItemTransportMode(itemInOffhand));
                     }
                 }
-            } else if (itemInOffhand.getItem() instanceof IPedestalFilter && itemInMainhand.getItem() instanceof IPedestalFilter) {
+            } else if (itemInOffhand.getItem() instanceof IFilterItem && itemInMainhand.getItem() instanceof IFilterItem) {
                 MowLibMessageUtils.messagePopup(p_41433_, ChatFormatting.RED, "mowlib.filter.message_twohanded");
             }
         }

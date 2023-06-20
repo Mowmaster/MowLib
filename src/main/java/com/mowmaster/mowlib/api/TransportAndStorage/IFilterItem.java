@@ -1,4 +1,4 @@
-package com.mowmaster.mowlib.Items.Filters;
+package com.mowmaster.mowlib.api.TransportAndStorage;
 
 import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlockEntity;
 import com.mowmaster.mowlib.Capabilities.Dust.DustMagic;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public interface IPedestalFilter extends IItemMode
+public interface IFilterItem extends ITransferMode
 {
     public boolean filterType = false;
 

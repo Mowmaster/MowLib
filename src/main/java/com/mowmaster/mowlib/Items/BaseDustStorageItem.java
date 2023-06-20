@@ -1,12 +1,9 @@
 package com.mowmaster.mowlib.Items;
 
 import com.mowmaster.mowlib.Capabilities.Dust.DustMagic;
-import com.mowmaster.mowlib.api.IDustStorage;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
+import com.mowmaster.mowlib.api.TransportAndStorage.IDustStorage;
 import net.minecraft.world.item.Item;
 
-import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.item.ItemStack;
 
 public class BaseDustStorageItem extends Item implements IDustStorage {

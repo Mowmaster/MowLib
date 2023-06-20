@@ -1,4 +1,4 @@
-package com.mowmaster.mowlib.api;
+package com.mowmaster.mowlib.api.TransportAndStorage;
 
 import com.mowmaster.mowlib.Capabilities.Dust.DustMagic;
 import net.minecraft.world.item.ItemStack;

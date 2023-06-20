@@ -1,4 +1,4 @@
-package com.mowmaster.mowlib.Items.WorkCards;
+package com.mowmaster.mowlib.api.DefineLocations;
 
 import net.minecraft.core.BlockPos;
 

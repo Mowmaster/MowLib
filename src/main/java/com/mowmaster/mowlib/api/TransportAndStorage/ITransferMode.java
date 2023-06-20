@@ -1,4 +1,4 @@
-package com.mowmaster.mowlib.Items.Filters;
+package com.mowmaster.mowlib.api.TransportAndStorage;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public interface IItemMode 
+public interface ITransferMode
 {
     ItemTransferMode getItemTransportMode(ItemStack stackIn);
 

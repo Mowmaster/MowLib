@@ -2,15 +2,14 @@ package com.mowmaster.mowlib.Items.Filters;
 
 import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlockEntity;
 import com.mowmaster.mowlib.Capabilities.Dust.DustMagic;
-import com.mowmaster.mowlib.Client.ItemTooltipComponent;
 import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils;
 import com.mowmaster.mowlib.MowLibUtils.MowLibMessageUtils;
+import com.mowmaster.mowlib.api.TransportAndStorage.IFilterItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
@@ -18,13 +17,11 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -39,11 +36,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class MowLibBaseFilter extends Item implements IPedestalFilter
+public class MowLibBaseFilter extends Item implements IFilterItem
 {
     public boolean filterType = false;
     public FilterDirection filterableDirection;
@@ -110,7 +106,7 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
         if(!world.isClientSide())
         {
             //Check for Offhand Only Filter
-            if(itemInOffhand.getItem() instanceof IPedestalFilter && !(itemInMainhand.getItem() instanceof IPedestalFilter))
+            if(itemInOffhand.getItem() instanceof IFilterItem && !(itemInMainhand.getItem() instanceof IFilterItem))
             {
                 if(result.getType().equals(HitResult.Type.MISS))
                 {
@@ -144,7 +140,7 @@ public class MowLibBaseFilter extends Item implements IPedestalFilter
                     }
                 }
             }
-            else if(itemInOffhand.getItem() instanceof IPedestalFilter && itemInMainhand.getItem() instanceof IPedestalFilter){
+            else if(itemInOffhand.getItem() instanceof IFilterItem && itemInMainhand.getItem() instanceof IFilterItem){
                 MowLibMessageUtils.messagePopup(player,ChatFormatting.RED,MODID + ".filter.message_twohanded");
             }
         }

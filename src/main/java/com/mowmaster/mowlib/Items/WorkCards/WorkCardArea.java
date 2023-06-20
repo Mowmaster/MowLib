@@ -1,6 +1,8 @@
 package com.mowmaster.mowlib.Items.WorkCards;
 
 import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlockEntity;
+import com.mowmaster.mowlib.MowLibUtils.MowLibBlockPosUtils;
+import com.mowmaster.mowlib.api.DefineLocations.ISelectableArea;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -10,6 +12,8 @@ import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.mowmaster.mowlib.MowLibUtils.MowLibBlockPosUtils.readBlockPosFromNBT;
 
 public class WorkCardArea extends WorkCardBase implements ISelectableArea {
     public WorkCardArea(Properties p_41383_) {
@@ -41,9 +45,8 @@ public class WorkCardArea extends WorkCardBase implements ISelectableArea {
         BlockPos posOne = readBlockPosFromNBT(workCardStack, 1);
         BlockPos posTwo = readBlockPosFromNBT(workCardStack, 2);
         if (
-            workCardStack.getItem() instanceof WorkCardArea workCard &&
             !posOne.equals(BlockPos.ZERO) && !posTwo.equals(BlockPos.ZERO) &&
-            workCard.isSelectionInRange(baseBlockEntity, posOne,rangeFromBlock) && workCard.isSelectionInRange(baseBlockEntity, posTwo,rangeFromBlock)
+            MowLibBlockPosUtils.isSelectionInRange(baseBlockEntity, posOne,rangeFromBlock) && MowLibBlockPosUtils.isSelectionInRange(baseBlockEntity, posTwo,rangeFromBlock)
         ) {
             return Optional.of(new AABB(posOne, posTwo));
         } else {

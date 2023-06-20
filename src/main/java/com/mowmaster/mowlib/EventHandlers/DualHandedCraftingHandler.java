@@ -5,7 +5,7 @@ import com.mowmaster.mowlib.MowLibUtils.MowLibColorReference;
 import com.mowmaster.mowlib.MowLibUtils.MowLibContainerUtils;
 import com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils;
 import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
-import com.mowmaster.mowlib.api.IDustStorage;
+import com.mowmaster.mowlib.api.TransportAndStorage.IDustStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
