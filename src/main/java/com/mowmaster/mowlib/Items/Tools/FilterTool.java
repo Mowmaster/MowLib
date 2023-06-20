@@ -35,7 +35,7 @@ public class FilterTool extends BaseTool implements IMowLibTool
         }
         else
         {
-            MowLibMessageUtils.messagePlayerChat(player,ChatFormatting.LIGHT_PURPLE,MODID + ".tool_filterinpedestal_not");
+            MowLibMessageUtils.messagePlayerChat(player,ChatFormatting.LIGHT_PURPLE,MODID + ".tool_filter_missing");
         }
     }
 }

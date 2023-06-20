@@ -70,6 +70,8 @@
   "mowlib.enum.filtertransfermode_dust": "Dust",
   "mowlib.enum.filtertransfermode_default": "§cFilter Transfer Mode Error",
 
+  "mowlib.tool_filter_missing": "Block Does Not Have A Filter",
+
   "mowlib.filter.tooltip_filterbase": "THIS FILTER BASE IS JUST A CRAFTING COMPONENT!!!",
   "item.mowlib.filter_base": "Filter Base",
   "item.mowlib.filter_base.base_description": "THIS FILTER BASE IS JUST A CRAFTING COMPONENT!!!",
@@ -135,6 +137,39 @@
   "jei.mowlib.filter_itemstack_machine.description": "§5 This Filter Filters By ItemStacks (EXACT)",
   "jei.mowlib.filter_itemstack_machine.interaction": "§3 Offhand Filter and Right Click to switch TYPES, Crouch Right Click to switch MODES",
 
+
+
+  "mowlib.workcard_blockpos_added": "Position Added",
+  "mowlib.workcard_blockpos_removed": "Position Removed",
+  "mowlib.workcard_blockpos_clear": "Positions Cleared",
+  "mowlib.workcard_blockpos_first": "First Position Selected",
+  "mowlib.workcard_blockpos_second": "Second Position Selected",
+  "mowlib.workcard_tooltip_shift": "Press Shift to Reveal Details",
+  "mowlib.workcard_tooltip_blockpos_title": "Block Positions",
+  "mowlib.workcard_tooltip_blockpos_one": "First Point: ",
+  "mowlib.workcard_tooltip_blockpos_two": "Second Point: ",
+  "item.mowlib.workcard_locations": "WorkCard (Location)",
+  "jei.mowlib.workcard_locations.description": "§5 Right Click Blocks to Add/Remove them from the selection. Right Clicking in the Air will clear the Selections",
+  "item.mowlib.workcard_area": "WorkCard (Area)",
+  "jei.mowlib.workcard_area.description": "§5 Crouch Right Click Blocks to Add/Remove them from the selection.(Max of 2 Selection Points)[Your Defining the Two opposite corners of a box] Crouch Right Clicking in the Air will clear the Selections",
+  "item.mowlib.workcard_belocations": "WorkCard (Machines)",
+  "jei.mowlib.workcard_belocations.description": "§5 Right Click Blocks (Machines like Pedestals or similar colorable 'machine like' blocks) to Add/Remove them from the selection. Right Clicking in the Air will clear the Selections",
+
+
+
+  "mowlib.tool_change": "Tool Changed",
+  "item.mowlib.tool_filter": "Tool (Filters)",
+  "jei.mowlib.tool_filter.interaction": "§5 Crouch Right Click in Air to Swap to a Different Tool, Remove Filters by Offhanding Tool and Left Clicking Block",
+  "jei.mowlib.tool_filter.description": "§5 Tool Used to Create/Remove Filters",
+  "item.mowlib.tool_work": "Tool (Work Cards)",
+  "jei.mowlib.tool_work.interaction": "§5 Crouch Right Click in Air to Swap to a Different Tool, Remove Work Cards by Offhanding Tool and Left Clicking Block",
+  "jei.mowlib.tool_work.description": "§5 Used to Create/Remove Work Cards",
+  "item.mowlib.tool_tag": "Tool (Item/Block Tags)",
+  "jei.mowlib.tool_tag.interaction": "§5 Crouch Right Click in Air to Swap to a Different Tool, Offhand Item/Block and Right Click Tool, Will Display the Tags on the Item/Block in the Players Chat.",
+  "jei.mowlib.tool_tag.description": "§5 Used to Make Tag related Items, and make Tags off of items/blocks viewable in game",
+  "item.mowlib.tool_dev": "Tool (Dev - Creative Only)",
+  "jei.mowlib.tool_dev.interaction": "§5 Offhand item with NBT and right click tool (in air) to display the NBT string in chat. Offhand Honey Comb and right click tool on Hive Block to 'fill' it.",
+  "jei.mowlib.tool_dev.description": "§5 Somewhat Useful Tool for creative mode users",
 
 
 
@@ -237,5 +272,26 @@
   "mowlib.text.separator.horizontal_rule_medium.dash": "----------",
   "mowlib.text.separator.horizontal_rule_small.dash": "-----",
   "mowlib.text.separator.min": "Min: ",
-  "mowlib.text.separator.max": "Max: "
+  "mowlib.text.separator.max": "Max: ",
+
+  "mowlib.text.numeral.1": "I",
+  "mowlib.text.numeral.2": "II",
+  "mowlib.text.numeral.3": "III",
+  "mowlib.text.numeral.4": "IV",
+  "mowlib.text.numeral.5": "V",
+  "mowlib.text.numeral.6": "VI",
+  "mowlib.text.numeral.7": "VII",
+  "mowlib.text.numeral.8": "VIII",
+  "mowlib.text.numeral.9": "IX",
+  "mowlib.text.numeral.10": "X",
+  "mowlib.text.numeral.11": "XI",
+  "mowlib.text.numeral.12": "XII",
+  "mowlib.text.numeral.13": "XIII",
+  "mowlib.text.numeral.14": "XIV",
+  "mowlib.text.numeral.15": "XV",
+  "mowlib.text.numeral.16": "XVI",
+  "mowlib.text.numeral.17": "XVII",
+  "mowlib.text.numeral.18": "XVIII",
+  "mowlib.text.numeral.19": "XIV",
+  "mowlib.text.numeral.20": "XX"
 }

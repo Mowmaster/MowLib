@@ -1,5 +1,6 @@
 package com.mowmaster.mowlib.Items.Tools;
 
+import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlockEntity;
 import com.mowmaster.mowlib.BlockEntities.MowLibBaseFilterableBlock;
 import com.mowmaster.mowlib.BlockEntities.MowLibBaseFilterableBlockEntity;
 import com.mowmaster.mowlib.Items.BaseUseInteractionItem;
@@ -27,6 +28,8 @@ import net.minecraft.world.phys.HitResult;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
+
 public class BaseTool extends BaseUseInteractionItem
 {
 
@@ -52,7 +55,7 @@ public class BaseTool extends BaseUseInteractionItem
             ItemStack newTool = new ItemStack(swapTool,itemStackInHand.getCount(),itemStackInHand.getTag());
             player.setItemInHand(hand, newTool);
 
-            MowLibMessageUtils.messagePopup(player, ChatFormatting.GREEN,"pedestals.tool_change");
+            MowLibMessageUtils.messagePopup(player, ChatFormatting.GREEN,MODID + ".tool_change");
             return InteractionResultHolder.success(itemStackInHand);
         }
 
@@ -76,7 +79,13 @@ public class BaseTool extends BaseUseInteractionItem
     }
 
     //Default method of interactGetPedestalDetail which is in interactCrouchingTargetBlock
-    public void getBlockEntityDetail(MowLibBaseFilterableBlockEntity baseFilterableBlockEntity, Player player) {}
+    public void getBlockEntityDetail(MowLibBaseBlockEntity baseBlockEntity, Player player) {
+        baseBlockEntity.chatDetailsBaseBlockEntity(player,baseBlockEntity);
+    }
+
+    public void getBlockEntityDetail(MowLibBaseFilterableBlockEntity baseFilterableBlockEntity, Player player) {
+        getBlockEntityDetail(baseFilterableBlockEntity,player);
+    }
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack itemStack) {

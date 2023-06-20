@@ -127,11 +127,11 @@ public interface IFilterItem extends ITransferMode
 
     /**
      * @param player
-     * @param filterableBlockEntity
+     * @param baseBlockEntity
      * When a player right clicks the FilterTool item on a pedestal, this is called.
      * Generally this will output filter info to the players chat in game.
      */
-    void chatDetails(Player player, MowLibBaseBlockEntity filterableBlockEntity, ItemStack filterStack);
+    void chatDetails(Player player, MowLibBaseBlockEntity baseBlockEntity, ItemStack filterStack);
 
     public static enum FilterDirection {
         INSERT,

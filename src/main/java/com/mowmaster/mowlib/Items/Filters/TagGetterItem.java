@@ -63,7 +63,7 @@ public class TagGetterItem extends Item
             {
                 //Clear tags???
                 clearTags(stackInMainHand);
-                MowLibMessageUtils.messagePopup(p_41433_, ChatFormatting.RED, "pedestals.taggetter.clear");
+                MowLibMessageUtils.messagePopup(p_41433_, ChatFormatting.RED, MODID + ".taggetter.clear");
             }
             else
             {
@@ -80,7 +80,7 @@ public class TagGetterItem extends Item
                         setSelectedTag(stackInMainHand,nextSelected);
                         stackInMainHand.setHoverName(Component.literal(listy.get(nextSelected)));
 
-                        MutableComponent comp = Component.translatable("pedestals.taggetter.changed_to");
+                        MutableComponent comp = Component.translatable(MODID + ".taggetter.changed_to");
                         comp.withStyle(ChatFormatting.GOLD);
                         MutableComponent modifiedComp = Component.literal(listy.get(nextSelected));
                         modifiedComp.withStyle(ChatFormatting.WHITE);
@@ -99,7 +99,7 @@ public class TagGetterItem extends Item
                         MowLibCompoundTagUtils.writeStringToNBT(MODID,stackInMainHand.getOrCreateTag(), ForgeRegistries.ITEMS.getKey(stackInOffHand.getItem()).toString(),"_selecteditem");
                         setStringList(stackInMainHand,getTags);
                         setSelectedTag(stackInMainHand,0);
-                        MutableComponent comp = Component.translatable("pedestals.taggetter.created");
+                        MutableComponent comp = Component.translatable(MODID + ".taggetter.created");
                         comp.append(Component.literal(""+getTags.size()+""));
                         MowLibMessageUtils.messagePopup(p_41433_, comp, ChatFormatting.GREEN );
                     }
@@ -124,7 +124,7 @@ public class TagGetterItem extends Item
                         setSelectedTag(stackInOffHand,nextSelected);
                         stackInOffHand.setHoverName(Component.literal(listy.get(nextSelected)));
 
-                        MutableComponent comp = Component.translatable("pedestals.taggetter.changed_to");
+                        MutableComponent comp = Component.translatable(MODID + ".taggetter.changed_to");
                         comp.withStyle(ChatFormatting.GOLD);
                         MutableComponent modifiedComp = Component.literal(listy.get(nextSelected));
                         modifiedComp.withStyle(ChatFormatting.WHITE);
@@ -147,7 +147,7 @@ public class TagGetterItem extends Item
                         stackInOffHand.setHoverName(Component.literal(getTags.get(0)));
                         setStringList(stackInOffHand,getTags);
                         setSelectedTag(stackInOffHand,0);
-                        MutableComponent comp = Component.translatable("pedestals.taggetter.created");
+                        MutableComponent comp = Component.translatable(MODID + ".taggetter.created");
                         comp.append(Component.literal(""+getTags.size()+""));
                         MowLibMessageUtils.messagePopup(p_41433_, comp, ChatFormatting.GREEN );
                     }
@@ -269,12 +269,11 @@ public class TagGetterItem extends Item
         List<String> listy = getStringList(p_41421_);
         if(listy.size()>0)
         {
-            MutableComponent comp = Component.translatable("pedestals.taggetter.tooltip_header");
+            MutableComponent comp = Component.translatable(MODID + ".taggetter.tooltip_header");
             comp.append(Component.literal(MowLibCompoundTagUtils.readStringFromNBT(MODID,p_41421_.getOrCreateTag(),"_selecteditem")));
-            comp.append(Component.translatable("pedestals.taggetter.tooltip_header"));
+            comp.append(Component.translatable(MODID + ".taggetter.tooltip_header"));
 
             MowLibTooltipUtils.addTooltipMessageWithStyle(p_41423_,comp,ChatFormatting.WHITE);
-
 
             int currentlySelected = getSelectedTag(p_41421_);
             for(int i=0;i<listy.size();i++)

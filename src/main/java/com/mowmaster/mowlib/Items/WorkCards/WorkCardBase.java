@@ -4,7 +4,9 @@ import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlock;
 import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlockEntity;
 import com.mowmaster.mowlib.Items.BaseUseInteractionItem;
 import com.mowmaster.mowlib.MowLibUtils.MowLibBlockPosUtils;
+import com.mowmaster.mowlib.MowLibUtils.MowLibComponentUtils;
 import com.mowmaster.mowlib.MowLibUtils.MowLibMessageUtils;
+import com.mowmaster.mowlib.MowLibUtils.MowLibTooltipUtils;
 import com.mowmaster.mowlib.Networking.MowLibPacketHandler;
 import com.mowmaster.mowlib.Networking.MowLibPacketParticles;
 import com.mowmaster.mowlib.api.DefineLocations.ISelectableArea;
@@ -164,7 +166,7 @@ public class WorkCardBase extends BaseUseInteractionItem implements IWorkCard
             }
             boolean added = addBlockPosToList(itemInHand,atLocation);
             player.setItemInHand(hand,itemInHand);
-            MowLibMessageUtils.messagePopup(player,(added)?(ChatFormatting.WHITE):(ChatFormatting.BLACK),(added)?(MODID + ".upgrade_blockpos_added"):(MODID + ".upgrade_blockpos_removed"));
+            MowLibMessageUtils.messagePopup(player,(added)?(ChatFormatting.WHITE):(ChatFormatting.BLACK),(added)?(MODID + ".workcard_blockpos_added"):(MODID + ".workcard_blockpos_removed"));
             MowLibPacketHandler.sendToNearby(level,player.getOnPos(),new MowLibPacketParticles(MowLibPacketParticles.EffectType.ANY_COLOR_CENTERED,atLocation.getX(),atLocation.getY()+1.0D,atLocation.getZ(),0,(added)?(200):(0),0));
         }
         return super.interactTargetBlock(level, player, hand, itemStackInHand, result);
@@ -175,7 +177,7 @@ public class WorkCardBase extends BaseUseInteractionItem implements IWorkCard
 
         ItemStack itemInHand = player.getItemInHand(hand);
         itemInHand.setTag(new CompoundTag());
-        MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".upgrade_blockpos_clear");
+        MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".workcard_blockpos_clear");
         return super.interactTargetAir(level, player, hand, itemStackInHand, result);
     }
 
@@ -193,13 +195,13 @@ public class WorkCardBase extends BaseUseInteractionItem implements IWorkCard
             {
                 saveBlockPosToNBT(itemInHand,2,atLocation);
                 player.setItemInHand(hand,itemInHand);
-                MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".upgrade_blockpos_second");
+                MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".workcard_blockpos_second");
             }
             else if(!hasTwoPointsAlready)
             {
                 saveBlockPosToNBT(itemInHand,1,atLocation);
                 player.setItemInHand(hand,itemInHand);
-                MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".upgrade_blockpos_first");
+                MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".workcard_blockpos_first");
             }
         }
         return super.interactCrouchingTargetBlock(level, player, hand, itemStackInHand, result);
@@ -212,7 +214,7 @@ public class WorkCardBase extends BaseUseInteractionItem implements IWorkCard
         if (hasOneBlockPos(itemInHand))
         {
             itemInHand.setTag(new CompoundTag());
-            MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".upgrade_blockpos_clear");
+            MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".workcard_blockpos_clear");
         }
 
         return super.interactCrouchingTargetAir(level, player, hand, itemStackInHand, result);
@@ -237,32 +239,32 @@ public class WorkCardBase extends BaseUseInteractionItem implements IWorkCard
             if(hasOneBlockPos(p_41421_))
             {
                 if (!Screen.hasShiftDown()) {
-                    MutableComponent base = Component.translatable(MODID + ".upgrade_description_shift");
+                    MutableComponent base = Component.translatable(MODID + ".workcard_tooltip_shift");
                     base.withStyle(ChatFormatting.WHITE);
                     p_41423_.add(base);
                 } else {
-                    MutableComponent posTitle = Component.translatable(MODID + ".upgrade_tooltip_blockpos_title");
+                    MutableComponent posTitle = Component.translatable(MODID + ".workcard_tooltip_blockpos_title");
                     posTitle.withStyle(ChatFormatting.GOLD);
                     p_41423_.add(posTitle);
 
                     //Separator
-                    MutableComponent separator = Component.translatable(MODID + ".tooltip_separator");
+                    MutableComponent separator = Component.translatable(MODID + ".text.separator.horizontal_rule_large.equals");
                     p_41423_.add(separator);
 
-                    MutableComponent posOne = Component.translatable(MODID + ".upgrade_tooltip_blockpos_one");
+                    MutableComponent posOne = Component.translatable(MODID + ".workcard_tooltip_blockpos_one");
                     BlockPos blockPosOne = readBlockPosFromNBT(p_41421_,1);
                     MutableComponent posOnePos = Component.literal(blockPosOne.getX() + "x " + blockPosOne.getY() + "y " + blockPosOne.getZ()+ "z");
                     posOnePos.withStyle(ChatFormatting.GRAY);
-                    posOne.append(Component.translatable(MODID + ".upgrade_tooltip_separator"));
+                    posOne.append(Component.translatable(MODID + ".text.separator.colon_space"));
                     posOne.append(posOnePos);
 
                     p_41423_.add(posOne);
 
-                    MutableComponent posTwo = Component.translatable(MODID + ".upgrade_tooltip_blockpos_two");
+                    MutableComponent posTwo = Component.translatable(MODID + ".workcard_tooltip_blockpos_two");
                     BlockPos blockPosTwo = readBlockPosFromNBT(p_41421_,2);
                     MutableComponent posTwoPos = Component.literal(blockPosTwo.getX() + "x " + blockPosTwo.getY() + "y " + blockPosTwo.getZ()+ "z");
                     posTwoPos.withStyle(ChatFormatting.GRAY);
-                    posTwo.append(Component.translatable(MODID + ".upgrade_tooltip_separator"));
+                    posTwo.append(Component.translatable(MODID + ".text.separator.colon_space"));
                     posTwo.append(posTwoPos);
                     p_41423_.add(posTwo);
                 }
@@ -275,22 +277,22 @@ public class WorkCardBase extends BaseUseInteractionItem implements IWorkCard
             if(getList.size()>0)
             {
                 if (!Screen.hasShiftDown()) {
-                    MutableComponent base = Component.translatable(MODID + ".upgrade_description_shift");
+                    MutableComponent base = Component.translatable(MODID + ".workcard_tooltip_shift");
                     base.withStyle(ChatFormatting.WHITE);
                     p_41423_.add(base);
                 } else {
-                    MutableComponent posTitle = Component.translatable(MODID + ".upgrade_tooltip_blockpos_title");
+                    MutableComponent posTitle = Component.translatable(MODID + ".workcard_tooltip_blockpos_title");
                     posTitle.withStyle(ChatFormatting.GOLD);
                     p_41423_.add(posTitle);
 
                     //Separator
-                    MutableComponent separator = Component.translatable(MODID + ".tooltip_separator");
+                    MutableComponent separator = Component.translatable(MODID + ".text.separator.horizontal_rule_large.equals");
                     p_41423_.add(separator);
 
                     for (BlockPos pos : getList) {
-                        MutableComponent posOnePos = Component.literal(pos.getX() + "x " + pos.getY() + "y " + pos.getZ()+ "z");
-                        posOnePos.withStyle(ChatFormatting.GRAY);
-                        p_41423_.add(posOnePos);
+                        MutableComponent formattedPos = MowLibComponentUtils.getBlockPosFormatted(pos);
+                        formattedPos.withStyle(ChatFormatting.GRAY);
+                        p_41423_.add(formattedPos);
                     }
                 }
             }
