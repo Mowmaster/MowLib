@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
@@ -168,3 +169,5 @@ public class MowLibBaseBlockEntity extends BlockEntity {
     }
 
 }
+
+

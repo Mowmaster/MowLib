@@ -24,7 +24,7 @@ public class MowLibBlockPosUtils {
             Math.abs(distanceVector.getZ()) <= range;
     }
 
-    public BlockPos getPosOfBlockBelow(Level level, BlockPos posOfPedestal, int numBelow)
+    public static BlockPos getPosOfBlockBelow(Level level, BlockPos posOfPedestal, int numBelow)
     {
         BlockState state = level.getBlockState(posOfPedestal);
 
@@ -49,7 +49,6 @@ public class MowLibBlockPosUtils {
         }
     }
 
-    //ToDo: Add to mowlib and remove from here
     //returns true for an add, false for a remove.
     public static boolean addBlockPosToList(String ModID, String identifier, ItemStack upgrade, BlockPos posOfBlock)
     {
@@ -68,7 +67,6 @@ public class MowLibBlockPosUtils {
         }
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static List<BlockPos> readBlockPosListFromNBT(String ModID, String identifier, ItemStack upgrade) {
         List<BlockPos> posList = new ArrayList<>();
         if(upgrade.hasTag())
@@ -141,7 +139,7 @@ public class MowLibBlockPosUtils {
         return posList;
     }
 
-    public void removeBlockListCustomNBTTags(String ModID, String identifier, ItemStack upgrade)
+    public static void removeBlockListCustomNBTTags(String ModID, String identifier, ItemStack upgrade)
     {
         String tagX = ModID + identifier +"_X";
         String tagY = ModID + identifier +"_Y";
@@ -153,7 +151,7 @@ public class MowLibBlockPosUtils {
         upgrade.setTag(getTags);
     }
 
-    public boolean hasBlockListCustomNBTTags(String ModID, String identifier, ItemStack upgrade)
+    public static boolean hasBlockListCustomNBTTags(String ModID, String identifier, ItemStack upgrade)
     {
         String tagX = ModID + identifier +"_X";
         String tagY = ModID + identifier +"_Y";
@@ -163,7 +161,6 @@ public class MowLibBlockPosUtils {
         return getTags.contains(tagX) && getTags.contains(tagY) && getTags.contains(tagZ);
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static void saveBlockPosToNBT(String ModID, String identifier, ItemStack upgrade, int num, BlockPos posToSave)
     {
         CompoundTag compound = new CompoundTag();
@@ -179,7 +176,6 @@ public class MowLibBlockPosUtils {
         upgrade.setTag(compound);
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static BlockPos readBlockPosFromNBT(String ModID, String identifier, ItemStack upgrade, int num) {
         if(upgrade.hasTag())
         {
@@ -194,28 +190,11 @@ public class MowLibBlockPosUtils {
         return BlockPos.ZERO;
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static BlockPos getBlockPosOnUpgrade(String ModID, String identifier, ItemStack stack, int num) {
 
         return readBlockPosFromNBT(ModID, identifier, stack,num);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //ToDo: Add to mowlib and remove from here
     public static void saveStringToNBT(ItemStack upgrade, String nbtTag, String string)
     {
         CompoundTag compound = new CompoundTag();
@@ -227,7 +206,6 @@ public class MowLibBlockPosUtils {
         upgrade.setTag(compound);
     }
 
-    //ToDo: Add to mowlib and remove from here
     //returns true for an add, false for a remove.
     public static boolean addBlockPosToList(ItemStack upgrade, BlockPos posOfBlock)
     {
@@ -246,7 +224,6 @@ public class MowLibBlockPosUtils {
         }
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static void saveBlockPosListToNBT(ItemStack upgrade, List<BlockPos> posListToSave)
     {
         CompoundTag compound = new CompoundTag();
@@ -271,7 +248,6 @@ public class MowLibBlockPosUtils {
         upgrade.setTag(compound);
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static List<BlockPos> readBlockPosListFromNBT(ItemStack upgrade) {
         List<BlockPos> posList = new ArrayList<>();
         if(upgrade.hasTag())
@@ -296,7 +272,6 @@ public class MowLibBlockPosUtils {
         return posList;
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static void saveBlockPosToNBT(ItemStack upgrade, int num, BlockPos posToSave)
     {
         CompoundTag compound = new CompoundTag();
@@ -312,7 +287,6 @@ public class MowLibBlockPosUtils {
         upgrade.setTag(compound);
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static BlockPos readBlockPosFromNBT(ItemStack upgrade, int num) {
         if(upgrade.hasTag())
         {
@@ -327,18 +301,15 @@ public class MowLibBlockPosUtils {
         return BlockPos.ZERO;
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static BlockPos getBlockPosOnUpgrade(ItemStack stack, int num) {
 
         return readBlockPosFromNBT(stack,num);
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static boolean hasOneBlockPos(ItemStack stack) {
         return !readBlockPosFromNBT(stack,1).equals(BlockPos.ZERO) || !readBlockPosFromNBT(stack,2).equals(BlockPos.ZERO);
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static boolean isSelectionInRange(MowLibBaseBlockEntity baseBlockEntity, BlockPos pos, int rangeFromBlock) {
         int range = rangeFromBlock;
         /*if(baseBlockEntity.getCoinOnPedestal().getItem() instanceof ItemUpgradeBase upgrade) {
@@ -347,7 +318,7 @@ public class MowLibBlockPosUtils {
         return MowLibBlockPosUtils.arePositionsInRange(pos, baseBlockEntity.getPos(), range);
     }
 
-    public boolean selectedAreaWithinRange(MowLibBaseBlockEntity baseBlockEntity, int getRange)
+    public static boolean selectedAreaWithinRange(MowLibBaseBlockEntity baseBlockEntity, int getRange)
     {
         if(isSelectionInRange(baseBlockEntity, readBlockPosFromNBT(baseBlockEntity.getWorkCard(),1),getRange) && isSelectionInRange(baseBlockEntity, readBlockPosFromNBT(baseBlockEntity.getWorkCard(),2),getRange))
         {
@@ -357,7 +328,6 @@ public class MowLibBlockPosUtils {
         return false;
     }
 
-    //ToDo: Add to mowlib and remove from here
     public static boolean selectedPointWithinRange(MowLibBaseBlockEntity baseBlockEntity, BlockPos posPoint, int getRange)
     {
         if(isSelectionInRange(baseBlockEntity, posPoint,getRange))
@@ -369,7 +339,7 @@ public class MowLibBlockPosUtils {
     }
 
 
-    public BlockPos getHigherByFacing(BlockPos atLocation, Direction facing)
+    public static BlockPos getHigherByFacing(BlockPos atLocation, Direction facing)
     {
         //west north down +XYZ
         //east +YZ
@@ -396,7 +366,7 @@ public class MowLibBlockPosUtils {
         return higherPos;
     }
 
-    public BlockPos getLowerByFacing(BlockPos atLocation, Direction facing)
+    public static BlockPos getLowerByFacing(BlockPos atLocation, Direction facing)
     {
         //west north down +-0
         //east -x
@@ -442,7 +412,7 @@ public class MowLibBlockPosUtils {
         return dir;
     }
 
-    public int getDistanceBetweenPoints(BlockPos pointOne, BlockPos posToCompare)
+    public static int getDistanceBetweenPoints(BlockPos pointOne, BlockPos posToCompare)
     {
         int x = pointOne.getX();
         int y = pointOne.getY();

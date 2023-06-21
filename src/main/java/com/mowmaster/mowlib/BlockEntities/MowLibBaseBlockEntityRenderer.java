@@ -1,12 +1,11 @@
-
-package com.mowmaster.mowlib.MowLibUtils;
+package com.mowmaster.mowlib.BlockEntities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -17,14 +16,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.joml.*;
 
 import java.lang.Math;
 import java.util.List;
 
-public class MowLibRenderUtils {
-
+public class MowLibBaseBlockEntityRenderer implements BlockEntityRenderer {
     public static Vector3f XN = new Vector3f(-1.0F, 0.0F, 0.0F);
     public static Vector3f XP = new Vector3f(1.0F, 0.0F, 0.0F);
     public static Vector3f YN = new Vector3f(0.0F, -1.0F, 0.0F);
@@ -33,7 +32,13 @@ public class MowLibRenderUtils {
     public static Vector3f ZP = new Vector3f(0.0F, 0.0F, 1.0F);
     public static Vector3f ZERO = new Vector3f(0.0F, 0.0F, 0.0F);
 
-    public static void renderItemRotating(Level worldIn, PoseStack p_112309_, MultiBufferSource p_112310_, ItemStack itemStack, int p_112311_, int p_112312_)
+
+    @Override
+    public void render(BlockEntity p_112307_, float p_112308_, PoseStack p_112309_, MultiBufferSource p_112310_, int p_112311_, int p_112312_) {
+
+    }
+
+    public void renderItemRotating(Level worldIn, PoseStack p_112309_, MultiBufferSource p_112310_, ItemStack itemStack, int p_112311_, int p_112312_)
     {
         if (!itemStack.isEmpty()) {
             p_112309_.pushPose();
@@ -51,7 +56,7 @@ public class MowLibRenderUtils {
         }
     }
 
-    public static void renderMultipleItemsRotating(Level level, PoseStack posStack, MultiBufferSource buffers, List<ItemStack> listed, int light, int overlay)
+    public void renderMultipleItemsRotating(Level level, PoseStack posStack, MultiBufferSource buffers, List<ItemStack> listed, int light, int overlay)
     {
         //https://github.com/VazkiiMods/Botania/blob/1.18.x/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileRuneAltar.java#L49
         int stacks = listed.size();
@@ -112,7 +117,7 @@ public class MowLibRenderUtils {
         }
     }
 
-    public static void renderStaticItem(Level worldIn,ItemStack itemTool, PoseStack p_112309_, MultiBufferSource p_112310_, int p_112311_, int p_112312_, float Xangle, float Yangle, float Zangle) {
+    public void renderStaticItem(Level worldIn,ItemStack itemTool, PoseStack p_112309_, MultiBufferSource p_112310_, int p_112311_, int p_112312_, float Xangle, float Yangle, float Zangle) {
         if (!itemTool.isEmpty()) {
             p_112309_.pushPose();
             p_112309_.translate(0.5D, 0.75D, 0.5D);
@@ -130,7 +135,7 @@ public class MowLibRenderUtils {
     }
 
     //https://github.com/StanCEmpire/RegionProtection/blob/1.18.x/src/main/java/stancempire/stancempiresregionprotection/blockentities/RegionBlockBER.java
-    public static void renderBoundingBox(BlockPos pos, AABB aabb, PoseStack matrixStack, VertexConsumer buffer, MowLibBaseBlockEntity blockEntity, float red, float green, float blue, float alpha)
+    public void renderBoundingBox(BlockPos pos, AABB aabb, PoseStack matrixStack, VertexConsumer buffer, MowLibBaseBlockEntity blockEntity, float red, float green, float blue, float alpha)
     {
         Matrix4f matrix4f = matrixStack.last().pose();
         Matrix3f matrix3f = matrixStack.last().normal();
@@ -184,7 +189,7 @@ public class MowLibRenderUtils {
 
     }
 
-    public static void renderFaces(TextureAtlasSprite sprite, BlockPos pos, AABB aabb, PoseStack matrixStack, VertexConsumer buffer, MowLibBaseBlockEntity blockEntity, float red, float green, float blue, float alpha)
+    public void renderFaces(TextureAtlasSprite sprite, BlockPos pos, AABB aabb, PoseStack matrixStack, VertexConsumer buffer, MowLibBaseBlockEntity blockEntity, float red, float green, float blue, float alpha)
     {
         Matrix4f matrix4f = matrixStack.last().pose();
 
@@ -277,7 +282,7 @@ public class MowLibRenderUtils {
         buffer.vertex(matrix4f, minX, maxY - 0.01f, minZ).color(red, green, blue, alpha).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(uvBrightness).normal(0, -1, 0).endVertex();
     }
 
-    private static void renderPedestalsHUD(PoseStack matrixStack, MultiBufferSource buffer, List<String> messages, float x, float y, float z, int angleX, int angleY, int angleZ) {
+    private void renderPedestalsHUD(PoseStack matrixStack, MultiBufferSource buffer, List<String> messages, float x, float y, float z, int angleX, int angleY, int angleZ) {
 
 
         matrixStack.pushPose();
@@ -313,5 +318,6 @@ public class MowLibRenderUtils {
 
         matrixStack.popPose();
     }
-}
 
+
+}

@@ -6,9 +6,6 @@ import com.mowmaster.mowlib.Capabilities.Dust.IDustHandler;
 import com.mowmaster.mowlib.Capabilities.Experience.CapabilityExperience;
 import com.mowmaster.mowlib.Capabilities.Experience.IExperienceStorage;
 import com.mowmaster.mowlib.MowLibUtils.MowLibItemUtils;
-import com.mowmaster.mowlib.MowLibUtils.MowLibXpUtils;
-import com.mowmaster.mowlib.Networking.MowLibPacketHandler;
-import com.mowmaster.mowlib.Networking.MowLibPacketParticles;
 import com.mowmaster.mowlib.api.TransportAndStorage.IFilterItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,22 +57,16 @@ public class MowLibBaseOmniStorageBlockEntity extends MowLibBaseFilterableBlockE
         super(p_155228_, p_155229_, p_155230_);
     }
 
-
-    public int setInventorySlotCount()
-    {
-        return 0;
-    }
-
     //Set Max Possible stacks to 64
     public ItemStackHandler createItemHandlerPedestal() {
         return new ItemStackHandler(64) {
             @Override
-            protected void onLoad() {
+            public void onLoad() {
                 super.onLoad();
             }
 
             @Override
-            protected void onContentsChanged(int slot) {
+            public void onContentsChanged(int slot) {
                 update();
             }
 
@@ -89,11 +80,11 @@ public class MowLibBaseOmniStorageBlockEntity extends MowLibBaseFilterableBlockE
 
             @Override
             public int getSlots() {
-                return setInventorySlotCount();
+                return super.getSlots();
             }
 
             @Override
-            protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
+            public int getStackLimit(int slot, @Nonnull ItemStack stack) {
                 //Run filter checks here
                 IFilterItem filter = getIFilterItem();
                 if(filter == null || !filter.getFilterDirection().insert())return super.getStackLimit(slot, stack);
@@ -247,7 +238,7 @@ public class MowLibBaseOmniStorageBlockEntity extends MowLibBaseFilterableBlockE
         };
     }
 
-    private IEnergyStorage createEnergyHandler() {
+    public IEnergyStorage createEnergyHandler() {
         return new IEnergyStorage() {
 
             /*
@@ -328,7 +319,7 @@ public class MowLibBaseOmniStorageBlockEntity extends MowLibBaseFilterableBlockE
         };
     }
 
-    private IExperienceStorage createExperienceHandler() {
+    public IExperienceStorage createExperienceHandler() {
         return new IExperienceStorage() {
 
             @Override
