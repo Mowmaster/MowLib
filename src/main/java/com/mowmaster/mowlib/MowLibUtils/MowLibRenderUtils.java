@@ -51,6 +51,15 @@ public class MowLibRenderUtils {
         }
     }
 
+    public static void renderItemRotatingModified(Level level, PoseStack posStack, MultiBufferSource buffers, ItemStack itemStack, int light, int overlay)
+    {
+        if (!itemStack.isEmpty()) {
+            long time = System.currentTimeMillis();
+            float angle = (time/25) % 360;
+            renderStaticSingleItemStack(level,itemStack,posStack,buffers,light,overlay,0.5D, 1.0D, 0.5D,0.75F, 0.75F, 0.75F,0,angle,0,ItemDisplayContext.GROUND);
+        }
+    }
+
     public static void renderMultipleItemsRotating(Level level, PoseStack posStack, MultiBufferSource buffers, List<ItemStack> listed, int light, int overlay)
     {
         //https://github.com/VazkiiMods/Botania/blob/1.18.x/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileRuneAltar.java#L49
@@ -112,19 +121,69 @@ public class MowLibRenderUtils {
         }
     }
 
-    public static void renderStaticItem(Level worldIn,ItemStack itemTool, PoseStack p_112309_, MultiBufferSource p_112310_, int p_112311_, int p_112312_, float Xangle, float Yangle, float Zangle) {
+    public static void renderMultipleItemsRotatingModified(Level level, PoseStack posStack, MultiBufferSource buffers, List<ItemStack> listed, int light, int overlay)
+    {
+        //https://github.com/VazkiiMods/Botania/blob/1.18.x/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileRuneAltar.java#L49
+        int stacks = listed.size();
+        if (stacks>1) {
+            posStack.pushPose();
+
+            int items = stacks;
+            float[] angles = new float[stacks];
+
+            float anglePer = 360F / items;
+            float totalAngle = 0F;
+            for (int i = 0; i < angles.length; i++) {
+                angles[i] = totalAngle += anglePer;
+            }
+
+            double time = level.getGameTime();
+
+
+            float sized = 1.25F;
+            float sizedd = 0.25F;
+            if(stacks <= 4){sized = 0.25F; sizedd = 0.05F;}
+            if(stacks <= 8 && stacks > 4){sized = 0.5F; sizedd = 0.10F;}
+            if(stacks <= 12 && stacks > 8){sized = 0.75F; sizedd = 0.15F;}
+            if(stacks <= 16 && stacks > 12){sized = 1.0F; sizedd = 0.20F;}
+
+            for (int i = 0; i < stacks; i++) {
+                posStack.pushPose();
+                posStack.translate(0.5F, 0.75F, 0.5F);
+                posStack.mulPose(new Quaternionf(new AxisAngle4f(angles[i] + (float) time, YP)));
+                posStack.translate(sized, 0F, sizedd);
+                posStack.mulPose(new Quaternionf(new AxisAngle4f(90F, YP)));
+                posStack.translate(0D, 0.075 * Math.sin((time + i * 10) / 5D), 0F);
+                ItemStack stack = listed.get(i);
+                Minecraft mc = Minecraft.getInstance();
+                if (!stack.isEmpty()) {
+                    mc.getItemRenderer().renderStatic(stack, ItemDisplayContext.GROUND,
+                            light, overlay, posStack, buffers, level,0);
+                }
+                posStack.popPose();
+            }
+
+            posStack.popPose();
+        }
+        else if(stacks==1)
+        {
+            long time = System.currentTimeMillis();
+            float angleY = (time/25) % 360;
+            renderStaticSingleItemStack(level,listed.get(0),posStack,buffers,light,overlay,0.5D, 1.0D, 0.5D,0.75F, 0.75F, 0.75F,0,angleY,0,ItemDisplayContext.GROUND);
+        }
+    }
+
+    public static void renderStaticSingleItemStack(Level worldIn,ItemStack itemTool, PoseStack p_112309_, MultiBufferSource p_112310_, int p_112311_, int p_112312_, double moveX, double moveY, double moveZ, float scaleX, float scaleY, float scaleZ, float angleX, float angleY, float angleZ, ItemDisplayContext context) {
         if (!itemTool.isEmpty()) {
             p_112309_.pushPose();
-            p_112309_.translate(0.5D, 0.75D, 0.5D);
-            p_112309_.scale(0.5F, 0.5F, 0.5F);
-
-            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(Xangle, XP)));
-            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(Yangle, YP)));
-            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(Zangle, ZP)));
+            p_112309_.translate(moveX, moveY, moveZ);
+            p_112309_.scale(scaleX, scaleY, scaleZ);
+            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angleX, XP)));
+            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angleY, YP)));
+            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angleZ, ZP)));
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
             BakedModel baked = renderer.getModel(itemTool,worldIn,null,0);
-            renderer.render(itemTool, ItemDisplayContext.FIXED,true,p_112309_,p_112310_,p_112311_,p_112312_,baked);
-            //Minecraft.getInstance().getItemRenderer().renderItem(itemCoin, ItemCameraTransforms.TransformType.FIXED, p_112311_, p_112312_, p_112309_, p_112310_);
+            renderer.render(itemTool, context,true,p_112309_,p_112310_,p_112311_,p_112312_,baked);
             p_112309_.popPose();
         }
     }
@@ -277,15 +336,12 @@ public class MowLibRenderUtils {
         buffer.vertex(matrix4f, minX, maxY - 0.01f, minZ).color(red, green, blue, alpha).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(uvBrightness).normal(0, -1, 0).endVertex();
     }
 
-    private static void renderPedestalsHUD(PoseStack matrixStack, MultiBufferSource buffer, List<String> messages, float x, float y, float z, int angleX, int angleY, int angleZ) {
+    public static void renderHUD(PoseStack matrixStack, MultiBufferSource buffer, List<String> messages, float moveX, float moveY, float moveZ, float scaleX, float scaleY, float scaleZ, int angleX, int angleY, int angleZ) {
 
 
         matrixStack.pushPose();
-        matrixStack.translate(x,y,z);
-        //float f3 = 0.0075F;
-        float f3 = 0.025F;
-        matrixStack.scale(f3 , f3 , f3);
-
+        matrixStack.translate(moveX,moveY,moveZ);
+        matrixStack.scale(scaleX , scaleY , scaleZ);
         matrixStack.mulPose(new Quaternionf(new AxisAngle4f(angleX, XP)));
         matrixStack.mulPose(new Quaternionf(new AxisAngle4f(angleY, YP)));
         matrixStack.mulPose(new Quaternionf(new AxisAngle4f(angleZ, ZP)));
