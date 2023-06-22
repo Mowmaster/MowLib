@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:yellow_stained_glass"
+  },
+  "entityString": "minecraft:skeleton_horse",
+  "mobType": 1,
+  "isBaby": true
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:purple_wool"
+  },
+  "entityString": "minecraft:allay",
+  "mobType": 1,
+  "isBaby": false
+}

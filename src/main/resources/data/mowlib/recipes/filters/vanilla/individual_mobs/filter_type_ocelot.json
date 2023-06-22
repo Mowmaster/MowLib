@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:yellow_glazed_terracotta"
+  },
+  "entityString": "minecraft:ocelot",
+  "mobType": 1,
+  "isBaby": false
+}

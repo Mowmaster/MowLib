@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:white_concrete_powder"
+  },
+  "entityString": "minecraft:chicken",
+  "mobType": 1,
+  "isBaby": true
+}

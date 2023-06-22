@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:blue_wool"
+  },
+  "entityString": "minecraft:shulker",
+  "mobType": 1,
+  "isBaby": false
+}

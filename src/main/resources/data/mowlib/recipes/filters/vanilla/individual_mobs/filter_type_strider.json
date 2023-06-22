@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:red_terracotta"
+  },
+  "entityString": "minecraft:strider",
+  "mobType": 1,
+  "isBaby": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:light_blue_glazed_terracotta"
+  },
+  "entityString": "minecraft:glow_squid",
+  "mobType": 1,
+  "isBaby": false
+}

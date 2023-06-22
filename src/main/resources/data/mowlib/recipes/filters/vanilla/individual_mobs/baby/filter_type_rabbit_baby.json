@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:blue_concrete_powder"
+  },
+  "entityString": "minecraft:rabbit",
+  "mobType": 1,
+  "isBaby": true
+}

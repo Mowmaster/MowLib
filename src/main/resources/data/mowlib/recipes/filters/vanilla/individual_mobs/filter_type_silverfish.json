@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:gray_wool"
+  },
+  "entityString": "minecraft:silverfish",
+  "mobType": 1,
+  "isBaby": false
+}

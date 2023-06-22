@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:light_gray_wool"
+  },
+  "entityString": "minecraft:phantom",
+  "mobType": 1,
+  "isBaby": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:orange_wool"
+  },
+  "entityString": "minecraft:armor_stand",
+  "mobType": 1,
+  "isBaby": false
+}

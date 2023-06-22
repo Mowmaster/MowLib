@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:slime_block"
+  },
+  "entityString": "minecraft:experience_orb",
+  "mobType": 1,
+  "isBaby": false
+}

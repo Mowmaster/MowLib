@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:mossy_stone_bricks"
+  },
+  "entityString": "minecraft:zombie_villager",
+  "mobType": 1,
+  "isBaby": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:nether_bricks"
+  },
+  "entityString": "minecraft:zombified_piglin",
+  "mobType": 1,
+  "isBaby": false
+}

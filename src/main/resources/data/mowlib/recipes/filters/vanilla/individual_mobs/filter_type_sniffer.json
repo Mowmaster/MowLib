@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:orange_terracotta"
+  },
+  "entityString": "minecraft:sniffer",
+  "mobType": 1,
+  "isBaby": false
+}

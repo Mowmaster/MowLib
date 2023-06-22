@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:light_blue_concrete_powder"
+  },
+  "entityString": "minecraft:goat",
+  "mobType": 1,
+  "isBaby": true
+}

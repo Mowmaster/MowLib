@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:green_glazed_terracotta"
+  },
+  "entityString": "minecraft:tadpole",
+  "mobType": 1,
+  "isBaby": false
+}

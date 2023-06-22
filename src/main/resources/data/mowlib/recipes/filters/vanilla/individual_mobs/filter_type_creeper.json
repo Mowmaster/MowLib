@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:green_wool"
+  },
+  "entityString": "minecraft:creeper",
+  "mobType": 1,
+  "isBaby": false
+}

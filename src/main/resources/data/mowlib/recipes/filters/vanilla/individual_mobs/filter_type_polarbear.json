@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:light_gray_terracotta"
+  },
+  "entityString": "minecraft:polar_bear",
+  "mobType": 1,
+  "isBaby": false
+}

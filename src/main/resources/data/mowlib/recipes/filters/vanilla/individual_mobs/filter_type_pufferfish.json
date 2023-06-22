@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:magenta_terracotta"
+  },
+  "entityString": "minecraft:pufferfish",
+  "mobType": 1,
+  "isBaby": false
+}

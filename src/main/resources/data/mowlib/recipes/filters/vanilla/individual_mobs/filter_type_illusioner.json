@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:magenta_stained_glass"
+  },
+  "entityString": "minecraft:illusioner",
+  "mobType": 1,
+  "isBaby": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:blue_stained_glass"
+  },
+  "entityString": "minecraft:zombie_horse",
+  "mobType": 1,
+  "isBaby": false
+}
