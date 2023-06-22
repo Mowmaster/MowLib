@@ -171,6 +171,19 @@
   "jei.mowlib.tool_dev.interaction": "§5 Offhand item with NBT and right click tool (in air) to display the NBT string in chat. Offhand Honey Comb and right click tool on Hive Block to 'fill' it.",
   "jei.mowlib.tool_dev.description": "§5 Somewhat Useful Tool for creative mode users",
 
+  "mowlib.mode_changed": "Mode Changed: ",
+  "mowlib.mode_items": "Item",
+  "mowlib.mode_fluids": "Fluid",
+  "mowlib.mode_energy": "Energy",
+  "mowlib.mode_experience": "XP",
+  "mowlib.mode_dust": "Dust",
+
+  "mowlib.filters.tooltip_filterlist": "===== Filter |---> Filter Contents =====",
+  "mowlib.filter_changed_added": "Block Added To Filter",
+  "mowlib.filter_changed_removed": "Block Removed From Filter",
+
+
+
 
 
   "mowlib.mowlib_colorName000": "Black",

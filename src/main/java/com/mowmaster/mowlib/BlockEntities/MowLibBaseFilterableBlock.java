@@ -102,6 +102,7 @@ public class MowLibBaseFilterableBlock extends MowLibBaseBlock
 
     @Override
     public InteractionResult use(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
+
         if(p_60504_.isClientSide())
         {
             ItemStack itemInHand = p_60506_.getMainHandItem();

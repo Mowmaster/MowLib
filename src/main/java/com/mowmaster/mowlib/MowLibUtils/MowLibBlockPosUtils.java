@@ -195,17 +195,6 @@ public class MowLibBlockPosUtils {
         return readBlockPosFromNBT(ModID, identifier, stack,num);
     }
 
-    public static void saveStringToNBT(ItemStack upgrade, String nbtTag, String string)
-    {
-        CompoundTag compound = new CompoundTag();
-        if(upgrade.hasTag())
-        {
-            compound = upgrade.getTag();
-        }
-        compound.putString(MODID+nbtTag, string);
-        upgrade.setTag(compound);
-    }
-
     //returns true for an add, false for a remove.
     public static boolean addBlockPosToList(ItemStack upgrade, BlockPos posOfBlock)
     {
@@ -272,6 +261,17 @@ public class MowLibBlockPosUtils {
         return posList;
     }
 
+    public static void saveStringToNBT(ItemStack upgrade, String nbtTag, String string)
+    {
+        CompoundTag compound = new CompoundTag();
+        if(upgrade.hasTag())
+        {
+            compound = upgrade.getTag();
+        }
+        compound.putString(nbtTag, string);
+        upgrade.setTag(compound);
+    }
+
     public static void saveBlockPosToNBT(ItemStack upgrade, int num, BlockPos posToSave)
     {
         CompoundTag compound = new CompoundTag();
@@ -283,14 +283,14 @@ public class MowLibBlockPosUtils {
         listed.add(posToSave.getX());
         listed.add(posToSave.getY());
         listed.add(posToSave.getZ());
-        compound.putIntArray(MODID+"_upgrade_blockpos_"+num, listed);
+        compound.putIntArray("mowlib_upgrade_blockpos_"+num, listed);
         upgrade.setTag(compound);
     }
 
     public static BlockPos readBlockPosFromNBT(ItemStack upgrade, int num) {
         if(upgrade.hasTag())
         {
-            String tag = MODID+"_upgrade_blockpos_"+num;
+            String tag = "mowlib_upgrade_blockpos_"+num;
             CompoundTag getCompound = upgrade.getTag();
             if(upgrade.getTag().contains(tag))
             {
@@ -299,6 +299,22 @@ public class MowLibBlockPosUtils {
             }
         }
         return BlockPos.ZERO;
+    }
+
+    public static boolean isNewBlockPosSmallerThanExisting(ItemStack stack, BlockPos posTwo) {
+        BlockPos posOne = getExistingSingleBlockPos(stack);
+        BlockPos toCompare = new BlockPos(Math.min(posOne.getX(), posTwo.getX()),Math.min(posOne.getY(), posTwo.getY()),Math.min(posOne.getZ(), posTwo.getZ()));
+
+        return (posTwo.equals(toCompare))?(true):(false);
+    }
+
+    public static boolean hasTwoPointsSelected(ItemStack stack)
+    {
+        return !readBlockPosFromNBT(stack,1).equals(BlockPos.ZERO) && !readBlockPosFromNBT(stack,2).equals(BlockPos.ZERO);
+    }
+
+    public static BlockPos getExistingSingleBlockPos(ItemStack stack) {
+        return (!readBlockPosFromNBT(stack,1).equals(BlockPos.ZERO))?(readBlockPosFromNBT(stack,1)):(readBlockPosFromNBT(stack,2));
     }
 
     public static BlockPos getBlockPosOnUpgrade(ItemStack stack, int num) {

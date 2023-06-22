@@ -114,6 +114,20 @@ public class JeiPlugin implements IModPlugin
         this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ITEM_MACHINE.get());
         this.registerIngredientDescription(registration, DeferredRegisterItems.FILTER_ITEMSTACK_MACHINE.get());
         this.registerIngredientInteraction(registration, DeferredRegisterItems.FILTER_ITEMSTACK_MACHINE.get());
+
+
+        this.registerIngredientDescription(registration, DeferredRegisterItems.WORKCARD_AREA.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.WORKCARD_LOCATIONS.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.WORKCARD_BLOCKENTITY_LOCATIONS.get());
+
+        this.registerIngredientDescription(registration, DeferredRegisterItems.TOOL_DEVTOOL.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.TOOL_DEVTOOL.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.TOOL_FILTERTOOL.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.TOOL_FILTERTOOL.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.TOOL_TAGTOOL.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.TOOL_TAGTOOL.get());
+        this.registerIngredientDescription(registration, DeferredRegisterItems.TOOL_WORKTOOL.get());
+        this.registerIngredientInteraction(registration, DeferredRegisterItems.TOOL_WORKTOOL.get());
     }
 
     @Override

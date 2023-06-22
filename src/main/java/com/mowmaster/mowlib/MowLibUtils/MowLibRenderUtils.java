@@ -3,6 +3,7 @@ package com.mowmaster.mowlib.MowLibUtils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -24,15 +25,7 @@ import java.lang.Math;
 import java.util.List;
 
 public class MowLibRenderUtils {
-
-    public static Vector3f XN = new Vector3f(-1.0F, 0.0F, 0.0F);
-    public static Vector3f XP = new Vector3f(1.0F, 0.0F, 0.0F);
-    public static Vector3f YN = new Vector3f(0.0F, -1.0F, 0.0F);
-    public static Vector3f YP = new Vector3f(0.0F, 1.0F, 0.0F);
-    public static Vector3f ZN = new Vector3f(0.0F, 0.0F, -1.0F);
-    public static Vector3f ZP = new Vector3f(0.0F, 0.0F, 1.0F);
-    public static Vector3f ZERO = new Vector3f(0.0F, 0.0F, 0.0F);
-
+    
     public static void renderItemRotating(Level worldIn, PoseStack p_112309_, MultiBufferSource p_112310_, ItemStack itemStack, int p_112311_, int p_112312_)
     {
         if (!itemStack.isEmpty()) {
@@ -41,7 +34,7 @@ public class MowLibRenderUtils {
             p_112309_.scale(0.75F, 0.75F, 0.75F);
             long time = System.currentTimeMillis();
             float angle = (time/25) % 360;
-            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angle, YP)));
+            p_112309_.mulPose(Axis.YP.rotationDegrees(angle));
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
             BakedModel baked = renderer.getModel(itemStack,worldIn,null,0);
             renderer.render(itemStack, ItemDisplayContext.GROUND,true,p_112309_,p_112310_,p_112311_,p_112312_,baked);
@@ -89,9 +82,9 @@ public class MowLibRenderUtils {
             for (int i = 0; i < stacks; i++) {
                 posStack.pushPose();
                 posStack.translate(0.5F, 0.75F, 0.5F);
-                posStack.mulPose(new Quaternionf(new AxisAngle4f(angles[i] + (float) time, YP)));
+                posStack.mulPose(Axis.YP.rotationDegrees(angles[i] + (float) time));
                 posStack.translate(sized, 0F, sizedd);
-                posStack.mulPose(new Quaternionf(new AxisAngle4f(90F, YP)));
+                posStack.mulPose(Axis.YP.rotationDegrees(90F));
                 posStack.translate(0D, 0.075 * Math.sin((time + i * 10) / 5D), 0F);
                 ItemStack stack = listed.get(i);
                 Minecraft mc = Minecraft.getInstance();
@@ -111,7 +104,7 @@ public class MowLibRenderUtils {
             posStack.scale(0.75F, 0.75F, 0.75F);
             long time = System.currentTimeMillis();
             float angle = (time/25) % 360;
-            posStack.mulPose(new Quaternionf(new AxisAngle4f(angle, YP)));
+            posStack.mulPose(Axis.YP.rotationDegrees(angle));
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
             BakedModel baked = renderer.getModel(listed.get(0),level,null,0);
             renderer.render(listed.get(0), ItemDisplayContext.GROUND,true,posStack,buffers,light,overlay,baked);
@@ -150,9 +143,9 @@ public class MowLibRenderUtils {
             for (int i = 0; i < stacks; i++) {
                 posStack.pushPose();
                 posStack.translate(0.5F, 0.75F, 0.5F);
-                posStack.mulPose(new Quaternionf(new AxisAngle4f(angles[i] + (float) time, YP)));
+                posStack.mulPose(Axis.YP.rotationDegrees(angles[i] + (float) time));
                 posStack.translate(sized, 0F, sizedd);
-                posStack.mulPose(new Quaternionf(new AxisAngle4f(90F, YP)));
+                posStack.mulPose(Axis.YP.rotationDegrees(90F));
                 posStack.translate(0D, 0.075 * Math.sin((time + i * 10) / 5D), 0F);
                 ItemStack stack = listed.get(i);
                 Minecraft mc = Minecraft.getInstance();
@@ -178,9 +171,9 @@ public class MowLibRenderUtils {
             p_112309_.pushPose();
             p_112309_.translate(moveX, moveY, moveZ);
             p_112309_.scale(scaleX, scaleY, scaleZ);
-            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angleX, XP)));
-            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angleY, YP)));
-            p_112309_.mulPose(new Quaternionf(new AxisAngle4f(angleZ, ZP)));
+            if(angleX <= 0){p_112309_.mulPose(Axis.XP.rotationDegrees(angleX));}
+            if(angleY <= 0){p_112309_.mulPose(Axis.YP.rotationDegrees(angleY));}
+            if(angleZ <= 0){p_112309_.mulPose(Axis.ZP.rotationDegrees(angleZ));}
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
             BakedModel baked = renderer.getModel(itemTool,worldIn,null,0);
             renderer.render(itemTool, context,true,p_112309_,p_112310_,p_112311_,p_112312_,baked);
@@ -336,38 +329,38 @@ public class MowLibRenderUtils {
         buffer.vertex(matrix4f, minX, maxY - 0.01f, minZ).color(red, green, blue, alpha).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(uvBrightness).normal(0, -1, 0).endVertex();
     }
 
-    public static void renderHUD(PoseStack matrixStack, MultiBufferSource buffer, List<String> messages, float moveX, float moveY, float moveZ, float scaleX, float scaleY, float scaleZ, int angleX, int angleY, int angleZ) {
+    public static void renderHUD(PoseStack posStack, MultiBufferSource buffer, List<String> messages, float moveX, float moveY, float moveZ, float scaleX, float scaleY, float scaleZ, int angleX, int angleY, int angleZ) {
 
-
-        matrixStack.pushPose();
-        matrixStack.translate(moveX,moveY,moveZ);
-        matrixStack.scale(scaleX , scaleY , scaleZ);
-        matrixStack.mulPose(new Quaternionf(new AxisAngle4f(angleX, XP)));
-        matrixStack.mulPose(new Quaternionf(new AxisAngle4f(angleY, YP)));
-        matrixStack.mulPose(new Quaternionf(new AxisAngle4f(angleZ, ZP)));
+        posStack.pushPose();
+        posStack.translate(moveX,moveY,moveZ);
+        posStack.scale(scaleX , scaleY , scaleZ);
+        if(angleX <= 0){posStack.mulPose(Axis.XP.rotationDegrees(angleX));}
+        if(angleY <= 0){posStack.mulPose(Axis.YP.rotationDegrees(angleY));}
+        if(angleZ <= 0){posStack.mulPose(Axis.ZP.rotationDegrees(angleZ));}
 
         Font fontrenderer = Minecraft.getInstance().font;
         int lines = 11;
-        int currenty = 7;
-        int height = 10;
+        float xHeight = 1f;
+        float yHeight = 7f;
+        float additionalHeight = 10f;
         int logsize = messages.size();
         int i = 0;
         for (String s : messages) {
             if (i >= logsize - lines) {
-                if (currenty + height <= 124) {
+                if (yHeight + additionalHeight <= 124f) {
                     String prefix = "";
 
                     //fontrenderer.plainSubstrByWidth(prefix + s, 115),7, currenty, 0xffffff, false, matrixStack.last().pose(), buffer, false, 0, 0xf000f0
                     MutableComponent comp = Component.empty();
-                    fontrenderer.drawInBatch(fontrenderer.plainSubstrByWidth(prefix + s, 115),1.0f,1.0f,7,false,matrixStack.last().pose(), buffer, Font.DisplayMode.SEE_THROUGH,0, 0xf000f0);
-                    currenty += height;
+                    fontrenderer.drawInBatch(fontrenderer.plainSubstrByWidth(prefix + s, 115),xHeight,yHeight,7,false,posStack.last().pose(), buffer, Font.DisplayMode.SEE_THROUGH,0, 0xf000f0);
+                    yHeight += additionalHeight;
                 }
             }
             i++;
         }
 
 
-        matrixStack.popPose();
+        posStack.popPose();
     }
 }
 

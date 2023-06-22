@@ -1,6 +1,7 @@
 package com.mowmaster.mowlib.BlockEntities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.mowmaster.mowlib.MowLibUtils.MowLibRenderUtils;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.joml.*;
@@ -34,7 +35,7 @@ public class BaseBuiltFueledMachineBlockEntityRenderer
             float angle = (time/50) % 360;
             //float angle = (worldIn.getGameTime()) / 20.0F * (180F / (float) Math.PI);
             //p_112309_.mulPose(new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), angle, true));
-            p_112309_.mulPose(new Quaternionf(new AxisAngle4f (angle, MowLibRenderUtils.YP)));
+            p_112309_.mulPose(Axis.YP.rotationDegrees(angle));
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
             BakedModel baked = renderer.getModel(itemStack,worldIn,null,0);
             renderer.render(itemStack, ItemDisplayContext.GROUND,true,p_112309_,p_112310_,p_112311_,p_112312_,baked);
@@ -62,11 +63,11 @@ public class BaseBuiltFueledMachineBlockEntityRenderer
             switch(axis)
             {
 
-                case 1: p_112309_.mulPose(new Quaternionf(new AxisAngle4f (angle, MowLibRenderUtils.XP)));
+                case 1: p_112309_.mulPose(Axis.XP.rotationDegrees(angle));
                     break;
-                case 2: p_112309_.mulPose(new Quaternionf(new AxisAngle4f (angle, MowLibRenderUtils.ZP)));
+                case 2: p_112309_.mulPose(Axis.ZP.rotationDegrees(angle));
                     break;
-                default: p_112309_.mulPose(new Quaternionf(new AxisAngle4f (angle, MowLibRenderUtils.YP)));
+                default: p_112309_.mulPose(Axis.YP.rotationDegrees(angle));
                     break;
             }
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();

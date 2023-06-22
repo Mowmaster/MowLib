@@ -7,6 +7,7 @@ import com.mowmaster.mowlib.Items.BaseUseInteractionItem;
 import com.mowmaster.mowlib.MowLibUtils.MowLibMessageUtils;
 import com.mowmaster.mowlib.Networking.MowLibPacketHandler;
 import com.mowmaster.mowlib.Networking.MowLibPacketParticles;
+import com.mowmaster.mowlib.api.Tools.IMowLibTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +31,7 @@ import java.util.List;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class BaseTool extends BaseUseInteractionItem
+public class BaseTool extends BaseUseInteractionItem implements IMowLibTool
 {
 
     public BaseTool(Properties p_41383_) {
@@ -72,19 +73,19 @@ public class BaseTool extends BaseUseInteractionItem
             BlockEntity tile = level.getBlockEntity(pos);
             if(tile instanceof MowLibBaseFilterableBlockEntity baseFilterableBlockEntity)
             {
-                getBlockEntityDetail(baseFilterableBlockEntity, player);
+                getBlockEntityDetailFilterable(baseFilterableBlockEntity, player);
             }
         }
         return  InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
     //Default method of interactGetPedestalDetail which is in interactCrouchingTargetBlock
-    public void getBlockEntityDetail(MowLibBaseBlockEntity baseBlockEntity, Player player) {
+    public void getBlockEntityDetailBase(MowLibBaseBlockEntity baseBlockEntity, Player player) {
         baseBlockEntity.chatDetailsBaseBlockEntity(player,baseBlockEntity);
     }
 
-    public void getBlockEntityDetail(MowLibBaseFilterableBlockEntity baseFilterableBlockEntity, Player player) {
-        getBlockEntityDetail(baseFilterableBlockEntity,player);
+    public void getBlockEntityDetailFilterable(MowLibBaseFilterableBlockEntity baseFilterableBlockEntity, Player player) {
+        getBlockEntityDetailBase(baseFilterableBlockEntity,player);
     }
 
     @Override

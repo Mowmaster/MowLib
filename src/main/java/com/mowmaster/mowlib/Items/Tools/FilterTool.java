@@ -1,5 +1,6 @@
 package com.mowmaster.mowlib.Items.Tools;
 
+import com.mowmaster.mowlib.BlockEntities.MowLibBaseBlockEntity;
 import com.mowmaster.mowlib.BlockEntities.MowLibBaseFilterableBlockEntity;
 import com.mowmaster.mowlib.MowLibUtils.MowLibMessageUtils;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
@@ -24,7 +25,7 @@ public class FilterTool extends BaseTool implements IMowLibTool
     public ItemStack getSwappedTool() { return DeferredRegisterItems.TOOL_WORKTOOL.get().getDefaultInstance(); }
 
     @Override
-    public void getBlockEntityDetail(MowLibBaseFilterableBlockEntity baseFilterableBlockEntity, Player player) {
+    public void getBlockEntityDetailFilterable(MowLibBaseFilterableBlockEntity baseFilterableBlockEntity, Player player) {
         if(baseFilterableBlockEntity.hasFilter())
         {
             ItemStack filterInPedestal = baseFilterableBlockEntity.getFilterInBlockEntity();

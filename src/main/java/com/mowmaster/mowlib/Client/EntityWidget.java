@@ -3,6 +3,7 @@ package com.mowmaster.mowlib.Client;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.math.Axis;
 import com.mowmaster.mowlib.MowLibUtils.MowLibRenderUtils;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
@@ -99,7 +100,7 @@ public class EntityWidget extends AbstractWidget {
         stack.pose().translate(0.0D, 0.0D, 1000.0D);
         stack.pose().scale((float) scale.x(), (float) scale.y(), (float) scale.z());
 
-        stack.pose().mulPose(new Quaternionf(new AxisAngle4f(180F, MowLibRenderUtils.ZP)));
+        stack.pose().mulPose(Axis.ZP.rotationDegrees(180F));
         stack.pose().translate(offset.x(), offset.y(), offset.z());
         final EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         final MultiBufferSource.BufferSource buffer = MultiBufferSource

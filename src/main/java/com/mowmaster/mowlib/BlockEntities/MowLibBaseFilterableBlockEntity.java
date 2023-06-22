@@ -258,6 +258,11 @@ public class MowLibBaseFilterableBlockEntity extends MowLibBaseBlockEntity
         return !baseInsertablesHandler.getStackInSlot(PrivateInventorySlot.WORK_CARD).isEmpty();
     }
 
+    @Override
+    public ItemStack getWorkCard() {
+        return getWorkCardInPedestal();
+    }
+
     public ItemStack getWorkCardInPedestal()
     {
         return baseInsertablesHandler.getStackInSlot(PrivateInventorySlot.WORK_CARD);
