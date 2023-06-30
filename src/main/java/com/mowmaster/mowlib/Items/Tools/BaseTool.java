@@ -66,7 +66,7 @@ public class BaseTool extends BaseUseInteractionItem implements IMowLibTool
     //Default method of interactCrouchingTargetBlock
     public InteractionResultHolder interactGetPedestalDetail(Level level, Player player, InteractionHand hand, ItemStack itemStackInHand, HitResult result)
     {
-        BlockPos pos = new BlockPos((int)result.getLocation().x,(int)result.getLocation().y,(int)result.getLocation().z);
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(result.getLocation().x, result.getLocation().y, result.getLocation().z);
         BlockState getBlockState = level.getBlockState(pos);
         if(getBlockState.getBlock() instanceof MowLibBaseFilterableBlock)
         {
