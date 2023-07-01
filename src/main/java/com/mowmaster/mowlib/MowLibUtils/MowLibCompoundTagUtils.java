@@ -196,6 +196,21 @@ public class MowLibCompoundTagUtils
         return 0;
     }
 
+    public static CompoundTag writeIntegerToNBT(@Nullable CompoundTag inputNBT, int input, String nbtName) {
+        CompoundTag compound = inputNBT != null ? inputNBT : new CompoundTag();
+        compound.putInt(nbtName, input);
+        return compound;
+    }
+
+    public static int readIntegerFromNBT(CompoundTag inputNBT, String nbtName)
+    {
+        if(inputNBT.contains(nbtName))
+        {
+            return inputNBT.getInt(nbtName);
+        }
+        return 0;
+    }
+
 
 
     /*===============================================================

@@ -49,7 +49,7 @@ public class DualHandedCraftingHandler
                     InWorldDualHandedCrafting getRecipe = getRecipe(level,blockTarget,player.getMainHandItem(),player.getOffhandItem());
                     if(getRecipe != null)
                     {
-                        ItemStack getResultItem = getBlockItemResult(getRecipe).stream().findFirst().get().copy();
+                        ItemStack getResultItem = getBlockItemResult(getRecipe,blockTarget,player.getMainHandItem(),player.getOffhandItem()).stream().findFirst().get().copy();
                         if(getResultItem != null)
                         {
                             if(!player.isCreative())
@@ -146,8 +146,13 @@ public class DualHandedCraftingHandler
         return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(InWorldDualHandedCrafting.Type.INSTANCE,cont,level).get(0) : null;
     }
 
-    protected static Collection<ItemStack> getBlockItemResult(InWorldDualHandedCrafting recipe) {
-        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem()));
+    protected static Collection<ItemStack> getBlockItemResult(InWorldDualHandedCrafting recipe, ItemStack targetBlockItem, ItemStack mainHandItem, ItemStack offHandItem) {
+        Container cont = MowLibContainerUtils.getContainer(3);
+        cont.setItem(-1,targetBlockItem);
+        cont.setItem(-1,mainHandItem);
+        cont.setItem(-1,offHandItem);
+        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Arrays.asList(recipe.assemble(cont)));
+        //return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem()));
     }
 
     protected static Boolean consumeMainHandItemOrDurability(InWorldDualHandedCrafting recipe) {
