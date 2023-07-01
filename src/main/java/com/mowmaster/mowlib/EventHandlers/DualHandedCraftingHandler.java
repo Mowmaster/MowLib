@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +31,7 @@ import java.util.List;
 public class DualHandedCraftingHandler
 {
 
-    @SubscribeEvent()
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void dualHandedCrafting(PlayerInteractEvent.RightClickBlock event) {
 
         Level level = event.getLevel();

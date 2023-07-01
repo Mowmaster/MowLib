@@ -32,6 +32,9 @@ public final class DeferredRecipeSerializers
     public static final RegistryObject<RecipeSerializer<InWorldDualHandedCrafting>> DUAL_HANDED_RECIPE_SERIALIZER =
             SERIALIZERS.register("dualhandedcrafting", () -> InWorldDualHandedCrafting.Serializer.INSTANCE);
 
+    public static final RegistryObject<RecipeSerializer<ToolSwapCrafting>> TOOL_SWAP_RECIPE_SERIALIZER =
+            SERIALIZERS.register("toolswapcrafting", () -> ToolSwapCrafting.Serializer.INSTANCE);
+
     public static final RegistryObject<RecipeSerializer<BaseBlockEntityFilter>> ENTITY_FILTER_RECIPE_SERIALIZER =
             SERIALIZERS.register("entity_filter", () -> BaseBlockEntityFilter.Serializer.INSTANCE);
 
