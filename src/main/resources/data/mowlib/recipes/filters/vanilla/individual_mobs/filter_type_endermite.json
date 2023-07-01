@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:magenta_wool"
+  },
+  "entityString": "minecraft:endermite",
+  "mobType": 1,
+  "isBaby": false
+}

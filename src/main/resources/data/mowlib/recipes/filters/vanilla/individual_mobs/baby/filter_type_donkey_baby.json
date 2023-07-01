@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:gray_concrete_powder"
+  },
+  "entityString": "minecraft:donkey",
+  "mobType": 1,
+  "isBaby": true
+}

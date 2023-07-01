@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:brown_terracotta"
+  },
+  "entityString": "minecraft:wolf",
+  "mobType": 1,
+  "isBaby": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:pink_wool"
+  },
+  "entityString": "minecraft:vex",
+  "mobType": 1,
+  "isBaby": false
+}

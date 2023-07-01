@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:yellow_concrete"
+  },
+  "entityString": "minecraft:bee",
+  "mobType": 1,
+  "isBaby": false
+}

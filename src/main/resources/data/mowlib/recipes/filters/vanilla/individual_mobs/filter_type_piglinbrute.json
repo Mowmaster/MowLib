@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:gilded_blackstone"
+  },
+  "entityString": "minecraft:piglin_brute",
+  "mobType": 1,
+  "isBaby": false
+}

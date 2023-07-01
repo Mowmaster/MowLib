@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:lime_concrete"
+  },
+  "entityString": "minecraft:turtle",
+  "mobType": 1,
+  "isBaby": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:cyan_wool"
+  },
+  "entityString": "minecraft:parrot",
+  "mobType": 1,
+  "isBaby": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:white_stained_glass"
+  },
+  "entityString": "minecraft:stray",
+  "mobType": 1,
+  "isBaby": false
+}

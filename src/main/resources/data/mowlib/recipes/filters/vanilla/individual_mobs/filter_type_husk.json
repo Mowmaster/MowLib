@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:pink_terracotta"
+  },
+  "entityString": "minecraft:husk",
+  "mobType": 1,
+  "isBaby": false
+}

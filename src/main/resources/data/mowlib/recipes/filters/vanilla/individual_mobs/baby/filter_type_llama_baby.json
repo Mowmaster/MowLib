@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:green_concrete_powder"
+  },
+  "entityString": "minecraft:llama",
+  "mobType": 1,
+  "isBaby": true
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:white_wool"
+  },
+  "entityString": "minecraft:ghast",
+  "mobType": 1,
+  "isBaby": false
+}

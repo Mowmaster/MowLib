@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:red_concrete"
+  },
+  "entityString": "minecraft:mooshroom",
+  "mobType": 1,
+  "isBaby": false
+}

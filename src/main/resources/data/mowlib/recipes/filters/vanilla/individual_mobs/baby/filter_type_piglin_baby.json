@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:pink_stained_glass"
+  },
+  "entityString": "minecraft:piglin",
+  "mobType": 1,
+  "isBaby": true
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:purple_stained_glass"
+  },
+  "entityString": "minecraft:evoker",
+  "mobType": 1,
+  "isBaby": false
+}

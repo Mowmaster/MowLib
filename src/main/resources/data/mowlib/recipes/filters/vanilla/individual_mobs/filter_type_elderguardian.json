@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:cyan_glazed_terracotta"
+  },
+  "entityString": "minecraft:elder_guardian",
+  "mobType": 1,
+  "isBaby": false
+}

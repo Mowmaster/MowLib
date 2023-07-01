@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:yellow_terracotta"
+  },
+  "entityString": "minecraft:cat",
+  "mobType": 1,
+  "isBaby": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:polished_blackstone_bricks"
+  },
+  "entityString": "minecraft:zoglin",
+  "mobType": 1,
+  "isBaby": false
+}

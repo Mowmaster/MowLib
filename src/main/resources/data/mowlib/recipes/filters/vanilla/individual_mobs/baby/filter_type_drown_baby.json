@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:blue_glazed_terracotta"
+  },
+  "entityString": "minecraft:drowned",
+  "mobType": 1,
+  "isBaby": true
+}

@@ -1,0 +1,9 @@
+{
+  "type": "mowlib:entity_filter",
+  "input": {
+    "item": "minecraft:white_terracotta"
+  },
+  "entityString": "minecraft:skeleton",
+  "mobType": 1,
+  "isBaby": false
+}
