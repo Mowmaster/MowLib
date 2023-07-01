@@ -1,6 +1,7 @@
 package com.mowmaster.mowlib.Recipes;
 
 import com.google.gson.JsonObject;
+import com.mowmaster.mowlib.MowLibUtils.MowLibCompoundTagUtils;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -33,15 +34,22 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
     private final Ingredient blockTarget;
     private final Ingredient offhandTool;
     private final Ingredient mainhandTool;
-    private final ItemStack resultBlock;
+    private final ItemStack resultStack;
     private final Boolean consumeOffhandItem;
     private final Boolean consumeMainhandItem;
+
+    private final Boolean modifyMainhandItem;
+    private final Boolean modifyOffhandItem;
+    private final String resultNBTName;
+    private final int resultNBTValue;
+    private final int resultNBTMinValue;
+    private final int resultNBTMaxValue;
 
 
 
     //Someday add in a bool value to set as something fake players could do too or not???
 
-    public InWorldDualHandedCrafting(ResourceLocation id, String group, @Nullable Ingredient blockTarget, @Nullable Ingredient mainhandTool, @Nullable Boolean consumeMainhandItem, @Nullable Ingredient offhandTool, @Nullable Boolean consumeOffhandItem, ItemStack resultBlock)
+    public InWorldDualHandedCrafting(ResourceLocation id, String group, @Nullable Ingredient blockTarget, @Nullable Ingredient mainhandTool, @Nullable Boolean consumeMainhandItem, @Nullable Ingredient offhandTool, @Nullable Boolean consumeOffhandItem, @Nullable ItemStack resultStack, @Nullable Boolean modifyMainhandItem, @Nullable Boolean modifyOffhandItem, @Nullable String resultNBTName, @Nullable int resultNBTValue, @Nullable int resultNBTMinValue, @Nullable int resultNBTMaxValue)
     {
         this.group = group;
         this.id = id;
@@ -50,7 +58,15 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
         this.consumeMainhandItem = consumeMainhandItem;
         this.offhandTool = offhandTool;
         this.consumeOffhandItem = consumeOffhandItem;
-        this.resultBlock = resultBlock;
+        this.resultStack = resultStack;
+
+
+        this.modifyMainhandItem = modifyMainhandItem;
+        this.modifyOffhandItem = modifyOffhandItem;
+        this.resultNBTName = resultNBTName;
+        this.resultNBTValue = resultNBTValue;
+        this.resultNBTMinValue = resultNBTMinValue;
+        this.resultNBTMaxValue = resultNBTMaxValue;
     }
 
     @Override
@@ -96,25 +112,111 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
     }
 
     @Override
-    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_)
+    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
+        return assemble(p_44001_);
+    }
+
+    public ItemStack assemble(Container inv)
     {
-        return getResultItem(p_267165_).copy();
+        if(resultStack == null || resultStack.isEmpty())
+        {
+            if(modifyMainHand())
+            {
+                ItemStack main = inv.getItem(1).copy();
+                if(getResultModificationName() != null && getResultModificationName() != "")
+                {
+                    if(mainhandTool.test(main))
+                    {
+                        if(getNBTModifiedItem(main, true))
+                        {
+                            getNBTModifiedItem(main, false);
+                            return main;
+                        }
+                        else{return main;}
+                    }
+                    else{return main;}
+                }
+                else{return main;}
+            }
+            else if(modifyOffHand())
+            {
+                ItemStack off = inv.getItem(2).copy();
+                if(getResultModificationName() != null && getResultModificationName() != "")
+                {
+                    if(offhandTool.test(off))
+                    {
+                        if(getNBTModifiedItem(off, true))
+                        {
+                            getNBTModifiedItem(off, false);
+                            return off;
+                        }
+                        else{return off;}
+                    }
+                    else{return off;}
+                }
+                else{return off;}
+            }
+        }
+
+        return getResultItem().copy();
+    }
+
+    public boolean getNBTModifiedItem(ItemStack inputUpgradeStack, boolean simulate)
+    {
+        if(resultStack == null || resultStack.isEmpty())
+        {
+            if(getResultModificationName() != null && getResultModificationName() != "")
+            {
+                int value = MowLibCompoundTagUtils.readIntegerFromNBT(inputUpgradeStack.getOrCreateTag(),getResultModificationName());
+                if(value>=getResultModificationMaxAmount()) { return false; }
+                if(value<getResultModificationMinAmount()) { return false; }
+
+                int newValue = value + getResultModificationAmount();
+                if(newValue > getResultModificationMaxAmount())
+                {
+                    newValue = getResultModificationMaxAmount();
+                }
+
+                if(!simulate)MowLibCompoundTagUtils.writeIntegerToNBT(inputUpgradeStack.getOrCreateTag(),newValue,getResultModificationName());
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_)
-    {
-        return resultBlock;
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
+        return getResultItem();
     }
 
-    public ItemStack getResultItemJEI()
+    public ItemStack getResultItem()
     {
-        return resultBlock;
+        return (resultStack.isEmpty() || resultStack == null)?(ItemStack.EMPTY):(resultStack);
     }
 
     public Boolean consumeMainHand(){return consumeMainhandItem;}
 
     public Boolean consumeOffHand(){return consumeOffhandItem;}
+
+    public Boolean modifyMainHand(){return modifyMainhandItem;}
+    public Boolean modifyOffHand(){return modifyOffhandItem;}
+    public String getResultModificationName()
+    {
+        return resultNBTName;
+    }
+    public int getResultModificationAmount()
+    {
+        return resultNBTValue;
+    }
+    public int getResultModificationMinAmount()
+    {
+        return resultNBTMinValue;
+    }
+    public int getResultModificationMaxAmount()
+    {
+        return resultNBTMaxValue;
+    }
 
     @Override
     public ResourceLocation getId()
@@ -154,9 +256,10 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
         public static final ResourceLocation ID =
                 new ResourceLocation(MODID,"dualhandedcrafting");
 
-        protected InWorldDualHandedCrafting createRecipe(ResourceLocation recipeId, String group, Ingredient blockTarget, Ingredient mainhandTool, Boolean consumeMainhandItem, Ingredient offhandTool, Boolean consumeOffhandItem, ItemStack result)
+
+        protected InWorldDualHandedCrafting createRecipe(ResourceLocation recipeId, String group, @Nullable Ingredient blockTarget, @Nullable Ingredient mainhandTool, @Nullable Boolean consumeMainhandItem, @Nullable Ingredient offhandTool, @Nullable Boolean consumeOffhandItem, @Nullable ItemStack resultStack, @Nullable Boolean modifyMainhandItem, @Nullable Boolean modifyOffhandItem, @Nullable String resultNBTName, @Nullable int resultNBTValue, @Nullable int resultNBTMinValue, @Nullable int resultNBTMaxValue)
         {
-            return new InWorldDualHandedCrafting(recipeId, group, blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, result);
+            return new InWorldDualHandedCrafting(recipeId, group, blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, resultStack, modifyMainhandItem, modifyOffhandItem, resultNBTName, resultNBTValue, resultNBTMinValue, resultNBTMaxValue);
         }
 
         @Override
@@ -168,8 +271,15 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
             Boolean consumeMainhandItem = json.has("consumeMainhandItem") ? GsonHelper.getAsBoolean(json,"consumeMainhandItem") : true;
             Ingredient offhandTool = json.has("offhandTool") ? CraftingHelper.getIngredient(json.get("offhandTool"),false) : null;
             Boolean consumeOffhandItem = json.has("consumeOffhandItem") ? GsonHelper.getAsBoolean(json,"consumeOffhandItem") : true;
-            ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
-            return createRecipe(recipeId, group, blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, result);
+            ItemStack resultStack = json.has("result") ? CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true) : ItemStack.EMPTY;
+
+            Boolean modifyMainhandItem = json.has("modifyMainhandItem") ? GsonHelper.getAsBoolean(json,"modifyMainhandItem") : false;
+            Boolean modifyOffhandItem = json.has("modifyOffhandItem") ? GsonHelper.getAsBoolean(json,"modifyOffhandItem") : false;
+            String resultNBTName = json.has("resultNBTName") ? GsonHelper.getAsString(json, "resultNBTName", "") : "";
+            int resultNBTValue = json.has("resultNBTValue") ? GsonHelper.getAsInt(json,"resultNBTValue") : (0);
+            int resultNBTMinValue = json.has("resultNBTMinValue") ? GsonHelper.getAsInt(json,"resultNBTMinValue") : (0);
+            int resultNBTMaxValue = json.has("resultNBTMaxValue") ? GsonHelper.getAsInt(json,"resultNBTMaxValue") : (0);
+            return createRecipe(recipeId, group, blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, resultStack, modifyMainhandItem, modifyOffhandItem, resultNBTName, resultNBTValue, resultNBTMinValue, resultNBTMaxValue);
         }
 
 
@@ -186,7 +296,13 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
             Ingredient offhandTool = hasOffHandTool ? Ingredient.fromNetwork(buffer) : null;
             boolean consumeOffhandItem = buffer.readBoolean();
             ItemStack result = buffer.readItem();
-            return createRecipe(recipeId, group,  blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, result);
+            boolean modifyMainhandItem = buffer.readBoolean();
+            boolean modifyOffhandItem = buffer.readBoolean();
+            String resultNBTName = buffer.readUtf(32767);
+            int resultNBTValue = buffer.readInt();
+            int resultNBTMinValue = buffer.readInt();
+            int resultNBTMaxValue = buffer.readInt();
+            return createRecipe(recipeId, group,  blockTarget, mainhandTool, consumeMainhandItem, offhandTool, consumeOffhandItem, result,modifyMainhandItem,modifyOffhandItem,resultNBTName,resultNBTValue,resultNBTMinValue,resultNBTMaxValue);
         }
 
         @Override
@@ -204,7 +320,13 @@ public class InWorldDualHandedCrafting implements Recipe<Container>
             buffer.writeBoolean(hasOffHandTool);
             if (hasOffHandTool) recipe.offhandTool.toNetwork(buffer);
             buffer.writeBoolean(recipe.consumeOffhandItem);
-            buffer.writeItem(recipe.resultBlock);
+            buffer.writeItem(recipe.resultStack);
+            buffer.writeBoolean(recipe.modifyMainhandItem);
+            buffer.writeBoolean(recipe.modifyOffhandItem);
+            buffer.writeUtf(recipe.resultNBTName);
+            buffer.writeInt(recipe.resultNBTValue);
+            buffer.writeInt(recipe.resultNBTMinValue);
+            buffer.writeInt(recipe.resultNBTMaxValue);
         }
 
         public RecipeSerializer<?> setRegistryName(ResourceLocation name) {

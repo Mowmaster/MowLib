@@ -48,7 +48,7 @@ public class DualHandedCraftingHandler
                     InWorldDualHandedCrafting getRecipe = getRecipe(level,blockTarget,player.getMainHandItem(),player.getOffhandItem());
                     if(getRecipe != null)
                     {
-                        ItemStack getResultItem = getBlockItemResult(level,getRecipe).stream().findFirst().get().copy();
+                        ItemStack getResultItem = getBlockItemResult(getRecipe,blockTarget,player.getMainHandItem(),player.getOffhandItem()).stream().findFirst().get().copy();
                         if(getResultItem != null)
                         {
                             if(!player.isCreative())
@@ -145,8 +145,13 @@ public class DualHandedCraftingHandler
         return recipes.size() > 0 ? level.getRecipeManager().getRecipesFor(InWorldDualHandedCrafting.Type.INSTANCE,cont,level).get(0) : null;
     }
 
-    protected static Collection<ItemStack> getBlockItemResult(Level level, InWorldDualHandedCrafting recipe) {
-        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem(level.registryAccess())));
+    protected static Collection<ItemStack> getBlockItemResult(InWorldDualHandedCrafting recipe, ItemStack targetBlockItem, ItemStack mainHandItem, ItemStack offHandItem) {
+        Container cont = MowLibContainerUtils.getContainer(3);
+        cont.setItem(-1,targetBlockItem);
+        cont.setItem(-1,mainHandItem);
+        cont.setItem(-1,offHandItem);
+        return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Arrays.asList(recipe.assemble(cont)));
+        //return (recipe == null)?(Arrays.asList(ItemStack.EMPTY)):(Collections.singleton(recipe.getResultItem()));
     }
 
     protected static Boolean consumeMainHandItemOrDurability(InWorldDualHandedCrafting recipe) {
@@ -156,36 +161,4 @@ public class DualHandedCraftingHandler
     protected static Boolean consumeOffHandItemOrDurability(InWorldDualHandedCrafting recipe) {
         return (recipe == null)?(true):(recipe.consumeOffHand());
     }
-
-    /*
-@Mod.EventBusSubscriber
-public class DualHandedCraftingHandler
-{
-    @SubscribeEvent()
-    public static void hammerCrafting(PlayerInteractEvent.RightClickBlock event) {
-        Level level = event.getWorld();
-        BlockPos pos = event.getPos();
-        BlockState state = level.getBlockState(pos);
-        Player player = event.getPlayer();
-        if(!level.isClientSide)
-        {
-            if(player.getMainHandItem() != null)
-            {
-                if(player.getMainHandItem().getItem() instanceof BaseHammerItem)
-                {
-                    ItemStack blockTarget = new ItemStack(state.getBlock().asItem());
-                    if(blockTarget != null)
-                    {
-                        TagKey<Item> LOGS = ItemTags.LOGS;
-                        if(blockTarget.is(LOGS) && player.getOffhandItem().getItem() instanceof AxeItem)
-                        {
-                            level.setBlock(pos, DeferredRegisterBlocks.BASIN_WOOD.get().defaultBlockState(),2);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-     */
 }

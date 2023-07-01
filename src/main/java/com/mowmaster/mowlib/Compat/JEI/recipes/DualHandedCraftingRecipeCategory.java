@@ -3,6 +3,8 @@ package com.mowmaster.mowlib.Compat.JEI.recipes;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mowmaster.mowlib.Compat.JEI.JEIRecipeTypes;
+import com.mowmaster.mowlib.MowLibUtils.MowLibReferences;
+import com.mowmaster.mowlib.Recipes.BaseBlockEntityFilter;
 import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
 import com.mowmaster.mowlib.Recipes.MobEffectColorRecipeCorrupted;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
@@ -15,8 +17,12 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -61,24 +67,68 @@ public class DualHandedCraftingRecipeCategory implements IRecipeCategory<InWorld
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, InWorldDualHandedCrafting recipe, IFocusGroup focuses) {
-        //Offhand
-        builder.addSlot(RecipeIngredientRole.INPUT, 33, 33)
-                .addIngredients(recipe.getIngredients().get(2));
-        //Mainhand
-        builder.addSlot(RecipeIngredientRole.INPUT, 144, 33)
-                .addIngredients(recipe.getIngredients().get(1));
-        //Block Clicked On
-        builder.addSlot(RecipeIngredientRole.INPUT, 90, 63)
-                .addIngredients(recipe.getIngredients().get(0));
-        //Result
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 90, 95)
-                .addItemStack(recipe.getResultItemJEI());
-    }
 
+        //Mainhand
+        builder.addSlot(RecipeIngredientRole.INPUT, 43, 25)
+                .addIngredients(recipe.getIngredients().get(1));
+        //Offhand
+        builder.addSlot(RecipeIngredientRole.INPUT, 43, 57)
+                .addIngredients(recipe.getIngredients().get(2));
+        //Block Clicked On
+        builder.addSlot(RecipeIngredientRole.INPUT, 102, 41)
+                .addIngredients(recipe.getIngredients().get(0));
+        if(recipe.getResultModificationName() != "")
+        {
+            //Result
+            builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 102, 75)
+                    .addItemStack((recipe.modifyMainHand())?(recipe.getIngredients().get(1).getItems()[0].setHoverName(Component.translatable(MODID + ".dual_handed.warning"))):(recipe.getIngredients().get(2).getItems()[0].setHoverName(Component.translatable(MODID + ".dual_handed.warning"))));
+        }
+        else
+        {
+            //Result
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 102, 75)
+                    .addItemStack(recipe.getResultItem());
+        }
+    }
 
     @Override
     public void draw(InWorldDualHandedCrafting recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
-        RenderSystem.enableBlend();
+        if(recipe.getResultModificationName() != "")
+        {
+            RenderSystem.enableBlend();
+            Font fontRenderer = Minecraft.getInstance().font;
+
+            MutableComponent modType = Component.translatable( "dual_handed." + recipe.getResultModificationName());
+            int width1 = fontRenderer.width(modType.getString());
+            guiGraphics.drawString(fontRenderer,modType,98-Math.floorDiv(width1,2),4,0xffffffff);
+
+
+            //+2 - Max 10
+
+            //+
+            MutableComponent separator1 = Component.translatable(MowLibReferences.MODID + ".text.separator.plus");
+            //" "
+            MutableComponent spaceText = Component.translatable(MowLibReferences.MODID + ".text.separator.space");
+            //"Min: "
+            MutableComponent minText = Component.translatable(MowLibReferences.MODID + ".text.separator.min");
+            //"Max: "
+            MutableComponent maxText = Component.translatable(MowLibReferences.MODID + ".text.separator.max");
+
+            MutableComponent increaseAmount = Component.literal(""+ recipe.getResultModificationAmount() +"");
+            MutableComponent minAmount = Component.literal(""+ recipe.getResultModificationMinAmount() +"");
+            MutableComponent maxAmount = Component.literal(""+ recipe.getResultModificationMaxAmount() +"");
+
+
+            separator1.append(increaseAmount);
+            separator1.append(spaceText);
+            separator1.append(minText);
+            separator1.append(minAmount);
+            separator1.append(spaceText);
+            separator1.append(maxText);
+            separator1.append(maxAmount);
+
+            int width = fontRenderer.width(separator1.getString());
+            guiGraphics.drawString(fontRenderer,separator1,98-Math.floorDiv(width,2),100,0xffffffff);
+        }
     }
 }
