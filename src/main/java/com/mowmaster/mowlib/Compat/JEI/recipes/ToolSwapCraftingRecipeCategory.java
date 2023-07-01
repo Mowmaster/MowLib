@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mowmaster.mowlib.Compat.JEI.JEIRecipeTypes;
 import com.mowmaster.mowlib.Recipes.InWorldDualHandedCrafting;
-import com.mowmaster.mowlib.Recipes.MobEffectColorRecipeCorrupted;
+import com.mowmaster.mowlib.Recipes.ToolSwapCrafting;
 import com.mowmaster.mowlib.Registry.DeferredRegisterItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 
 import static com.mowmaster.mowlib.MowLibUtils.MowLibReferences.MODID;
 
-public class DualHandedCraftingRecipeCategory implements IRecipeCategory<InWorldDualHandedCrafting>
+public class ToolSwapCraftingRecipeCategory implements IRecipeCategory<ToolSwapCrafting>
 {
     private final IDrawable background;
     private final Component localizedName;
@@ -30,18 +30,18 @@ public class DualHandedCraftingRecipeCategory implements IRecipeCategory<InWorld
     private final IDrawable icon;
     private final ItemStack renderStack = new ItemStack(DeferredRegisterItems.ICON_HAND.get());
 
-    public DualHandedCraftingRecipeCategory(IGuiHelper guiHelper) {
+    public ToolSwapCraftingRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(
-                new ResourceLocation(MODID, "textures/gui/jei/dual_handed_crafting.png"), 0, 0, 196, 128);
-        this.localizedName = Component.translatable(MODID + ".jei.dual_handed_crafting");
+                new ResourceLocation(MODID, "textures/gui/jei/tool_swap_crafting.png"), 0, 0, 128, 128);
+        this.localizedName = Component.translatable(MODID + ".jei.tool_swap_crafting");
         //this.overlay =
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, this.renderStack);
         //this.renderStack.getOrCreateTag().putBoolean("RenderFull", true);
     }
 
     @Override
-    public RecipeType<InWorldDualHandedCrafting> getRecipeType() {
-        return JEIRecipeTypes.DUAL_HANDED_CRAFING;
+    public RecipeType<ToolSwapCrafting> getRecipeType() {
+        return JEIRecipeTypes.TOOL_SWAP_CRAFING;
     }
 
     @Override
@@ -60,24 +60,17 @@ public class DualHandedCraftingRecipeCategory implements IRecipeCategory<InWorld
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, InWorldDualHandedCrafting recipe, IFocusGroup focuses) {
-        //Offhand
-        builder.addSlot(RecipeIngredientRole.INPUT, 33, 33)
-                .addIngredients(recipe.getIngredients().get(2));
+    public void setRecipe(IRecipeLayoutBuilder builder, ToolSwapCrafting recipe, IFocusGroup focuses) {
         //Mainhand
-        builder.addSlot(RecipeIngredientRole.INPUT, 144, 33)
-                .addIngredients(recipe.getIngredients().get(1));
-        //Block Clicked On
-        builder.addSlot(RecipeIngredientRole.INPUT, 90, 63)
+        builder.addSlot(RecipeIngredientRole.INPUT, 76, 33)
                 .addIngredients(recipe.getIngredients().get(0));
         //Result
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 90, 95)
-                .addItemStack(recipe.getResultItemJEI());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 22, 94)
+                .addItemStack(recipe.getResultItem());
     }
 
-
     @Override
-    public void draw(InWorldDualHandedCrafting recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(ToolSwapCrafting recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
         RenderSystem.enableBlend();
     }

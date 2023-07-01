@@ -10,6 +10,9 @@ public class JEIRecipeTypes
     public static final RecipeType<InWorldDualHandedCrafting> DUAL_HANDED_CRAFING =
             RecipeType.create(MODID, "dual_handed_crafting", InWorldDualHandedCrafting.class);
 
+    public static final RecipeType<ToolSwapCrafting> TOOL_SWAP_CRAFING =
+            RecipeType.create(MODID, "tool_swap_crafting", ToolSwapCrafting.class);
+
     public static final RecipeType<WorkStationBaseTypeRecipe> WORKSTATIONBASE_CRAFING =
             RecipeType.create(MODID, "workstationbase_crafting", WorkStationBaseTypeRecipe.class);
 

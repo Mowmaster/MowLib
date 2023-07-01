@@ -2,6 +2,7 @@
   "itemGroup.mowlib": "MowLib",
 
   "mowlib.jei.dual_handed_crafting": "Dual Handed Crafting",
+  "mowlib.jei.tool_swap_crafting": "Tool Swapping",
   "mowlib.jei.workstation_crafting": "Workstation Base Crafting",
   "mowlib.jei.machine_crafting": "Machine Base Crafting",
   "mowlib.jei.effect_crafting": "Effect Crafting",

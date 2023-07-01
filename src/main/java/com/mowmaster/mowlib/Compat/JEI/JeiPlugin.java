@@ -45,6 +45,7 @@ public class JeiPlugin implements IModPlugin
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new DualHandedCraftingRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new ToolSwapCraftingRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new MachineBaseCraftingRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new WorkstationBaseCraftingRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new EffectCraftingRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
@@ -59,6 +60,8 @@ public class JeiPlugin implements IModPlugin
 
         List<InWorldDualHandedCrafting> dualHandedRecipes = recipeManager.getAllRecipesFor(InWorldDualHandedCrafting.Type.INSTANCE);
         registration.addRecipes(JEIRecipeTypes.DUAL_HANDED_CRAFING, dualHandedRecipes);
+        List<ToolSwapCrafting> toolSwapRecipes = recipeManager.getAllRecipesFor(ToolSwapCrafting.Type.INSTANCE);
+        registration.addRecipes(JEIRecipeTypes.TOOL_SWAP_CRAFING, toolSwapRecipes);
         List<MachineBaseTypeRecipe> machineBase = recipeManager.getAllRecipesFor(MachineBaseTypeRecipe.Type.INSTANCE);
         registration.addRecipes(JEIRecipeTypes.MACHINEBASE_CRAFING, machineBase);
         List<WorkStationBaseTypeRecipe> workstationBase = recipeManager.getAllRecipesFor(WorkStationBaseTypeRecipe.Type.INSTANCE);
@@ -141,6 +144,8 @@ public class JeiPlugin implements IModPlugin
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(DeferredRegisterItems.ICON_HAND.get()),
                 JEIRecipeTypes.DUAL_HANDED_CRAFING);
+        registration.addRecipeCatalyst(new ItemStack(DeferredRegisterItems.ICON_HAND.get()),
+                JEIRecipeTypes.TOOL_SWAP_CRAFING);
         registration.addRecipeCatalyst(new ItemStack(DeferredRegisterItems.ICON_MACHINEBASE.get()),
                 JEIRecipeTypes.MACHINEBASE_CRAFING);
         registration.addRecipeCatalyst(new ItemStack(DeferredRegisterItems.ICON_WORKSTATIONBASE.get()),
