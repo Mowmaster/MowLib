@@ -41,27 +41,8 @@ public class BaseTool extends BaseUseInteractionItem implements IMowLibTool
     public ItemStack getMainTool(){return Items.STICK.getDefaultInstance();}
     public ItemStack getSwappedTool(){return Items.BLAZE_ROD.getDefaultInstance();}
 
-    public InteractionResultHolder interactCrouchingTargetAir(Level level, Player player, InteractionHand hand, ItemStack itemStackInHand, HitResult result)
-    { return interactSwapTool(level,player,hand,itemStackInHand, result, getMainTool().getItem(), getSwappedTool().getItem()); }
-
     public InteractionResultHolder interactCrouchingTargetBlock(Level level, Player player, InteractionHand hand, ItemStack itemStackInHand, HitResult result)
     { return interactGetPedestalDetail(level, player, hand, itemStackInHand, result); }
-
-
-    //Default method of interactCrouchingTargetAir
-    public InteractionResultHolder interactSwapTool(Level level, Player player, InteractionHand hand, ItemStack itemStackInHand, HitResult result, Item mainTool, Item swapTool)
-    {
-        if(itemStackInHand.getItem().equals(mainTool))
-        {
-            ItemStack newTool = new ItemStack(swapTool,itemStackInHand.getCount(),itemStackInHand.getTag());
-            player.setItemInHand(hand, newTool);
-
-            MowLibMessageUtils.messagePopup(player, ChatFormatting.GREEN,MODID + ".tool_change");
-            return InteractionResultHolder.success(itemStackInHand);
-        }
-
-        return  InteractionResultHolder.pass(player.getItemInHand(hand));
-    }
 
     //Default method of interactCrouchingTargetBlock
     public InteractionResultHolder interactGetPedestalDetail(Level level, Player player, InteractionHand hand, ItemStack itemStackInHand, HitResult result)
