@@ -24,4 +24,8 @@ public class WorkCardLocations extends WorkCardBase implements ISelectablePoints
                 .filter(blockPos -> MowLibBlockPosUtils.selectedPointWithinRange(baseBlockEntity, blockPos, rangeFromBlock))
                 .toList();
     }
+
+    public static int getNumPositions(ItemStack workCardStack) {
+        return MowLibBlockPosUtils.readBlockPosListFromNBT(workCardStack).size();
+    }
 }
