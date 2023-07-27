@@ -45,64 +45,72 @@ public class WorkCardBase extends BaseUseInteractionItem implements IWorkCard
 
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-
-        saveBlockPosToNBT(stack,10,context.getClickedPos());
-        saveStringToNBT(stack,"mowlib_string_last_clicked_direction",context.getClickedFace().toString());
+        saveBlockPosToNBT(stack, 10, context.getClickedPos());
+        saveStringToNBT(stack, "mowlib_string_last_clicked_direction", context.getClickedFace().toString());
         return super.onItemUseFirst(stack, context);
     }
 
     @Override
     public InteractionResultHolder interactTargetBlock(Level level, Player player, InteractionHand hand, ItemStack itemStackInHand, HitResult result) {
-        ItemStack itemInHand = player.getItemInHand(hand);
-        BlockPos atLocation = readBlockPosFromNBT(itemInHand,10);
-        if(itemInHand.getItem() instanceof ISelectablePoints)
-        {
-            if(getWorkCardType() == 3)
-            {
-                if(!(level.getBlockState(atLocation).getBlock() instanceof MowLibBaseBlock))
-                    return InteractionResultHolder.fail(player.getItemInHand(hand));
+        BlockPos atLocation = readBlockPosFromNBT(itemStackInHand,10);
+        if (itemStackInHand.getItem() instanceof ISelectablePoints) {
+            if (getWorkCardType() == 3) {
+                if (!(level.getBlockState(atLocation).getBlock() instanceof MowLibBaseBlock)) {
+                    return InteractionResultHolder.fail(itemStackInHand);
+                }
             }
-            boolean added = addBlockPosToList(itemInHand,atLocation);
-            player.setItemInHand(hand,itemInHand);
+            boolean added = addBlockPosToList(itemStackInHand,atLocation);
             MowLibMessageUtils.messagePopup(player,(added)?(ChatFormatting.WHITE):(ChatFormatting.BLACK),(added)?(MODID + ".workcard_blockpos_added"):(MODID + ".workcard_blockpos_removed"));
             MowLibPacketHandler.sendToNearby(level,player.getOnPos(),new MowLibPacketParticles(MowLibPacketParticles.EffectType.ANY_COLOR_CENTERED,atLocation.getX(),atLocation.getY()+1.0D,atLocation.getZ(),0,(added)?(200):(0),0));
+        } else if(itemStackInHand.getItem() instanceof ISelectableArea) {
+            if (!hasOneBlockPos(itemStackInHand)) {
+                saveBlockPosToNBT(itemStackInHand, 1, atLocation);
+                player.setItemInHand(hand, itemStackInHand);
+                MowLibMessageUtils.messagePopup(player, ChatFormatting.WHITE, MODID + ".workcard_blockpos_first");
+            } else if (!hasTwoPointsSelected(itemStackInHand)) {
+                saveBlockPosToNBT(itemStackInHand, 2, atLocation);
+                player.setItemInHand(hand, itemStackInHand);
+                MowLibMessageUtils.messagePopup(player, ChatFormatting.WHITE, MODID + ".workcard_blockpos_second");
+            }
         }
+
         return super.interactTargetBlock(level, player, hand, itemStackInHand, result);
     }
 
     @Override
     public InteractionResultHolder interactTargetAir(Level level, Player player, InteractionHand hand, ItemStack itemStackInHand, HitResult result) {
-
-        ItemStack itemInHand = player.getItemInHand(hand);
-        if(itemInHand.getItem() instanceof ISelectablePoints)
-        {
-            itemInHand.setTag(new CompoundTag());
+        if (
+            (itemStackInHand.getItem() instanceof ISelectablePoints && readBlockPosListFromNBT(itemStackInHand).size() > 0) ||
+                (itemStackInHand.getItem() instanceof ISelectableArea && hasOneBlockPos(itemStackInHand))
+        ) {
+            itemStackInHand.setTag(new CompoundTag());
             MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".workcard_blockpos_clear");
         }
+
         return super.interactTargetAir(level, player, hand, itemStackInHand, result);
     }
 
     @Override
     public InteractionResultHolder interactCrouchingTargetBlock(Level level, Player player, InteractionHand hand, ItemStack itemStackInHand, HitResult result) {
-
-        ItemStack itemInHand = player.getItemInHand(hand);
-        BlockPos atLocation = readBlockPosFromNBT(itemInHand,10);
-        if(itemInHand.getItem() instanceof ISelectableArea)
-        {
-            Boolean hasOnePointAlready = hasOneBlockPos(itemInHand);
-            Boolean hasTwoPointsAlready = hasTwoPointsSelected(itemInHand);
-
-            if(hasOnePointAlready && !hasTwoPointsAlready)
-            {
-                saveBlockPosToNBT(itemInHand,2,atLocation);
-                player.setItemInHand(hand,itemInHand);
-                MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".workcard_blockpos_second");
+        BlockPos atLocation = readBlockPosFromNBT(itemStackInHand,10);
+        if (itemStackInHand.getItem() instanceof ISelectablePoints) {
+            if (getWorkCardType() == 3) {
+                if (!(level.getBlockState(atLocation).getBlock() instanceof MowLibBaseBlock)) {
+                    return InteractionResultHolder.fail(itemStackInHand);
+                }
             }
-            else if(!hasTwoPointsAlready)
-            {
-                saveBlockPosToNBT(itemInHand,1,atLocation);
-                player.setItemInHand(hand,itemInHand);
-                MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".workcard_blockpos_first");
+            boolean added = addBlockPosToList(itemStackInHand, atLocation);
+            MowLibMessageUtils.messagePopup(player,(added)?(ChatFormatting.WHITE):(ChatFormatting.BLACK),(added)?(MODID + ".workcard_blockpos_added"):(MODID + ".workcard_blockpos_removed"));
+            MowLibPacketHandler.sendToNearby(level,player.getOnPos(),new MowLibPacketParticles(MowLibPacketParticles.EffectType.ANY_COLOR_CENTERED,atLocation.getX(),atLocation.getY()+1.0D,atLocation.getZ(),0,(added)?(200):(0),0));
+        } else if(itemStackInHand.getItem() instanceof ISelectableArea) {
+            if (!hasOneBlockPos(itemStackInHand)) {
+                saveBlockPosToNBT(itemStackInHand, 1, atLocation);
+                player.setItemInHand(hand, itemStackInHand);
+                MowLibMessageUtils.messagePopup(player, ChatFormatting.WHITE, MODID + ".workcard_blockpos_first");
+            } else if (!hasTwoPointsSelected(itemStackInHand)) {
+                saveBlockPosToNBT(itemStackInHand, 2, atLocation);
+                player.setItemInHand(hand, itemStackInHand);
+                MowLibMessageUtils.messagePopup(player, ChatFormatting.WHITE, MODID + ".workcard_blockpos_second");
             }
         }
         return super.interactCrouchingTargetBlock(level, player, hand, itemStackInHand, result);
@@ -110,15 +118,12 @@ public class WorkCardBase extends BaseUseInteractionItem implements IWorkCard
 
     @Override
     public InteractionResultHolder interactCrouchingTargetAir(Level level, Player player, InteractionHand hand, ItemStack itemStackInHand, HitResult result) {
-
-        ItemStack itemInHand = player.getItemInHand(hand);
-        if(itemInHand.getItem() instanceof ISelectableArea)
-        {
-            if (hasOneBlockPos(itemInHand))
-            {
-                itemInHand.setTag(new CompoundTag());
-                MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".workcard_blockpos_clear");
-            }
+        if (
+            (itemStackInHand.getItem() instanceof ISelectablePoints && readBlockPosListFromNBT(itemStackInHand).size() > 0) ||
+                (itemStackInHand.getItem() instanceof ISelectableArea && hasOneBlockPos(itemStackInHand))
+        ) {
+            itemStackInHand.setTag(new CompoundTag());
+            MowLibMessageUtils.messagePopup(player,ChatFormatting.WHITE,MODID + ".workcard_blockpos_clear");
         }
 
         return super.interactCrouchingTargetAir(level, player, hand, itemStackInHand, result);
