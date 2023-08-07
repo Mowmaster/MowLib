@@ -60,10 +60,10 @@ public class ToolSwapCraftingRecipeCategory implements IRecipeCategory<ToolSwapC
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ToolSwapCrafting recipe, IFocusGroup focuses) {
         //Mainhand
-        builder.addSlot(RecipeIngredientRole.INPUT, 77, 34)
+        builder.addSlot(RecipeIngredientRole.INPUT, 76, 33)
                 .addIngredients(recipe.getIngredients().get(0));
         //Result
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 23, 95)
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 22, 95)
                 .addItemStack(recipe.getResultItem());
     }
 
