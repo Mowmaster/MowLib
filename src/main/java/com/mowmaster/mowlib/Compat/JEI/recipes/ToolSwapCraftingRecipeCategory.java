@@ -65,7 +65,7 @@ public class ToolSwapCraftingRecipeCategory implements IRecipeCategory<ToolSwapC
         builder.addSlot(RecipeIngredientRole.INPUT, 76, 33)
                 .addIngredients(recipe.getIngredients().get(0));
         //Result
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 22, 94)
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 22, 95)
                 .addItemStack(recipe.getResultItem());
     }
 
