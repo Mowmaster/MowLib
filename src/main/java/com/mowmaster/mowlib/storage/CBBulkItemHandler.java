@@ -60,8 +60,12 @@ public class CBBulkItemHandler extends ResourceStacksResourceHandler<ItemResourc
     }
 
     // ---- Helpers for players (each runs as its own transaction) ----
+    // Deprecated: StorageInteractions.insertStack / extractStack do the same for any item handler (and are what
+    // CBBulkStorageBlock now uses). These still work, unchanged, so nothing that calls them breaks; they'll be
+    // removed in the next major version. @Deprecated makes the compiler warn wherever they're still called.
 
     // Puts as much of the stack in as fits (does not change the stack). Returns how many went in.
+    @Deprecated
     public int insertStack(ItemStack stack)
     {
         if (stack.isEmpty()) return 0;
@@ -79,7 +83,9 @@ public class CBBulkItemHandler extends ResourceStacksResourceHandler<ItemResourc
         }
     }
 
-    // Takes up to maxAmount (and at most one normal stack) out of the first slot that has something
+    // Takes up to maxAmount (and at most one normal stack) out of the first slot that has something.
+    // (StorageInteractions.extractStack takes from the LAST slot; the same thing for single-slot storage.)
+    @Deprecated
     public ItemStack extractStack(int maxAmount)
     {
         for (int index = 0; index < size(); index++)

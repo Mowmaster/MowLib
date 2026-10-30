@@ -1,7 +1,6 @@
 package com.mowmaster.mowlib.recipes;
 
 import com.mowmaster.mowlib.MowLibReferences;
-import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.registry.MowLibRecipes;
 import com.mowmaster.mowlib.tint.CBTintBlockEntity;
 import com.mowmaster.mowlib.tint.IColorableBlock;

@@ -6,19 +6,15 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
-import java.util.List;
 
 public class CreativeTabRegistry
 {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MowLibReferences.MODID);
 
-    // Every book in each size its recipes make, then the crafting materials.
-    // Books: (8 pages plain; copper 12, iron 16, gold 24, as in 1.20)
+    // MowLib's own items: the colour picker and dye, the work cards and tools, then the filters
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MOWLIB_TAB = TABS.register("mowlib", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.mowlib"))
             .icon(() -> new ItemStack(MowLibItems.WORKCARD_AREA.get()))

@@ -12,11 +12,18 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 // Block entity types shared by every mod using MowLib. Their valid blocks are found across ALL mods' blocks:
 // block entity types are registered after every mod's blocks, so the scan sees them all.
+//
+// MowLib itself has no blocks, so on its own (and in MowLib's datagen run) both sets are empty. That's allowed:
+// NeoForge's BlockEntityType(factory, Block...) constructor throws on an EMPTY varargs list ("instantiated without
+// valid blocks"), but the BlockEntityType(factory, Set<Block>) constructor accepts an empty set on purpose. So these
+// pass a Set. No example blocks are needed to keep MowLib loading.
 public class MowLibBlockEntities
 {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -31,9 +38,11 @@ public class MowLibBlockEntities
     public static final Supplier<BlockEntityType<CBBulkStorageBlockEntity>> BULK_STORAGE = BLOCK_ENTITIES.register("bulk_storage",
             () -> new BlockEntityType<>(CBBulkStorageBlockEntity::new, blocksMatching(block -> block instanceof CBBulkStorageBlock)));
 
-    private static Block[] blocksMatching(Predicate<Block> test)
+    // Every registered block (from any mod) that passes the test, as a Set (which may be empty, see above).
+    // Collectors.toUnmodifiableSet() gathers a stream into a Set that can't be changed afterwards.
+    private static Set<Block> blocksMatching(Predicate<Block> test)
     {
-        return BuiltInRegistries.BLOCK.stream().filter(test).toArray(Block[]::new);
+        return BuiltInRegistries.BLOCK.stream().filter(test).collect(Collectors.toUnmodifiableSet());
     }
 
     public static void register(IEventBus eventBus)

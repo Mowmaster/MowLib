@@ -56,7 +56,7 @@ public class CBBulkStorageBlockEntity extends BlockEntity implements ITintHolder
     {
         if (level == null) return;
         ItemStack stack;
-        while (!(stack = items.extractStack(Integer.MAX_VALUE)).isEmpty())
+        while (!(stack = StorageInteractions.extractStack(items, Integer.MAX_VALUE)).isEmpty())
         {
             Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
         }

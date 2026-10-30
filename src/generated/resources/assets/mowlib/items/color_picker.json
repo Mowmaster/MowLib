@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "component": "minecraft:dyed_color",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "mowlib:item/color_picker"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "mowlib:item/color_picker_dyed"
+    },
+    "property": "minecraft:has_component"
+  }
+}

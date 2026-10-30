@@ -29,12 +29,12 @@ import org.jetbrains.annotations.NotNull;
 // - Right-click with an allowed item: stores as much of the held stack as fits (decorated pot sound and dust)
 // - Left-click: takes 1 out; sneak + left-click: a full stack (64). Creative players take items out the same way,
 //   and can only break it once it's empty.
-// - Breaking it spills the contents. Hoppers and pipes can insert and extract (see CBCapabilities).
+// - Breaking it spills the contents. Hoppers and pipes can insert and extract (see MowLibCapabilities).
+// Putting in and taking out go through StorageInteractions, the same helpers every MowLib storage uses.
 // Subclasses set the shape and tint regions for their model; capacity and the allowed-item tag come in through
 // the constructor, so new storage blocks are mostly a model plus a registry line.
 public class CBBulkStorageBlock extends Block implements IColorableBlock
 {
-    private static final int SHIFT_EXTRACT = 64;
     // Downward speed of the dust when taking items out (the dust plume particle drifts upward on its own)
     private static final double EXTRACT_DUST_SPEED = 0.3;
 
@@ -107,7 +107,7 @@ public class CBBulkStorageBlock extends Block implements IColorableBlock
         if (level instanceof ServerLevel serverLevel)
         {
             CBBulkItemHandler items = storage.getItems();
-            int inserted = items.insertStack(stack);
+            int inserted = StorageInteractions.insertStack(items, stack, false);
             if (inserted > 0)
             {
                 stack.consume(inserted, player); // creative players keep their stack
@@ -155,11 +155,10 @@ public class CBBulkStorageBlock extends Block implements IColorableBlock
     private void extract(ServerLevel level, BlockPos pos, Player player)
     {
         if (!(level.getBlockEntity(pos) instanceof CBBulkStorageBlockEntity storage)) return;
-        ItemStack taken = storage.getItems().extractStack(player.isShiftKeyDown() ? SHIFT_EXTRACT : 1);
+        // 1, or a full stack when sneaking, into the inventory or dropped at the player's feet if it's full.
+        // (This used to call Inventory#add, which doesn't drop anything: with a full inventory the items were lost.)
+        ItemStack taken = StorageInteractions.takeToPlayer(player, storage.getItems());
         if (taken.isEmpty()) return;
-
-        // Into the inventory, or dropped at the player's feet if it's full
-        player.getInventory().add(taken);
         level.playSound(null, pos, SoundEvents.DECORATED_POT_BREAK, SoundSource.BLOCKS, 1f, 0.7f + 0.5f * storage.getItems().fullness());
 
         // The insert dust in reverse: starts above and around the top, moving down into the pile

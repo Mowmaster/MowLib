@@ -3,13 +3,13 @@ package com.mowmaster.mowlib.datagen;
 import com.mowmaster.mowlib.MowLibReferences;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.data.event.GatherDataRegistryEntriesEvent;
 
+// Run with the "data" run config (clientData), which fires GatherDataEvent.Client and writes to src/generated/resources.
 @EventBusSubscriber(modid = MowLibReferences.MODID)
 public class MowLibDataGenerator
 {
@@ -27,10 +27,12 @@ public class MowLibDataGenerator
                 event.getResourceManager(PackType.CLIENT_RESOURCES)));
     }
 
+    // Recipes are registry entries in 26.3. event.add(...) gathers them for MowLib's own namespace; the recipe ids
+    // are mowlib:..., so the minecraft namespace no longer needs to be listed (that was only needed for the old
+    // minecraft:mowlib.picked_dye ids).
     @SubscribeEvent
     public static void gatherDataRegistryEntries(GatherDataRegistryEntriesEvent event)
     {
-        event.gatherFor(MowLibReferences.MODID, Identifier.DEFAULT_NAMESPACE)
-                .add(MowLibRecipeProvider.create());
+        event.add(MowLibRecipeProvider.create());
     }
 }

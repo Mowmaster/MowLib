@@ -25,11 +25,13 @@ public class MowLibRecipeProvider extends RecipeProvider
     @Override
     protected void buildRecipes()
     {
+        // save(output, String) reads the string as a full id: "mowlib:picked_dye" -> data/mowlib/recipe/picked_dye.json.
+        // (A string without a colon, like the old "mowlib.picked_dye", lands in the minecraft namespace.)
         // Colour picker holding a colour -> custom dye (the picker is returned reset)
         SpecialRecipeBuilder.special(() -> CBPickedDyeRecipe.INSTANCE)
-                .save(output, MowLibReferences.MODID + ".picked_dye");
+                .save(output, MowLibReferences.id("picked_dye").toString());
         // Any #mowlib:dyeable_in_crafting item + dyes -> the item with the dyes mixed into its colour
         SpecialRecipeBuilder.special(() -> ColorableItemDyeRecipe.INSTANCE)
-                .save(output, MowLibReferences.MODID + ".colorable_dye");
+                .save(output, MowLibReferences.id("colorable_dye").toString());
     }
 }
