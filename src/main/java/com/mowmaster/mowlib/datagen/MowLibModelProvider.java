@@ -1,5 +1,6 @@
 package com.mowmaster.mowlib.datagen;
 
+import com.mowmaster.mowlib.MowLib;
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.registry.MowLibItems;
 import net.minecraft.client.color.item.Dye;
@@ -48,5 +49,9 @@ public class MowLibModelProvider extends ModelProvider
                 blockModels.modelOutput);
         blockModels.itemModelOutput.accept(MowLibItems.CUSTOM_DYE.get(),
                 ItemModelUtils.tintedModel(customDyeModel, new Dye(0xFFFFFFFF)));
+
+        blockModels.createTrivialCube(MowLib.EXAMPLE_BLOCK.get());
+        blockModels.createTrivialCube(MowLib.EXAMPLE_STORAGE_BLOCK.get());
+
     }
 }
