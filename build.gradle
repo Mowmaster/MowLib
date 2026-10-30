@@ -161,6 +161,9 @@ neoForge.ideSyncTask generateModMetadata
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
+            // Publish as com.mowmaster.mowlib:mowlib. Without this, Maven uses the Gradle project name, which
+            // defaults to the folder name ("MowLib"), and mods asking for "mowlib" can't find it.
+            artifactId = mod_id
             from components.java
         }
     }
