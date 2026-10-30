@@ -1,7 +1,7 @@
 package com.mowmaster.mowlib.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.network.SelectPagePayload;
 import com.mowmaster.mowlib.network.TurnBlockPagePayload;
 import com.mowmaster.mowlib.network.TurnHeldPagePayload;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 // The change is made here straight away (so tooltips update) and the server is told.
 // Vanilla scrolls bundles with an ItemSlotMouseAction, but only the screen itself can add those, so we listen for the
 // scroll event instead. (Scrolling moved from Bibliomania's BookScrollHandler; the keys are NEW.)
-@EventBusSubscriber(modid = MowLibIds.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MowLibReferences.MODID, value = Dist.CLIENT)
 public final class PageInputHandler
 {
     private PageInputHandler() {}

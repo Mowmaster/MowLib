@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.knapping;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.storage.StorageInteractions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 // Runs KnappingRecipes: right-clicking a block with the right items in both hands makes the result, uses up the
 // held items the recipe says to, and plays the block's hit sound. @EventBusSubscriber puts this on the game event bus.
 // (Moved from Bibliomania's KnappingHandler, with the recipes taken out into KnappingRecipes.)
-@EventBusSubscriber(modid = MowLibIds.MODID)
+@EventBusSubscriber(modid = MowLibReferences.MODID)
 public final class KnappingHandler
 {
     private KnappingHandler() {}

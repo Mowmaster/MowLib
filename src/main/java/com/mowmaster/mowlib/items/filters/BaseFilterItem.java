@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.items.filters;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.FilterData;
 import com.mowmaster.mowlib.filter.FilterDirection;
 import com.mowmaster.mowlib.filter.ITransportFilter;
@@ -44,7 +44,7 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
     {
         // New filters start in item mode; the default component also gives the item model its first texture
         super(properties.stacksTo(1)
-                .component(MowLibDataComponents.FILTER_MODE.get(), MowLibIds.id("items")));
+                .component(MowLibDataComponents.FILTER_MODE.get(), MowLibReferences.id("items")));
         this.direction = direction;
     }
 
@@ -74,7 +74,7 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
     // What whitelist/blacklist are called for this filter (the durability filter says above/below)
     protected Component listTypeName(boolean blacklist)
     {
-        return Component.translatable(MowLibIds.MODID + (blacklist ? ".filter_type_blacklist" : ".filter_type_whitelist"));
+        return Component.translatable(MowLibReferences.MODID + (blacklist ? ".filter_type_blacklist" : ".filter_type_whitelist"));
     }
 
     // ---- ITransportFilter ----
@@ -154,7 +154,7 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
         if (hand != InteractionHand.OFF_HAND) return InteractionResult.PASS;
         if (player.getMainHandItem().getItem() instanceof ITransportFilter)
         {
-            if (!level.isClientSide()) player.sendOverlayMessage(Component.translatable(MowLibIds.MODID + ".filter.message_twohanded").withStyle(ChatFormatting.RED));
+            if (!level.isClientSide()) player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".filter.message_twohanded").withStyle(ChatFormatting.RED));
             return InteractionResult.FAIL;
         }
         if (!level.isClientSide())
@@ -191,7 +191,7 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
             }
             FilterData data = getData(filter);
             filter.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), data.get(mode.getId()).withList(list)));
-            player.sendOverlayMessage(Component.translatable(MowLibIds.MODID + ".filter_changed").withStyle(mode.getColor()));
+            player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".filter_changed").withStyle(mode.getColor()));
         }
         return InteractionResult.SUCCESS;
     }
@@ -202,7 +202,7 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
         int next = (types.indexOf(getMode(filter)) + 1) % types.size();
         TransportType<?> mode = types.get(next);
         filter.set(MowLibDataComponents.FILTER_MODE.get(), mode.getId());
-        player.sendOverlayMessage(Component.translatable(MowLibIds.MODID + ".filter_mode_changed").append(mode.getName()));
+        player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".filter_mode_changed").append(mode.getName()));
     }
 
     private void toggleBlacklist(Player player, ItemStack filter)
@@ -212,7 +212,7 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
         FilterData.Entry entry = data.get(mode.getId());
         boolean blacklist = !entry.blacklist();
         filter.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), entry.withBlacklist(blacklist)));
-        player.sendOverlayMessage(Component.translatable(MowLibIds.MODID + ".filter_type_changed")
+        player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".filter_type_changed")
                 .append(listTypeName(blacklist))
                 .withStyle(blacklist ? ChatFormatting.DARK_GRAY : ChatFormatting.WHITE));
     }
@@ -226,11 +226,11 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
         TransportType<?> mode = getMode(stack);
         FilterData.Entry entry = getEntry(stack, mode);
 
-        tooltip.accept(Component.translatable(MowLibIds.MODID + ".filter.tooltip_filterdirection").append(direction.getName()).withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.translatable(MowLibIds.MODID + ".tooltip_mode").append(mode.getName()));
+        tooltip.accept(Component.translatable(MowLibReferences.MODID + ".filter.tooltip_filterdirection").append(direction.getName()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable(MowLibReferences.MODID + ".tooltip_mode").append(mode.getName()));
         if (canToggleBlacklist())
         {
-            tooltip.accept(Component.translatable(MowLibIds.MODID + ".filter_type").append(listTypeName(entry.blacklist())).withStyle(ChatFormatting.WHITE));
+            tooltip.accept(Component.translatable(MowLibReferences.MODID + ".filter_type").append(listTypeName(entry.blacklist())).withStyle(ChatFormatting.WHITE));
         }
         for (ItemStackTemplate template : entry.list())
         {

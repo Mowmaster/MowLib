@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.network;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.paging.IPageHolder;
 import com.mowmaster.mowlib.paging.PageArrows;
 import io.netty.buffer.ByteBuf;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 // key is pressed in the world while looking at one). NEW in MowLib.
 public record TurnBlockPagePayload(BlockPos pos, int direction) implements CustomPacketPayload
 {
-    public static final Type<TurnBlockPagePayload> TYPE = new Type<>(MowLibIds.id("turn_block_page"));
+    public static final Type<TurnBlockPagePayload> TYPE = new Type<>(MowLibReferences.id("turn_block_page"));
 
     // How close the player must be (8 blocks, squared) for the server to accept it
     private static final double MAX_DISTANCE_SQR = 64.0;

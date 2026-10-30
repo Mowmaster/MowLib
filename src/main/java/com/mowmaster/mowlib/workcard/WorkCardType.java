@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.workcard;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import net.minecraft.network.chat.Component;
 
 // The kinds of work card (1.20's numbers 1, 2, 3), and what a machine accepts.
@@ -24,6 +24,6 @@ public enum WorkCardType
     // "Area", "Locations"... (lang key mowlib.workcard_type.<name>)
     public Component getName()
     {
-        return Component.translatable(MowLibIds.MODID + ".workcard_type." + name().toLowerCase());
+        return Component.translatable(MowLibReferences.MODID + ".workcard_type." + name().toLowerCase());
     }
 }

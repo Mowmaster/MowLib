@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.network;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.paging.IPageable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -15,7 +15,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 // page key is pressed in the world while holding one). NEW in MowLib.
 public record TurnHeldPagePayload(boolean offhand, int direction) implements CustomPacketPayload
 {
-    public static final Type<TurnHeldPagePayload> TYPE = new Type<>(MowLibIds.id("turn_held_page"));
+    public static final Type<TurnHeldPagePayload> TYPE = new Type<>(MowLibReferences.id("turn_held_page"));
 
     public static final StreamCodec<ByteBuf, TurnHeldPagePayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, TurnHeldPagePayload::offhand,

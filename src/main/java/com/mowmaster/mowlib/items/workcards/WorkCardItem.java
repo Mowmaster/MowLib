@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.items.workcards;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.registry.MowLibDataComponents;
 import com.mowmaster.mowlib.workcard.IWorkCard;
 import com.mowmaster.mowlib.workcard.IWorkCardHolder;
@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 // with the work card tool in the offhand and a left-click). The positions are the mowlib:work_positions component.
 public abstract class WorkCardItem extends Item implements IWorkCard
 {
-    protected static final String MODID = MowLibIds.MODID;
+    protected static final String MODID = MowLibReferences.MODID;
 
     protected WorkCardItem(Properties properties)
     {

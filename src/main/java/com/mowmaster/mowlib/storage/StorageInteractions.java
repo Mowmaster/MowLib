@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.storage;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.IFilterHolder;
 import com.mowmaster.mowlib.filter.ITransportFilter;
 import com.mowmaster.mowlib.items.tools.FilterToolItem;
@@ -155,7 +155,7 @@ public final class StorageInteractions
     {
         if (!(player.getOffhandItem().getItem() instanceof FilterToolItem)) return false;
         if (holder.hasFilter()) giveToPlayer(player, holder.removeFilter());
-        else player.sendOverlayMessage(Component.translatable(MowLibIds.MODID + ".tool_filter_missing"));
+        else player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".tool_filter_missing"));
         return true;
     }
 }

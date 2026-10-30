@@ -47,6 +47,24 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   (`recipes/CBPickedDyeRecipe`, serializer `mowlib:picked_dye`).
 - `datamaps/`: `CBBlockColor` (`{"color": "#RRGGBB"}`) and `CBDataMaps.BLOCK_COLORS`. `datagen/CBBlockColorProvider`
   fills it with the average texture colour of plain solid cubes (vanilla, plus anything loaded during datagen).
+- `paging/` - pages on items (`IPageable`) and block entities (`IPageHolder`). MowLib turns them for every mod:
+  scroll or the page keys (Page Down / Page Up, `client/MowLibKeyMappings`) over an item in an inventory, the page
+  keys while holding it or looking at the block (`client/PageInputHandler`, payloads `mowlib:select_page`,
+  `turn_held_page`, `turn_block_page`). `PageArrows`: clickable page-turn boxes on a model.
+  - Paged storage: one item type per page (`CBBulkItemHandler` slots). `PagedStorage` for block entities (like
+    `CBTintData`), `IPagedStorageItem` + `PagedStorageInteractions` for items (bundle-style inventory clicks, the page
+    grid tooltip `PagedContentsTooltip`). Item data: `mowlib:paged_contents` (`PagedContents`). Item model property
+    `mowlib:paged_fullness`.
+- `knapping/` - hold items in both hands and right-click a block. Mods register `KnappingRecipe`s in
+  `KnappingRecipes` from common setup; `KnappingHandler` runs them.
+- `recipes/ColorableItemDyeRecipe` (`mowlib:colorable_dye`): items in `#mowlib:dyeable_in_crafting` + dyes in a
+  crafting grid -> mixed `dyed_color`.
+- `items/tools/CraftingToolItem`: a tool that stays in the crafting grid, losing 1 durability per craft.
+- `display/ISpinningItemHolder` + `client/SpinningItemRenderer`: a block entity's item spinning above the block. Mods
+  register the renderer for their own types (`SpinningItemRenderer::new`).
+- `drops/` - bonus drops: a chance of an extra item when a player breaks a block (tool + block match). Mods register
+  `BonusDrop`s in `BonusDrops` from common setup; `BonusDropHandler` rolls every match.
+
 
 ## 26.x notes (learned in CrystalBlocks)
 - Render layer comes from texture alpha; use `noOcclusion()` on see-through blocks.

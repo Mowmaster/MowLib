@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.filter;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import net.minecraft.network.chat.Component;
 
 // When a filter applies: to what goes INTO the holder, what's taken OUT of it, or neither (NEUTRAL, used by
@@ -13,6 +13,6 @@ public enum FilterDirection
 
     public Component getName()
     {
-        return Component.translatable(MowLibIds.MODID + ".filter_direction." + name().toLowerCase());
+        return Component.translatable(MowLibReferences.MODID + ".filter_direction." + name().toLowerCase());
     }
 }

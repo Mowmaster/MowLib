@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.network;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -9,7 +9,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 // Registers MowLib's network payloads. The registrar's version must match between client and server, so bump it
 // whenever a payload is added or its format changes (mismatched versions then refuse to connect instead of failing
 // on an unknown payload). Handlers run on the main thread by default.
-@EventBusSubscriber(modid = MowLibIds.MODID)
+@EventBusSubscriber(modid = MowLibReferences.MODID)
 public class MowLibNetwork
 {
     private static final String VERSION = "2"; // 2: added the page payloads

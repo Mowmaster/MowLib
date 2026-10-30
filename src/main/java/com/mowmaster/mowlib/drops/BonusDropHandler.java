@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.drops;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +13,7 @@ import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 // Rolls every matching BonusDrop when a player breaks a block. This uses the block break event rather than a global
 // loot modifier because 26.3 rewrote loot conditions (random_chance and others), and this needs no loot JSON.
 // (Moved from Bibliomania's GrassFiberHandler.)
-@EventBusSubscriber(modid = MowLibIds.MODID)
+@EventBusSubscriber(modid = MowLibReferences.MODID)
 public final class BonusDropHandler
 {
     private BonusDropHandler() {}

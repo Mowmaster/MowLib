@@ -2,7 +2,7 @@ package com.mowmaster.mowlib.transport;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.util.MowLibParticles;
 import com.mowmaster.mowlib.util.MowLibXpUtils;
 import net.minecraft.ChatFormatting;
@@ -38,14 +38,14 @@ import java.util.function.BiFunction;
 // items that hold experience (other mods register their items for it with RegisterCapabilitiesEvent#registerItem).
 public class ExperienceTransportType extends TransportType<AmountResource>
 {
-    public static final AmountResource EXPERIENCE = new AmountResource(MowLibIds.id("experience"));
+    public static final AmountResource EXPERIENCE = new AmountResource(MowLibReferences.id("experience"));
 
     public static final BlockCapability<ResourceHandler<AmountResource>, Direction> BLOCK =
-            BlockCapability.createSided(MowLibIds.id("experience_handler"), ResourceHandler.asClass());
+            BlockCapability.createSided(MowLibReferences.id("experience_handler"), ResourceHandler.asClass());
 
     // ItemAccess as the context: the same as NeoForge's own item capabilities (Capabilities.Fluid.ITEM...)
     public static final ItemCapability<ResourceHandler<AmountResource>, ItemAccess> ITEM =
-            ItemCapability.create(MowLibIds.id("experience_handler"), ResourceHandler.asClass(), ItemAccess.class);
+            ItemCapability.create(MowLibReferences.id("experience_handler"), ResourceHandler.asClass(), ItemAccess.class);
 
     public ExperienceTransportType()
     {

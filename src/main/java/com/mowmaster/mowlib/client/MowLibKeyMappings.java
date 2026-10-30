@@ -1,7 +1,7 @@
 package com.mowmaster.mowlib.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import net.minecraft.client.KeyMapping;
 
 // MowLib's configurable keys (Options > Controls > Key Binds, under "MowLib"). Registered in MowLibClient.
@@ -12,7 +12,7 @@ public final class MowLibKeyMappings
 {
     private MowLibKeyMappings() {}
 
-    public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(MowLibIds.id("mowlib"));
+    public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(MowLibReferences.id("mowlib"));
 
     // Turn to the next / previous page of a paged item (hovered in an inventory, or held) or block (looked at)
     public static final KeyMapping PAGE_NEXT = new KeyMapping("key.mowlib.page_next", InputConstants.KEY_PAGEDOWN, CATEGORY);

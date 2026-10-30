@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.items.filters;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.FilterData;
 import com.mowmaster.mowlib.transport.TransportType;
 import net.minecraft.network.chat.Component;
@@ -59,6 +59,6 @@ public class DurabilityFilterItem extends ItemOnlyFilterItem
     @Override
     protected Component listTypeName(boolean blacklist)
     {
-        return Component.translatable(MowLibIds.MODID + (blacklist ? ".filter_type_below" : ".filter_type_above"));
+        return Component.translatable(MowLibReferences.MODID + (blacklist ? ".filter_type_below" : ".filter_type_above"));
     }
 }

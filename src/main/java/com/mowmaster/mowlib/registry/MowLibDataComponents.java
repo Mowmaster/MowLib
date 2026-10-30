@@ -2,6 +2,7 @@ package com.mowmaster.mowlib.registry;
 
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.FilterData;
+import com.mowmaster.mowlib.paging.PagedContents;
 import com.mowmaster.mowlib.transport.TransportContents;
 import com.mowmaster.mowlib.transport.TransportType;
 import com.mowmaster.mowlib.transport.TransportTypes;
@@ -22,6 +23,10 @@ public class MowLibDataComponents
 {
     public static final DeferredRegister.DataComponents COMPONENTS =
             DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MowLibReferences.MODID);
+
+    // field: what a paged storage item holds (pages, selected page, each page's item and amount)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<PagedContents>> PAGED_CONTENTS =
+            COMPONENTS.registerComponentType("paged_contents", builder -> builder.persistent(PagedContents.CODEC).networkSynchronized(PagedContents.STREAM_CODEC));
 
     // The transport type a filter is currently set to (its "mode"). Separate from FILTER_DATA so the item model
     // can switch texture on it (items/<filter>.json uses a "minecraft:component" select). Loading turns an old

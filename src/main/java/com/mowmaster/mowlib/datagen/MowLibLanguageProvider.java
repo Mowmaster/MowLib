@@ -19,5 +19,16 @@ public class MowLibLanguageProvider extends LanguageProvider
         addItem(MowLibItems.CUSTOM_DYE, "Custom Dye");
         add("message.mowlib.color_picker.picked", "Picked color %s");
         add("message.mowlib.color_picker.none", "This block has no color to pick");
+
+        // Page keys (client/MowLibKeyMappings)
+        add("key.category.mowlib.mowlib", "MowLib");
+        add("key.mowlib.page_next", "Next Page");
+        add("key.mowlib.page_previous", "Previous Page");
+        // Paged storage tooltip (client/ClientPagedContentsTooltip)
+        add("tooltip.mowlib.paged.page", "Page %1$s/%2$s: %3$s");
+        add("tooltip.mowlib.paged.empty_page", "Empty");
+        add("tooltip.mowlib.paged.fullness", "Holds %1$s / %2$s");
+
+
     }
 }

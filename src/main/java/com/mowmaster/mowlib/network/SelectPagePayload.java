@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.network;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.paging.IPageable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 // A payload is a record holding the data, a Type (its id) and a StreamCodec (how to write and read it).
 public record SelectPagePayload(int slot, int page) implements CustomPacketPayload
 {
-    public static final Type<SelectPagePayload> TYPE = new Type<>(MowLibIds.id("select_page"));
+    public static final Type<SelectPagePayload> TYPE = new Type<>(MowLibReferences.id("select_page"));
 
     // Writes slot then page as variable-length ints, and reads them back in the same order
     public static final StreamCodec<ByteBuf, SelectPagePayload> STREAM_CODEC = StreamCodec.composite(

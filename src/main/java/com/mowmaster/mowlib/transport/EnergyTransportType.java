@@ -2,7 +2,7 @@ package com.mowmaster.mowlib.transport;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +31,7 @@ import java.util.function.BiFunction;
 // dropper's own business).
 public class EnergyTransportType extends TransportType<AmountResource>
 {
-    public static final AmountResource ENERGY = new AmountResource(MowLibIds.id("energy"));
+    public static final AmountResource ENERGY = new AmountResource(MowLibReferences.id("energy"));
 
     public EnergyTransportType()
     {

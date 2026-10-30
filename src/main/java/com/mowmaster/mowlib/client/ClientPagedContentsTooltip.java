@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.client;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.paging.PagedContents;
 import com.mowmaster.mowlib.paging.PagedContentsTooltip;
 import net.minecraft.client.gui.Font;
@@ -118,15 +118,15 @@ public class ClientPagedContentsTooltip implements ClientTooltipComponent
         List<ResourceStack<ItemResource>> stacks = contents.stacks();
         Component what = page < stacks.size() && !stacks.get(page).isEmpty()
                 ? Component.literal(stacks.get(page).amount() + " ").append(stacks.get(page).resource().getHoverName())
-                : Component.translatable("tooltip." + MowLibIds.MODID + ".paged.empty_page");
-        return Component.translatable("tooltip." + MowLibIds.MODID + ".paged.page",
+                : Component.translatable("tooltip." + MowLibReferences.MODID + ".paged.empty_page");
+        return Component.translatable("tooltip." + MowLibReferences.MODID + ".paged.page",
                 page + 1, contents.pages(), what).getString();
     }
 
     // "Holds 40 / 256"
     private String fullnessLine()
     {
-        return Component.translatable("tooltip." + MowLibIds.MODID + ".paged.fullness",
+        return Component.translatable("tooltip." + MowLibReferences.MODID + ".paged.fullness",
                 contents.totalAmount(), (long) pageCapacity * contents.pages()).getString();
     }
 }

@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.network;
 
-import com.mowmaster.mowlib.MowLibIds;
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.transport.TransportTypes;
 import com.mowmaster.mowlib.transport.TransportType;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 // resource is null when the type has no resource stream codec.
 public record TransferParticlesPayload(@Nullable TransportType<?> transportType, Vec3 from, Vec3 to, @Nullable Resource resource) implements CustomPacketPayload
 {
-    public static final Type<TransferParticlesPayload> TYPE = new Type<>(MowLibIds.id("transfer_particles"));
+    public static final Type<TransferParticlesPayload> TYPE = new Type<>(MowLibReferences.id("transfer_particles"));
 
     // Written by hand because the resource's codec depends on the type: the type id first, then its resource
     public static final StreamCodec<RegistryFriendlyByteBuf, TransferParticlesPayload> STREAM_CODEC = StreamCodec.of(
