@@ -40,7 +40,7 @@ authors="Mowmaster"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A storage mod using slabs to store items with manual interactions
+Shared code for Mowmaster's mods: tintable blocks, the colour picker and custom dye, and bulk item storage.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.

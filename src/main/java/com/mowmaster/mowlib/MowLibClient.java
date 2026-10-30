@@ -1,31 +1,40 @@
 package com.mowmaster.mowlib;
 
-import net.minecraft.client.Minecraft;
+import com.mowmaster.mowlib.client.CBBlockEntityTintSource;
+import com.mowmaster.mowlib.tint.IColorableBlock;
+import net.minecraft.client.color.block.BlockTintSource;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
-// This class will not load on dedicated servers. Accessing client side code from here is safe.
-@Mod(value = mowlib.MODID, dist = Dist.CLIENT)
-// You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-@EventBusSubscriber(modid = mowlib.MODID, value = Dist.CLIENT)
-public class MowLibClient {
-    public MowLibClient(ModContainer container) {
-        // Allows NeoForge to create a config screen for this mod's configs.
-        // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
-        // Do not forget to add translations for your config options to the en_us.json file.
-        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-    }
+import java.util.ArrayList;
+import java.util.List;
 
+// Client-only setup. This class never loads on a dedicated server.
+@Mod(value = MowLibReferences.MODID, dist = Dist.CLIENT)
+@EventBusSubscriber(modid = MowLibReferences.MODID, value = Dist.CLIENT)
+public class MowLibClient
+{
+    // Every colourable block from every mod gets one tint source per tint region (region N = model tintindex N).
+    // Mods using MowLib must not register their own tint sources for IColorableBlocks.
     @SubscribeEvent
-    static void onClientSetup(FMLClientSetupEvent event) {
-        // Some client setup code
-        mowlib.LOGGER.info("HELLO FROM CLIENT SETUP");
-        mowlib.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+    public static void registerTintSources(RegisterColorHandlersEvent.BlockTintSources event)
+    {
+        for (Block block : BuiltInRegistries.BLOCK)
+        {
+            if (block instanceof IColorableBlock colorable)
+            {
+                List<BlockTintSource> sources = new ArrayList<>();
+                for (int region = 0; region < colorable.getTintRegionCount(); region++)
+                {
+                    sources.add(new CBBlockEntityTintSource(region));
+                }
+                event.register(sources, block);
+            }
+        }
     }
 }
