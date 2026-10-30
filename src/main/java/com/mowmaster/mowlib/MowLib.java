@@ -1,6 +1,7 @@
 package com.mowmaster.mowlib;
 
 import com.mojang.logging.LogUtils;
+import com.mowmaster.mowlib.creative.CreativeTabRegistry;
 import com.mowmaster.mowlib.registry.MowLibBlockEntities;
 import com.mowmaster.mowlib.registry.MowLibItems;
 import com.mowmaster.mowlib.registry.MowLibRecipes;
@@ -27,15 +28,6 @@ public class MowLib
         MowLibItems.register(modEventBus);
         MowLibBlockEntities.register(modEventBus);
         MowLibRecipes.register(modEventBus);
-        modEventBus.addListener(this::addCreative);
-    }
-
-    private void addCreative(BuildCreativeModeTabContentsEvent event)
-    {
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES)
-        {
-            event.accept(MowLibItems.COLOR_PICKER);
-            event.accept(MowLibItems.CUSTOM_DYE);
-        }
+        CreativeTabRegistry.register(modEventBus);
     }
 }
