@@ -97,4 +97,30 @@ public record CBPixelBox(double minX, double minY, double minZ, double maxX, dou
     {
         return new CBPixelBox(16 - maxX, minY, minZ, 16 - minX, maxY, maxZ);
     }
+
+    // ---- Models built facing UP that can face all six ways (blockstate: up as modelled, down = x 180,
+    // sideways = x 90 then y), e.g. Pedestals' pedestal ----
+
+    // Quarter turns of "x" from an up-facing model to facing
+    public static int xQuarterTurnsFromUp(Direction facing)
+    {
+        return switch (facing)
+        {
+            case UP -> 0;
+            case DOWN -> 2;
+            default -> 1;
+        };
+    }
+
+    // Quarter turns of "y" from an up-facing model to facing (after xQuarterTurnsFromUp)
+    public static int yQuarterTurnsFromUp(Direction facing)
+    {
+        return facing.getAxis().isVertical() ? 0 : quarterTurns(facing);
+    }
+
+    // This up-facing box turned to face facing, the same way the blockstate turns the model
+    public CBPixelBox rotateFromUp(Direction facing)
+    {
+        return rotateX(xQuarterTurnsFromUp(facing)).rotateY(yQuarterTurnsFromUp(facing));
+    }
 }

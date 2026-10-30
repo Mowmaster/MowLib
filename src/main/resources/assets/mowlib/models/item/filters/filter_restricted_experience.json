@@ -1,0 +1,7 @@
+{
+  "parent": "mowlib:item/filters/filter_template",
+  "textures": {
+    "frame": "mowlib:item/filters/filteritemdefault_xp",
+    "icon": "mowlib:item/filters/filterrestricted"
+  }
+}

@@ -64,3 +64,15 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - For simple model fixes (a missing `tintindex`, `#`, texture key), just tell me the line to change; only send a model file when the geometry changes.
 - To check 26.3 APIs, read the public `neoforged/neoforge` repo (branch `26.3.x`) and the porting primers in `neoforged/.github` (`primers/26.1`, `26.2`, `26.3`). NeoForge's docs are in `neoforged/Documentation`.
 - Reference implementation of everything here: `Mowmaster/CrystalBlocks`, branch `NeoForge-26x`.
+
+## Project State
+- transport: TransportType registry (mowlib:transport_type; items/fluids/energy/experience). A type = how to
+  store, reach (block/entity/item handlers), save, filter, drop, absorb and show one kind of thing; machine
+  numbers (rates, sizes) belong to the machine (host.getCapacity). TransportContents = contents in an item.
+  mowlib:experience_handler block + item capabilities.
+- filter: ITransportFilter items (12, mowlib:filter_*), FilterData, IFilterHolder (block entities with a
+  filter slot), filter tool. workcard: IWorkCard/IWorkCardHolder, area + locations cards, work card tool.
+- ghost: GhostItem + client.GhostItemRenderer (missing-input displays). storage.StorageInteractions: the
+  shared right-click insert / left-click take / filter slot clicks.
+- util: MowLibXpUtils, MowLibOwner + MowLibFakePlayer, MowLibBlockActions, MowLibTextUtils, MowLibParticles;
+  client: MowLibClientParticles. CBPixelBox.rotateFromUp for six-facing models.

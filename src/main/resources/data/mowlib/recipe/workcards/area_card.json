@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "SIS",
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:stick",
+    "I": "mowlib:tool_work"
+  },
+  "result": {
+    "id": "mowlib:workcard_area"
+  }
+}

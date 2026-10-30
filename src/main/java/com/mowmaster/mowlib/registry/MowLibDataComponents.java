@@ -1,0 +1,55 @@
+package com.mowmaster.mowlib.registry;
+
+import com.mowmaster.mowlib.MowLibReferences;
+import com.mowmaster.mowlib.filter.FilterData;
+import com.mowmaster.mowlib.transport.TransportContents;
+import com.mowmaster.mowlib.transport.TransportType;
+import com.mowmaster.mowlib.transport.TransportTypes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.Identifier;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.List;
+
+// MowLib's item data components (replace 1.20's stack NBT). persistent = saved with the item,
+// networkSynchronized = sent to clients (needed for tooltips and item models).
+public class MowLibDataComponents
+{
+    public static final DeferredRegister.DataComponents COMPONENTS =
+            DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MowLibReferences.MODID);
+
+    // The transport type a filter is currently set to (its "mode"). Separate from FILTER_DATA so the item model
+    // can switch texture on it (items/<filter>.json uses a "minecraft:component" select). Loading turns an old
+    // (aliased) type id into the type's current one, so the model's cases ("mowlib:items"...) match it.
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Identifier>> FILTER_MODE =
+            COMPONENTS.registerComponentType("filter_mode", builder -> builder.persistent(Identifier.CODEC.xmap(MowLibDataComponents::currentTypeId, id -> id))
+                    .networkSynchronized(Identifier.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FilterData>> FILTER_DATA =
+            COMPONENTS.registerComponentType("filter_data", builder -> builder.persistent(FilterData.CODEC).networkSynchronized(FilterData.STREAM_CODEC));
+
+    // A work card's selected positions
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<BlockPos>>> WORK_POSITIONS =
+            COMPONENTS.registerComponentType("work_positions", builder -> builder.persistent(BlockPos.CODEC.listOf())
+                    .networkSynchronized(BlockPos.STREAM_CODEC.apply(ByteBufCodecs.list())));
+
+    // The contents of a storage carried as an item (any mod's "packet", "tank item", ...)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<TransportContents<?>>> TRANSPORT_CONTENTS =
+            COMPONENTS.registerComponentType("transport_contents", builder -> builder.persistent(TransportContents.CODEC).networkSynchronized(TransportContents.STREAM_CODEC));
+
+    private static Identifier currentTypeId(Identifier id)
+    {
+        TransportType<?> type = TransportTypes.REGISTRY.getValue(id);
+        return type != null ? type.getId() : id;
+    }
+
+    public static void register(IEventBus eventBus)
+    {
+        COMPONENTS.register(eventBus);
+    }
+}

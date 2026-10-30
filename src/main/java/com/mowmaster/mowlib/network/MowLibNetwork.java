@@ -1,0 +1,18 @@
+package com.mowmaster.mowlib.network;
+
+import com.mowmaster.mowlib.MowLibIds;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+
+// Registers MowLib's network payloads. The registrar's version ("1") must match between client and server, so
+// bump it whenever a payload's format changes.
+@EventBusSubscriber(modid = MowLibIds.MODID)
+public class MowLibNetwork
+{
+    @SubscribeEvent
+    public static void register(RegisterPayloadHandlersEvent event)
+    {
+        event.registrar("1").playToClient(TransferParticlesPayload.TYPE, TransferParticlesPayload.STREAM_CODEC, TransferParticlesPayload::handle);
+    }
+}

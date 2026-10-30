@@ -1,0 +1,227 @@
+package com.mowmaster.mowlib.transport;
+
+import com.mojang.serialization.Codec;
+import com.mowmaster.mowlib.client.MowLibClientParticles;
+import com.mowmaster.mowlib.filter.FilterDirection;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.BiFunction;
+
+// Fluids. The storage is one tank of host.getCapacity(FLUIDS) mB.
+public class FluidTransportType extends TransportType<FluidResource>
+{
+    public FluidTransportType()
+    {
+        super(ChatFormatting.BLUE);
+    }
+
+    @Override
+    public TransportStorage<FluidResource> createStorage(TransportStorageHost host)
+    {
+        return new Storage(host, this);
+    }
+
+    @Override
+    public <T extends BlockEntity> void registerBlockCapability(RegisterCapabilitiesEvent event, BlockEntityType<T> blockEntityType,
+                                                                BiFunction<T, Direction, ResourceHandler<FluidResource>> storage)
+    {
+        event.registerBlockEntity(Capabilities.Fluid.BLOCK, blockEntityType, storage::apply);
+    }
+
+    // ---- Other things' storage ----
+
+    @Override
+    public @Nullable ResourceHandler<FluidResource> getBlockHandler(Level level, BlockPos pos, @Nullable Direction side)
+    {
+        return level.getCapability(Capabilities.Fluid.BLOCK, pos, side);
+    }
+
+    @Override
+    public @Nullable ResourceHandler<FluidResource> getEntityHandler(Entity entity, @Nullable Direction side)
+    {
+        return Capabilities.Fluid.ENTITY.getCapability(entity, side);
+    }
+
+    // Buckets, bottles, tanks...
+    @Override
+    public @Nullable ResourceHandler<FluidResource> getItemHandler(ItemAccess access)
+    {
+        return access.getCapability(Capabilities.Fluid.ITEM);
+    }
+
+    // ---- In the world ----
+
+    // Places a source block (a bucket's worth) where there's room for one. Water boils away in the nether,
+    // like emptying a bucket there.
+    @Override
+    public boolean dropInWorld(ServerLevel level, BlockPos pos, ResourceHandler<FluidResource> from, int amount, @Nullable ServerPlayer cause)
+    {
+        FluidResource stored = from.getResource(0);
+        if (stored.isEmpty() || amount < FluidType.BUCKET_VOLUME) return false;
+        FluidStack bucket = stored.toStack(FluidType.BUCKET_VOLUME);
+        BlockState there = level.getBlockState(pos);
+        if (!there.isAir() && !there.canBeReplaced(stored.getFluid())) return false;
+
+        FluidType fluidType = stored.getFluid().getFluidType();
+        FluidState toPlace = fluidType.getStateForPlacement(level, pos, bucket);
+        if (!fluidType.canBePlacedInLevel(level, pos, bucket)) return false;
+
+        try (Transaction transaction = Transaction.openRoot())
+        {
+            if (from.extract(stored, FluidType.BUCKET_VOLUME, transaction) < FluidType.BUCKET_VOLUME) return false;
+            transaction.commit();
+        }
+        if (fluidType.isVaporizedOnPlacement(level, pos, bucket))
+        {
+            fluidType.onVaporize(cause, level, pos, bucket);
+        }
+        else
+        {
+            level.setBlock(pos, toPlace.createLegacyBlock(), Block.UPDATE_ALL_IMMEDIATE);
+        }
+        return true;
+    }
+
+    // ---- Saving ----
+
+    @Override
+    public Codec<FluidResource> getResourceCodec()
+    {
+        return FluidResource.CODEC;
+    }
+
+    @Override
+    public StreamCodec<RegistryFriendlyByteBuf, FluidResource> getResourceStreamCodec()
+    {
+        return FluidResource.STREAM_CODEC;
+    }
+
+    // "Water: 16000mB"
+    @Override
+    public Component describeAmount(FluidResource resource, int amount)
+    {
+        return Component.empty().append(resource.getHoverName()).append(": " + amount + "mB");
+    }
+
+    // ---- Filters ----
+
+    // Fluid filters are set from an inventory of fluid containers (buckets, tanks...): each stands for its fluid
+    @Override
+    public boolean usesFilterList()
+    {
+        return true;
+    }
+
+    @Override
+    public @Nullable FluidResource resourceFromFilterEntry(ItemStack entry)
+    {
+        FluidStack contained = FluidUtil.getFirstStackContained(entry);
+        return contained.isEmpty() ? null : FluidResource.of(contained);
+    }
+
+    @Override
+    public boolean isSameKind(FluidResource first, FluidResource second)
+    {
+        return first.getFluid().isSame(second.getFluid());
+    }
+
+    @Override
+    public @Nullable Identifier getRegistryName(FluidResource resource)
+    {
+        return BuiltInRegistries.FLUID.getKey(resource.getFluid());
+    }
+
+    // One tank, with the host's filter applied. Its capacity is read from the host each time.
+    public static class Storage extends FluidStacksResourceHandler implements TransportStorage<FluidResource>
+    {
+        private final TransportStorageHost host;
+        private final FluidTransportType type;
+
+        public Storage(TransportStorageHost host, FluidTransportType type)
+        {
+            super(1, Math.max(0, host.getCapacity(type)));
+            this.host = host;
+            this.type = type;
+        }
+
+        public int getCapacity()
+        {
+            return Math.max(0, host.getCapacity(type));
+        }
+
+        @Override
+        public boolean isValid(int index, FluidResource resource)
+        {
+            return host.filterAllows(type, resource, FilterDirection.INSERT);
+        }
+
+        @Override
+        protected int getCapacity(int index, FluidResource resource)
+        {
+            return resource.isEmpty() ? getCapacity() : host.filterLimit(type, resource, getCapacity());
+        }
+
+        @Override
+        public int extract(int index, FluidResource resource, int amount, TransactionContext transaction)
+        {
+            if (!host.filterAllows(type, resource, FilterDirection.EXTRACT)) return 0;
+            return super.extract(index, resource, amount, transaction);
+        }
+
+        @Override
+        protected void onContentsChanged(int index, FluidStack previousContents)
+        {
+            host.onStorageChanged(type);
+        }
+
+        // "Water: 1000/16000"
+        @Override
+        public @Nullable Component describe()
+        {
+            FluidStack stored = FluidUtil.getStack(this, 0);
+            if (stored.isEmpty()) return null;
+            return Component.empty().append(stored.getHoverName())
+                    .append(": " + stored.getAmount() + "/" + getCapacity())
+                    .withStyle(type.getColor());
+        }
+    }
+
+    // Bubbles in the fluid's colour. Fluid colours are only known on the client, so the work is in a client class.
+    @Override
+    public void addTransferParticles(Level level, Vec3 from, Vec3 to, @Nullable FluidResource resource, RandomSource random)
+    {
+        if (resource == null || resource.isEmpty()) super.addTransferParticles(level, from, to, resource, random);
+        else MowLibClientParticles.fluid(level, from, to, resource, random);
+    }
+}
