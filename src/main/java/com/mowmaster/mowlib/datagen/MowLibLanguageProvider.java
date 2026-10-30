@@ -30,6 +30,13 @@ public class MowLibLanguageProvider extends LanguageProvider
         add("message." + MODID + ".color_picker.picked", "Picked color %s");
         add("message." + MODID + ".color_picker.none", "This block has no color to pick");
         add("message." + MODID + ".color_picker.cleared", "Color cleared");
+        // A Custom Dye crafted from a picker that knows its block: "Diamond Block Dye" (recipes/CBPickedDyeRecipe)
+        add("item." + MODID + ".custom_dye.from_block", "%s Dye");
+
+        // ---- Color Palette (palette/, client/ClientColorPaletteTooltip) ----
+        addItem(MowLibItems.COLOR_PALETTE, "Color Palette");
+        add("tooltip." + MODID + ".palette.selected", "Selected: %s");
+        add("tooltip." + MODID + ".palette.empty", "No dyes");
 
         // ---- Page keys (client/MowLibKeyMappings) and the paged storage tooltip (client/ClientPagedContentsTooltip) ----
         add("key.category." + MODID + ".mowlib", "MowLib");

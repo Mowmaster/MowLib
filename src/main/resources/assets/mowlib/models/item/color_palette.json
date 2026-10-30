@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mowlib:item/color_palette",
+    "layer1": "mowlib:item/color_palette_paint"
+  }
+}

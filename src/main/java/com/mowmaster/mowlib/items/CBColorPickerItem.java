@@ -4,6 +4,7 @@ import com.mowmaster.mowlib.tint.CBTintBlockEntity;
 import com.mowmaster.mowlib.tint.IColorableBlock;
 import com.mowmaster.mowlib.datamaps.CBBlockColor;
 import com.mowmaster.mowlib.datamaps.CBDataMaps;
+import com.mowmaster.mowlib.registry.MowLibDataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -24,8 +25,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import com.mowmaster.mowlib.tint.ITintHolder;
 import org.jetbrains.annotations.Nullable;
 
-// Right-click a block to store its colour; craft the picker on its own for a Custom Dye of that colour.
-// Sneak + right-click the air to clear the stored colour (back to an empty picker).
+// Right-click a block to store its colour (and which block it was); craft the picker on its own for a Custom Dye of
+// that colour, named after the block ("Diamond Block Dye"). Sneak + right-click the air to clear it.
 public class CBColorPickerItem extends Item
 {
     public CBColorPickerItem(Properties properties)
@@ -52,6 +53,7 @@ public class CBColorPickerItem extends Item
             else
             {
                 context.getItemInHand().set(DataComponents.DYED_COLOR, new DyedItemColor(color));
+                context.getItemInHand().set(MowLibDataComponents.PICKED_BLOCK.get(), state.getBlock());
                 if (player != null)
                 {
                     player.sendOverlayMessage(Component.translatable("message.mowlib.color_picker.picked",
@@ -75,6 +77,7 @@ public class CBColorPickerItem extends Item
         {
             // Removing the component makes it a plain picker again (and the item model goes back to the empty one)
             picker.remove(DataComponents.DYED_COLOR);
+            picker.remove(MowLibDataComponents.PICKED_BLOCK.get());
             player.sendOverlayMessage(Component.translatable("message.mowlib.color_picker.cleared"));
             level.playSound(null, player.blockPosition(), SoundEvents.DYE_USE, SoundSource.PLAYERS, 1f, 0.5f);
         }

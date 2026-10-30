@@ -94,10 +94,13 @@ public interface IColorableBlock extends EntityBlock
         return InteractionResult.SUCCESS;
     }
 
-    // The colour an item dyes with: vanilla (and tagged modded) dyes, or a Custom Dye. Null if it isn't a dye.
+    // The colour an item dyes with: an IDyeSource (the Color Palette's selected dye), vanilla (and tagged modded)
+    // dyes, or a Custom Dye. Null if it isn't a dye.
     @Nullable
     static Integer dyeColorOf(ItemStack stack)
     {
+        if (stack.getItem() instanceof IDyeSource source) return source.getDyeColor(stack);
+
         DyeColor dye = DyeColor.getColor(stack);
         if (dye != null) return dye.getTextureDiffuseColor() & 0xFFFFFF;
 

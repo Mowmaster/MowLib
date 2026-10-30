@@ -16,6 +16,7 @@ import com.mowmaster.mowlib.items.tools.FilterToolItem;
 import com.mowmaster.mowlib.items.tools.MowLibToolItem;
 import com.mowmaster.mowlib.items.workcards.WorkCardAreaItem;
 import com.mowmaster.mowlib.items.workcards.WorkCardLocationsItem;
+import com.mowmaster.mowlib.palette.ColorPaletteItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -32,6 +33,8 @@ public class MowLibItems
             properties -> new CBColorPickerItem(properties.stacksTo(1)));
     // A dye of any colour, stored in its dyed_color component
     public static final DeferredItem<Item> CUSTOM_DYE = ITEMS.registerItem("custom_dye", Item::new);
+    // Holds one of each dye; paints with the selected one
+    public static final DeferredItem<ColorPaletteItem> COLOR_PALETTE = ITEMS.registerItem("color_palette", ColorPaletteItem::new);
 
     public static final DeferredItem<FilterToolItem> TOOL_FILTER = ITEMS.registerItem("tool_filter", FilterToolItem::new);
     public static final DeferredItem<MowLibToolItem> TOOL_WORK = ITEMS.registerItem("tool_work", MowLibToolItem::new);

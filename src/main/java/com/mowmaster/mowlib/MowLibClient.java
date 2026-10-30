@@ -2,9 +2,12 @@ package com.mowmaster.mowlib;
 
 import com.mowmaster.mowlib.client.CBBlockEntityTintSource;
 import com.mowmaster.mowlib.tint.IColorableBlock;
+import com.mowmaster.mowlib.client.ClientColorPaletteTooltip;
 import com.mowmaster.mowlib.client.ClientPagedContentsTooltip;
 import com.mowmaster.mowlib.client.MowLibKeyMappings;
 import com.mowmaster.mowlib.client.PagedFullnessProperty;
+import com.mowmaster.mowlib.client.SelectedDyeTint;
+import com.mowmaster.mowlib.palette.ColorPaletteTooltip;
 import com.mowmaster.mowlib.paging.PagedContentsTooltip;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -55,11 +58,19 @@ public class MowLibClient
         event.register(MowLibKeyMappings.PAGE_PREVIOUS);
     }
 
-    // Every mod's paged storage items get the page grid tooltip
+    // Every mod's paged storage items get the page grid tooltip; the Color Palette shows all its dyes
     @SubscribeEvent
     public static void registerTooltips(RegisterClientTooltipComponentFactoriesEvent event)
     {
         event.register(PagedContentsTooltip.class, ClientPagedContentsTooltip::new);
+        event.register(ColorPaletteTooltip.class, ClientColorPaletteTooltip::new);
+    }
+
+    // "mowlib:selected_dye", an item model tint: the Color Palette (or any IDyeSource) in its selected colour
+    @SubscribeEvent
+    public static void registerItemTintSources(RegisterColorHandlersEvent.ItemTintSources event)
+    {
+        event.register(MowLibReferences.id("selected_dye"), SelectedDyeTint.MAP_CODEC);
     }
 
     // "mowlib:paged_fullness", for item models that fill up (minecraft:range_dispatch)

@@ -3,14 +3,17 @@ package com.mowmaster.mowlib.registry;
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.FilterData;
 import com.mowmaster.mowlib.paging.PagedContents;
+import com.mowmaster.mowlib.palette.ColorPaletteContents;
 import com.mowmaster.mowlib.transport.TransportContents;
 import com.mowmaster.mowlib.transport.TransportType;
 import com.mowmaster.mowlib.transport.TransportTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -46,6 +49,17 @@ public class MowLibDataComponents
     // The contents of a storage carried as an item (any mod's "packet", "tank item", ...)
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<TransportContents<?>>> TRANSPORT_CONTENTS =
             COMPONENTS.registerComponentType("transport_contents", builder -> builder.persistent(TransportContents.CODEC).networkSynchronized(TransportContents.STREAM_CODEC));
+
+    // The block a colour picker took its colour from, so the Custom Dye crafted from it can be named after it
+    // ("Diamond Block Dye"). Saved as the block's id; ByteBufCodecs.registry sends it as the registry's number.
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Block>> PICKED_BLOCK =
+            COMPONENTS.registerComponentType("picked_block", builder -> builder.persistent(BuiltInRegistries.BLOCK.byNameCodec())
+                    .networkSynchronized(ByteBufCodecs.registry(Registries.BLOCK)));
+
+    // A Color Palette's dyes (sorted by colour) and which one is selected
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ColorPaletteContents>> COLOR_PALETTE =
+            COMPONENTS.registerComponentType("color_palette", builder -> builder.persistent(ColorPaletteContents.CODEC)
+                    .networkSynchronized(ColorPaletteContents.STREAM_CODEC));
 
     private static Identifier currentTypeId(Identifier id)
     {

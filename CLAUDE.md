@@ -70,7 +70,11 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - `items/` - `CBColorPickerItem` (`mowlib:color_picker`; picked colour from `ITintHolder` or the
   `mowlib:block_colors` data map), `mowlib:custom_dye`. `items/tools/`: `MowLibToolItem` (offhand tools with a
   tooltip), `FilterToolItem`, `CraftingToolItem` (stays in the grid, loses durability).
-- `recipes/` - `CBPickedDyeRecipe` (`mowlib:picked_dye`: picker alone -> custom dye), `ColorableItemDyeRecipe`
+- `palette/` - `ColorPaletteItem` (`mowlib:color_palette`): bundle-like, one of each dye (vanilla + Custom Dye; a
+  duplicate is used up and voided), sorted by colour, max 64. The selected dye (`IPageable`: scroll / page keys) is
+  what it paints with (`tint/IDyeSource`), and tints its model (`client/SelectedDyeTint`, `mowlib:selected_dye`).
+  `ColorPaletteContents` (`mowlib:color_palette`), `ColorPaletteTooltip` + `client/ClientColorPaletteTooltip`.
+- `recipes/` - `CBPickedDyeRecipe` (`mowlib:picked_dye`: picker alone -> custom dye named after the picked block, `mowlib:picked_block`), `ColorableItemDyeRecipe`
   (`mowlib:colorable_dye`: `#mowlib:dyeable_in_crafting` + dyes -> mixed `dyed_color`).
 - `datamaps/` - `CBBlockColor` (`{"color": "#RRGGBB"}`), `CBDataMaps.BLOCK_COLORS`.
 - `datagen/` - models (picker, dye), language, recipes, and `CBBlockColorProvider` (average texture colour of

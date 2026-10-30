@@ -21,6 +21,7 @@ public class CreativeTabRegistry
             .displayItems((parameters, output) -> {
                 output.accept(MowLibItems.COLOR_PICKER);
                 output.accept(MowLibItems.CUSTOM_DYE);
+                output.accept(MowLibItems.COLOR_PALETTE);
                 output.accept(MowLibItems.WORKCARD_AREA);
                 output.accept(MowLibItems.WORKCARD_LOCATIONS);
                 output.accept(MowLibItems.TOOL_FILTER);
