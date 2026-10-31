@@ -92,6 +92,9 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - `display/ISpinningItemHolder` + `client/SpinningItemRenderer`: a block entity's item spinning above it. Mods
   register the renderer for their own types (`SpinningItemRenderer::new`).
 - `ghost/GhostItem` + `client/GhostItemRenderer`: floating "missing input" items with labels.
+- `display/MobDisplay` + `client/MobDisplayRenderer`: a mob shown on a block (spin / face player / fixed; baby,
+  adult or a growing-up loop; sheep colour and sheared). Use the renderer inside your own block entity renderer, or
+  `display/IMobDisplayHolder` + `client/MobDisplayBlockRenderer`. `#mowlib:mob_display_blacklist`: mobs never shown.
 - `util/` - `CBPixelBox` (pixel boxes: rotate incl. `rotateFromUp` for six-facing models, shapes, click-to-pixel),
   `MowLibOwner` + `MowLibFakePlayer`, `MowLibBlockActions` (break/place as a player), `MowLibXpUtils`,
   `MowLibTextUtils`, `MowLibParticles`.

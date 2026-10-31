@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:player",
+    "minecraft:ender_dragon",
+    {
+      "id": "minecraft:mannequin",
+      "required": false
+    }
+  ]
+}
