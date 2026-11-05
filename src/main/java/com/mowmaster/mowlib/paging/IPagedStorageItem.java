@@ -26,8 +26,15 @@ public interface IPagedStorageItem extends IPageable
     // Whether this item may go in (e.g. refuse other storage items)
     boolean accepts(ItemStack self, ItemResource resource);
 
-    // Whether players can put items in by hand in inventories (taking out always works)
+    // Whether players can put items in by hand in inventories
     default boolean allowsInsert(ItemStack self)
+    {
+        return true;
+    }
+
+    // Whether players can take this page's items out by hand in inventories (the bundle-style right-clicks). Say no
+    // for a page that's in use (a half-eaten cake...); the click is then refused with the bundle's fail sound.
+    default boolean allowsTakeOut(ItemStack self, int page)
     {
         return true;
     }

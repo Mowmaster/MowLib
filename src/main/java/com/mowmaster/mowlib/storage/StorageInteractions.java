@@ -6,11 +6,13 @@ import com.mowmaster.mowlib.filter.ITransportFilter;
 import com.mowmaster.mowlib.items.tools.FilterToolItem;
 import com.mowmaster.mowlib.transport.TransportType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -18,8 +20,11 @@ import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+
+import java.util.function.Function;
 
 // Putting things into a storage block by hand and taking them out, the same way in every mod. Call these from
 // your block's useItemOn (right-click) and attack (survival left-click) on the SERVER (level.isClientSide() false):
@@ -157,5 +162,46 @@ public final class StorageInteractions
         if (holder.hasFilter()) giveToPlayer(player, holder.removeFilter());
         else player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".tool_filter_missing"));
         return true;
+    }
+
+    // ---- Reaching items in inventory slots (for inventory clicks) ----
+
+    // Runs `action` on the item in `slot` as an ItemAccess (what NeoForge's item capabilities need, so a bucket can
+    // become an empty bucket in place). For the player's own inventory this is the real slot (anything that doesn't
+    // fit goes to the rest of the inventory). For other containers the item is copied into a 2-slot holder, the action
+    // runs there, and the result goes back into the slot (the second slot catches anything extra, given to the player).
+    // Server only (it changes things).
+    public static <T> T withSlotAccess(Player player, Slot slot, Function<ItemAccess, T> action)
+    {
+        if (slot.container == player.getInventory())
+        {
+            return action.apply(ItemAccess.forPlayerSlot(player, slot.getContainerSlot()));
+        }
+        NonNullList<ItemStack> copy = NonNullList.withSize(2, ItemStack.EMPTY);
+        copy.set(0, slot.getItem().copy());
+        ItemStacksResourceHandler holder = new ItemStacksResourceHandler(copy);
+        T result = action.apply(ItemAccess.forHandlerIndex(holder, 0));
+        slot.set(holder.getResource(0).toStack(holder.getAmountAsInt(0)));
+        giveToPlayer(player, holder.getResource(1).toStack(holder.getAmountAsInt(1)));
+        return result;
+    }
+
+    // The item on the cursor (in an open container) as an ItemAccess
+    public static ItemAccess cursorAccess(Player player)
+    {
+        return ItemAccess.forPlayerCursor(player, player.containerMenu);
+    }
+
+    // Moves up to `amount` of a type between two handlers, committed (TransportType#transfer, so the type's own rules
+    // apply). Returns how much moved. The handlers must hold the type's resource: the casts are only safe then.
+    @SuppressWarnings("unchecked")
+    public static <R extends Resource> int move(TransportType<R> type, ResourceHandler<?> from, ResourceHandler<?> to, int amount)
+    {
+        try (Transaction transaction = Transaction.openRoot())
+        {
+            int moved = type.transfer((ResourceHandler<R>) from, (ResourceHandler<R>) to, amount, transaction);
+            if (moved > 0) transaction.commit();
+            return moved;
+        }
     }
 }

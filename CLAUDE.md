@@ -63,13 +63,20 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   - `CBBulkStorageBlock` (+ `CBBulkStorageBlockEntity`, shared type `mowlib:bulk_storage`): right-click inserts,
     left-click takes 1, sneak-left-click a stack; creative players extract until empty before breaking; spills on
     break; comparator output; tintable. Subclass with shape, tint regions, capacity and item tag.
-  - `StorageInteractions`: the shared insert / take / give-to-player / fluid container / filter slot clicks. Use
-    these rather than writing new ones. `ItemEntityAccess`: an item entity used like an inventory slot.
+  - `StorageInteractions`: the shared insert / take / give-to-player / fluid container / filter slot clicks, plus
+    `withSlotAccess` / `cursorAccess` (inventory slots and the cursor as `ItemAccess`) and `move` (between two
+    handlers of a type). Use these rather than writing new ones. `ItemEntityAccess`: an item entity used like an
+    inventory slot.
+  - `IInventoryUsable` + `InventoryClicks` + `InventoryClick`: items other items are used on in an inventory, either
+    way round (food onto a mob book, seeds onto a planter); `useHeld` for a block standing in for the item.
 - `transport/` - `TransportType` registry (`mowlib:transport_type`; items/fluids/energy/experience built in). A
   type = how to store, reach (block/entity/item handlers), save, filter, drop, absorb and show one kind of thing;
   machine numbers (rates, sizes) belong to the machine (`TransportStorageHost#getCapacity`). `TransportStorage`,
   `AmountResource`/`AmountStorage` for amount-only types, `TransportContents` (`mowlib:transport_contents`).
   `ExperienceTransportType` makes the `mowlib:experience_handler` block + item capabilities.
+  Items holding one type (tanks, batteries, tomes): `ITransportStorageItem`, `ItemTransportStorage` (opens the
+  item's `mowlib:transport_contents` as a storage), `TransportItemInteractions` (bucket-style inventory clicks with
+  any item of the type, fill bar).
 - `filter/` - `ITransportFilter`, `FilterData` (`mowlib:filter_data`, `mowlib:filter_mode`), `FilterDirection`,
   `IFilterHolder` (block entities with a filter slot), `HeldFilters` (a filter inside an item, `mowlib:held_filter`:
   get/set/allows, the offhand filter / Filter Tool clicks for `use()`, a whitelist summary for paged items). `items/filters/`: the 11 filters (`mowlib:filter_*`) on
@@ -90,7 +97,7 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   plain solid cubes).
 - `paging/` - pages on items (`IPageable`) and block entities (`IPageHolder`), turned for every mod by scroll or
   the page keys. `PageArrows` (clickable page-turn boxes). Paged storage: `PagedStorage` (block entities),
-  `IPagedStorageItem` + `PagedStorageInteractions` (bundle-style clicks), `PagedContents`
+  `IPagedStorageItem` + `PagedStorageInteractions` (bundle-style clicks; `allowsTakeOut` can refuse a page), `PagedContents`
   (`mowlib:paged_contents`), `PagedContentsTooltip`.
 - `keys/` - the action keys' item/block side: `IActivatable` (activate key on a hovered or held item; the on/off
   mode in `mowlib:activated`), `IKeyPlaceable` (place key puts a block item down, skipping its right-click),

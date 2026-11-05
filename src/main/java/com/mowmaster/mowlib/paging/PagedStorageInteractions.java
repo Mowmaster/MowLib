@@ -26,6 +26,7 @@ import java.util.Optional;
 // - Holding the item, right-click an empty slot: takes the selected page out into it.
 //   Empty-handed, right-click this item: takes the selected page out onto your cursor.
 // These run on both sides (the client predicts), like vanilla's bundle. (Moved from Bibliomania's BookItem.)
+// IPagedStorageItem#allowsTakeOut can refuse the take-out clicks for a page (it's in use).
 public final class PagedStorageInteractions
 {
     private PagedStorageInteractions() {}
@@ -56,6 +57,11 @@ public final class PagedStorageInteractions
         }
         if (clickAction == ClickAction.SECONDARY && other.isEmpty())
         {
+            if (!item.allowsTakeOut(self, item.contents(self).selectedPage()))
+            {
+                player.playSound(SoundEvents.BUNDLE_INSERT_FAIL, 1f, 1f);
+                return true;
+            }
             ItemStack removed = item.extractSelected(self);
             if (!removed.isEmpty())
             {
@@ -95,6 +101,11 @@ public final class PagedStorageInteractions
         }
         if (clickAction == ClickAction.SECONDARY && other.isEmpty())
         {
+            if (!item.allowsTakeOut(self, item.contents(self).selectedPage()))
+            {
+                player.playSound(SoundEvents.BUNDLE_INSERT_FAIL, 1f, 1f);
+                return true;
+            }
             if (slot.allowModification(player))
             {
                 ItemStack removed = item.extractSelected(self);
