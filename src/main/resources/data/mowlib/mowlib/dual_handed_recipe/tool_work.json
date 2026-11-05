@@ -1,0 +1,9 @@
+{
+  "offhand": "#minecraft:coals",
+  "mainhand": "#c:rods/wooden",
+  "block": "#c:bookshelves",
+  "consume_offhand": true,
+  "consume_mainhand": true,
+  "consume_block": true,
+  "result": { "id": "mowlib:tool_work" }
+}
