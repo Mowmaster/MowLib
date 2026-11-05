@@ -35,11 +35,13 @@ import java.util.function.Consumer;
 // sheared) for any block entity renderer. Works for any living mob whose renderer only needs the entity, which is
 // nearly all of them; #mowlib:mob_display_blacklist lists the ones that don't (player, ender dragon...).
 // It's how vanilla's mob spawner shows its spinning mob: a real entity is made on the client (never added to the
-// world), set up, and turned into a render state by the EntityRenderDispatcher, which then draws that state.
+// world), set up, and turned into a render state by the EntityRenderDispatcher. The mob's own renderer then draws
+// that state (not the dispatcher, which would add a shadow, hitboxes and fire).
+// Lighting: by default the mob is lit by the world where it stands (the light at its feet), like a real mob.
 //
 // Use it in your renderer's two steps, like GhostItemRenderer (26.x renderers: extractRenderState copies, submit draws):
 //   - keep one MobDisplayRenderer in your renderer, and a MobDisplayRenderer.Shown in your render state
-//   - extractRenderState: mobRenderer.extract(state.mob, display, level, feet, cameraPos, partialTick, state.lightCoords)
+//   - extractRenderState: mobRenderer.extract(state.mob, display, level, feet, cameraPos, partialTick)
 //     where feet is the world position the mob stands on (e.g. Vec3.atLowerCornerOf(pos).add(0.5, 1, 0.5))
 //   - submit: move the pose to the same spot (poseStack.translate(0.5, 1, 0.5) from the block's corner), then
 //     mobRenderer.submit(state.mob, poseStack, submitNodeCollector, camera)
@@ -63,8 +65,20 @@ public class MobDisplayRenderer
     private final Set<EntityType<?>> broken = new HashSet<>();
     private WeakReference<Level> entitiesLevel = new WeakReference<>(null);
 
+    // Pass as lightCoords for the light where the mob stands (the default, and almost always what you want)
+    public static final int WORLD_LIGHT = -1;
+
     // ---- Step 1: extract (copy what's needed into the render state) ----
 
+    // Lit by the world at the mob's feet
+    public void extract(Shown shown, MobDisplay display, @Nullable Level level, Vec3 feet, Vec3 cameraPos, float partialTick)
+    {
+        extract(shown, display, level, feet, cameraPos, partialTick, WORLD_LIGHT, null);
+    }
+
+    // lightCoords: a fixed light to draw it with instead (packed light, e.g. LightCoordsUtil's full bright), or
+    // WORLD_LIGHT. Don't pass a block entity render state's lightCoords: that's the light INSIDE the block, which for a
+    // solid block is dark.
     public void extract(Shown shown, MobDisplay display, @Nullable Level level, Vec3 feet, Vec3 cameraPos, float partialTick, int lightCoords)
     {
         extract(shown, display, level, feet, cameraPos, partialTick, lightCoords, null);
@@ -80,8 +94,12 @@ public class MobDisplayRenderer
         Entity entity = displayEntity(level, display.type());
         if (entity == null) return;
 
-        // Standing where it's shown (some renderers look at the blocks around the entity)
+        // Standing where it's shown: its light comes from there, and some renderers look at the blocks around it
         entity.snapTo(feet.x, feet.y, feet.z);
+        // Its age in ticks, kept in step with the world. A mob that never ticks stays at 0, and the idle animations
+        // (breathing, head bob, villager arms) run off age + partial tick: with the age stuck, they jumped back every
+        // tick (20 times a second), which looked like flickering.
+        entity.tickCount = (int) level.getGameTime();
         // Game time kept small so the float stays precise; 24000 is a whole number of spins and growing loops
         float time = (level.getGameTime() % 24000) + partialTick;
         float growScale = applyAge(entity, display.age(), time, shown, level, feet);
@@ -104,10 +122,8 @@ public class MobDisplayRenderer
             broken.add(display.type());
             return;
         }
-        // Lit like the block it stands on, and no shadow (the shadow would be drawn full size at the entity's position)
-        renderState.lightCoords = lightCoords;
-        renderState.shadowRadius = 0f;
-        renderState.shadowPieces.clear();
+        // extractEntity has already lit it with the light at its feet; only a fixed light replaces that
+        if (lightCoords != WORLD_LIGHT) renderState.lightCoords = lightCoords;
 
         shown.entity = renderState;
         shown.scale = fitScale(display) * growScale;
@@ -129,8 +145,11 @@ public class MobDisplayRenderer
         poseStack.pushPose();
         poseStack.rotate(Axis.YP.rotationDegrees(shown.yaw));
         poseStack.scale(shown.scale, shown.scale, shown.scale);
-        // Draws it at the pose's origin (0, 0, 0), as the spawner does
-        dispatcher().submit(shown.entity, camera, 0.0, 0.0, 0.0, poseStack, submitNodeCollector);
+        // The mob's own renderer draws just the mob, at the pose's origin. (EntityRenderDispatcher#submit would also add
+        // its shadow, debug hitboxes and fire.) getRenderer finds the renderer from the render state; var lets Java
+        // work out its long generic type (EntityRenderer<?, ? super EntityRenderState>), which still accepts the state.
+        var renderer = dispatcher().getRenderer(shown.entity);
+        renderer.submit(shown.entity, poseStack, submitNodeCollector, camera);
         poseStack.popPose();
     }
 

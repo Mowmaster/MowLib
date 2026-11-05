@@ -45,7 +45,8 @@ public class MobDisplayBlockRenderer<T extends BlockEntity & IMobDisplayHolder> 
             return;
         }
         Vec3 feet = Vec3.atLowerCornerOf(holder.getBlockPos()).add(0.5, state.height, 0.5);
-        mobs.extract(state.mob, display, holder.getLevel(), feet, cameraPos, partialTick, state.lightCoords);
+        // Lit by the world at the mob's feet (state.lightCoords is the light inside the block: dark for a solid one)
+        mobs.extract(state.mob, display, holder.getLevel(), feet, cameraPos, partialTick);
     }
 
     @Override
