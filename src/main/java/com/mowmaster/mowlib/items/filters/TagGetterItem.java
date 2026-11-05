@@ -2,6 +2,7 @@ package com.mowmaster.mowlib.items.filters;
 
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.TagGetterData;
+import com.mowmaster.mowlib.keys.IBlockKeyTool;
 import com.mowmaster.mowlib.paging.IPageable;
 import com.mowmaster.mowlib.registry.MowLibDataComponents;
 import com.mowmaster.mowlib.storage.IInventoryUsable;
@@ -11,6 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -20,12 +22,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
@@ -41,12 +44,12 @@ import java.util.function.Consumer;
 // matches anything in each getter's selected tag. The tags live in the mowlib:tag_getter component (TagGetterData).
 // - In an inventory: click an item onto it, or it onto an item (left-click), to read that item's tags. The item
 //   isn't used up. Scroll over it, or the page keys, to select the next/previous tag (IPageable).
-// - In the main hand: right-click with an item in the offhand to read that item's tags; with an empty offhand,
-//   right-click to select the next tag; sneak + right-click the air to clear it.
-// - Sneak + right-click a block (either hand) to read the tags of the block's item.
-// Reads item tags, plus the fluid tags of the fluid inside (a water bucket gives the water tags as well), so one
-// getter works for a tag filter in items or fluids mode.
-public class TagGetterItem extends Item implements IPageable, IInventoryUsable
+// - In the hand: the pick-up key (MowLibKeyMappings.PICKUP) at a block reads that BLOCK's tags (IBlockKeyTool).
+//   Right-click selects the next tag; sneak + right-click clears it. The page keys select the next/previous tag.
+// From an item it reads item tags, plus the fluid tags of the fluid inside (a water bucket gives the water tags as
+// well), so one getter works for a tag filter in items or fluids mode. From a block it reads block tags (mineable
+// with a pickaxe, logs...); the tag filter matches those against the block that an item places.
+public class TagGetterItem extends Item implements IPageable, IInventoryUsable, IBlockKeyTool
 {
     public TagGetterItem(Properties properties)
     {
@@ -72,6 +75,14 @@ public class TagGetterItem extends Item implements IPageable, IInventoryUsable
         stack.typeHolder().tags().forEach(tag -> ids.add(tag.location()));
         FluidStack fluid = FluidUtil.getFirstStackContained(stack);
         if (!fluid.isEmpty()) fluid.getFluid().builtInRegistryHolder().tags().forEach(tag -> ids.add(tag.location()));
+        return List.copyOf(ids);
+    }
+
+    // A block's tags (its block tags, not its item's), A to Z
+    public static List<Identifier> blockTagsOf(BlockState state)
+    {
+        Set<Identifier> ids = new TreeSet<>(Comparator.comparing(Identifier::toString));
+        state.getBlock().builtInRegistryHolder().tags().forEach(tag -> ids.add(tag.location()));
         return List.copyOf(ids);
     }
 
@@ -150,9 +161,8 @@ public class TagGetterItem extends Item implements IPageable, IInventoryUsable
     {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
         ItemStack getter = player.getMainHandItem();
-        ItemStack offhand = player.getOffhandItem();
-        // Nothing to do (no offhand item, no tags to cycle): decided the same way on both sides
-        if (!player.isShiftKeyDown() && offhand.isEmpty() && data(getter).isEmpty()) return InteractionResult.PASS;
+        // Nothing to cycle (no tags, not sneaking): decided the same way on both sides
+        if (!player.isShiftKeyDown() && data(getter).isEmpty()) return InteractionResult.PASS;
         if (!level.isClientSide())
         {
             if (player.isShiftKeyDown())
@@ -160,40 +170,46 @@ public class TagGetterItem extends Item implements IPageable, IInventoryUsable
                 getter.remove(MowLibDataComponents.TAG_GETTER.get());
                 player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".taggetter.clear").withStyle(ChatFormatting.RED));
             }
-            else if (!offhand.isEmpty()) read(level, player, getter, offhand);
             // The next tag. The message over the hotbar comes from describePage (HeldPageMessages sees the change).
             else setPage(getter, data(getter).selectedIndex() + 1);
         }
         return InteractionResult.SUCCESS;
     }
 
-    // Sneak + right-click a block: its item's tags
+    // ---- The pick-up key at a block: read its block tags (IBlockKeyTool; the place key isn't used) ----
+
     @Override
-    public InteractionResult useOn(UseOnContext context)
+    public boolean usesBlockKey(ItemStack stack, Level level, BlockHitResult hit, Player player, BlockKey key)
     {
-        Player player = context.getPlayer();
-        if (player == null || !player.isShiftKeyDown()) return InteractionResult.PASS;
-        Level level = context.getLevel();
-        if (!level.isClientSide())
-        {
-            BlockState state = level.getBlockState(context.getClickedPos());
-            read(level, player, context.getItemInHand(), new ItemStack(state.getBlock()));
-        }
-        return InteractionResult.SUCCESS;
+        return key == BlockKey.PICKUP && !level.getBlockState(hit.getBlockPos()).isAir();
     }
 
-    private static void read(Level level, Player player, ItemStack getter, ItemStack from)
+    @Override
+    public void onBlockKey(ItemStack stack, ServerPlayer player, BlockHitResult hit, BlockKey key)
     {
-        if (readTags(getter, from))
+        BlockState state = player.level().getBlockState(hit.getBlockPos());
+        List<Identifier> tags = blockTagsOf(state);
+        if (tags.isEmpty())
         {
-            player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".taggetter.created", data(getter).tags().size())
-                    .withStyle(ChatFormatting.GREEN));
-            level.playSound(null, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 1f, 1.2f);
+            player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".taggetter.none").withStyle(ChatFormatting.RED));
+            return;
         }
-        else player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".taggetter.none").withStyle(ChatFormatting.RED));
+        // The source is the block's id (the tooltip names the block)
+        stack.set(MowLibDataComponents.TAG_GETTER.get(),
+                new TagGetterData(Optional.of(BuiltInRegistries.BLOCK.getKey(state.getBlock())), tags, 0));
+        player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".taggetter.created", tags.size()).withStyle(ChatFormatting.GREEN));
+        player.level().playSound(null, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 1f, 1.2f);
     }
 
     // ---- Tooltip: where the tags came from, then every tag, the selected one in gold ----
+
+    // The source's name: an item's, or for a block without an item of the same id (water, fire...) the block's
+    private static Component sourceName(Identifier id)
+    {
+        Item item = BuiltInRegistries.ITEM.getValue(id);
+        if (item != Items.AIR) return new ItemStack(item).getHoverName();
+        return BuiltInRegistries.BLOCK.getValue(id).getName();
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag)
@@ -206,7 +222,7 @@ public class TagGetterItem extends Item implements IPageable, IInventoryUsable
             return;
         }
         data.source().ifPresent(id -> tooltip.accept(Component.translatable(MowLibReferences.MODID + ".taggetter.tooltip_header",
-                new ItemStack(BuiltInRegistries.ITEM.getValue(id)).getHoverName()).withStyle(ChatFormatting.GRAY)));
+                sourceName(id)).withStyle(ChatFormatting.GRAY)));
         int selected = data.selectedIndex();
         for (int index = 0; index < data.tags().size(); index++)
         {

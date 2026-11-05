@@ -8,6 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -69,11 +70,16 @@ public class TagFilterItem extends BaseFilterItem
         return false;
     }
 
-    // TagKey.create: the tag with this id in the item (or fluid) registry. typeHolder: the item's registry entry;
-    // a fluid's state can be asked about its tags directly.
+    // TagKey.create: the tag with this id in the item (or block, or fluid) registry. typeHolder: the item's registry
+    // entry; a fluid's state can be asked about its tags directly. An item that places a block also matches its block's
+    // tags, so a getter that read a block's tags (mineable/pickaxe...) works on items too.
     private static boolean inTag(Resource resource, Identifier tag)
     {
-        if (resource instanceof ItemResource item) return item.typeHolder().is(TagKey.create(Registries.ITEM, tag));
+        if (resource instanceof ItemResource item)
+        {
+            if (item.typeHolder().is(TagKey.create(Registries.ITEM, tag))) return true;
+            return item.getItem() instanceof BlockItem blockItem && blockItem.getBlock().builtInRegistryHolder().is(TagKey.create(Registries.BLOCK, tag));
+        }
         if (resource instanceof FluidResource fluid) return fluid.getFluid().defaultFluidState().is(TagKey.create(Registries.FLUID, tag));
         return false;
     }

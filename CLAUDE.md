@@ -90,7 +90,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   item, which a right-click removes). Held: page keys switch mode, the activation key toggles whitelist/blacklist,
   pick-up / place keys add / remove the looked-at block (`TransportType#filterEntryAt`). `TagFilterItem` (`filter_tag`,
   `filter_tag_machine`) matches the selected tag of each `TagGetterItem` (`mowlib:tag_getter`, data
-  `filter/TagGetterData`) on its list. Models are hand-written in `assets/mowlib/items` (one per transport mode); their frame is tinted black
+  `filter/TagGetterData`) on its list. The getter reads an item's tags when the item is clicked onto it, or a block's
+  block tags with the pick-up key; block tags also match the items that place those blocks. Models are hand-written in `assets/mowlib/items` (one per transport mode); their frame is tinted black
   for a blacklist (`client/FilterListTint`, `mowlib:filter_list`), and amount-only modes (energy, experience:
   `TransportType#isAmountOnly`) read Allowed / Disabled and show the plain icon while disabled
   (`client/FilterBlacklistProperty`, `mowlib:filter_blacklist`).

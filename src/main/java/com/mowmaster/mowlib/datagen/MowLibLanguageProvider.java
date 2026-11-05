@@ -93,7 +93,7 @@ public class MowLibLanguageProvider extends LanguageProvider
         add(MODID + ".taggetter.selected", "Selected tag: %s");
         add(MODID + ".taggetter.empty", "No tags");
         add(MODID + ".taggetter.tooltip_header", "Tags of %s:");
-        add(MODID + ".taggetter.tooltip_howto", "Click an item onto it to read its tags");
+        add(MODID + ".taggetter.tooltip_howto", "Click an item onto it to read its tags, or press the pick-up key at a block");
 
         add(MODID + ".filter.tooltip_filterdirection", "Applies to: ");
         add(MODID + ".tooltip_mode", "Mode: ");
