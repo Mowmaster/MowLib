@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.recipes.CBPickedDyeRecipe;
 import com.mowmaster.mowlib.recipes.ColorableItemDyeRecipe;
-import com.mowmaster.mowlib.recipes.FilterResetRecipe;
+import com.mowmaster.mowlib.recipes.PickerResetRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -25,9 +25,9 @@ public class MowLibRecipes
     public static final Supplier<RecipeSerializer<ColorableItemDyeRecipe>> COLORABLE_DYE = RECIPE_SERIALIZERS.register("colorable_dye",
             () -> new RecipeSerializer<>(MapCodec.unit(ColorableItemDyeRecipe.INSTANCE), StreamCodec.unit(ColorableItemDyeRecipe.INSTANCE)));
 
-    // Any filter alone -> a Blank Filter
-    public static final Supplier<RecipeSerializer<FilterResetRecipe>> FILTER_RESET = RECIPE_SERIALIZERS.register("filter_reset",
-            () -> new RecipeSerializer<>(MapCodec.unit(FilterResetRecipe.INSTANCE), StreamCodec.unit(FilterResetRecipe.INSTANCE)));
+    // Any picker group's item alone -> its blank (a filter -> Blank Filter, a work card -> Blank Work Card...)
+    public static final Supplier<RecipeSerializer<PickerResetRecipe>> PICKER_RESET = RECIPE_SERIALIZERS.register("picker_reset",
+            () -> new RecipeSerializer<>(MapCodec.unit(PickerResetRecipe.INSTANCE), StreamCodec.unit(PickerResetRecipe.INSTANCE)));
 
     public static void register(IEventBus eventBus)
     {

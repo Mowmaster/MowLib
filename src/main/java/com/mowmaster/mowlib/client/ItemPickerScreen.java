@@ -2,7 +2,9 @@ package com.mowmaster.mowlib.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mowmaster.mowlib.MowLibReferences;
-import com.mowmaster.mowlib.filter.FilterPicker;
+import com.mowmaster.mowlib.picker.ItemPicker;
+import com.mowmaster.mowlib.picker.PickerGroup;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -17,21 +19,22 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.util.List;
 
-// The Blank Filter's picker menu: every filter (FilterPicker.choices), each on a small label (the reading HUD's
-// sprite), centred on the screen. Up to MowLibClientConfig.PICKER_RING_MAX of them (8 by default) go in a ring; more go
-// in a grid 9 across. The hovered filter's name is on a piece of paper under them. Clicking a filter swaps one Blank
-// Filter for it (FilterPicker.Pick, checked by the server) and closes the menu; Escape closes it.
-// Opened by the activation key while holding a Blank Filter (ClientActivations, registered in MowLibClient).
+// The radial menu of a picker group (picker/PickerGroup): every item the blank can become (the Blank Filter's filters,
+// the Blank Work Card's work cards, another mod's group), each on a small label (the reading HUD's sprite), centred on
+// the screen. Up to MowLibClientConfig.PICKER_RING_MAX of them (8 by default) go in a ring; more go in a grid 9 across.
+// The hovered item's name is on a piece of paper under them. Clicking one swaps one blank in `hand` for it
+// (ItemPicker.Pick, checked by the server) and closes the menu; Escape closes it.
+// Opened with open(group, hand): by the activation key (MowLibClient), ItemPicker.openOnClient or ItemPicker.open.
 // 26.x screens draw by "extracting" what to draw each frame (extractRenderState, given a GuiGraphicsExtractor) and get
 // clicks as a MouseButtonEvent (its x(), y() and button()).
-public class FilterPickerScreen extends Screen
+public class ItemPickerScreen extends Screen
 {
     // GUI sprites (textures/gui/sprites), nine-sliced by their .png.mcmeta, shared with the reading HUD
     private static final Identifier PAPER = MowLibReferences.id("reading_paper");
     private static final Identifier LABEL = MowLibReferences.id("reading_label");
     // The reading HUD's dark brown ink (0xAARRGGBB)
     private static final int INK = 0xFF3B2A1A;
-    // A filter's tile, and the bigger one under the mouse
+    // An item's tile, and the bigger one under the mouse
     private static final int TILE = 22;
     private static final int TILE_HOVERED = 26;
     // Space between tiles, in the ring and the grid
@@ -41,6 +44,7 @@ public class FilterPickerScreen extends Screen
     // Between the tiles and the name paper under them
     private static final int TEXT_GAP = 8;
 
+    private final PickerGroup group;
     private final InteractionHand hand;
     private final List<Item> choices;
     // Each tile's centre, and the bottom edge of all the tiles; worked out in init (which also runs when the window is
@@ -51,11 +55,18 @@ public class FilterPickerScreen extends Screen
     // The tile under the mouse when last drawn, or -1
     private int hovered = -1;
 
-    public FilterPickerScreen(InteractionHand hand)
+    public ItemPickerScreen(PickerGroup group, InteractionHand hand)
     {
-        super(Component.translatable("screen." + MowLibReferences.MODID + ".filter_picker"));
+        super(group.title());
+        this.group = group;
         this.hand = hand;
-        this.choices = FilterPicker.choices();
+        this.choices = group.choices();
+    }
+
+    // Opens the menu (client). Since 26.2 screens are set on the Gui (Minecraft#gui), not on Minecraft itself.
+    public static void open(PickerGroup group, InteractionHand hand)
+    {
+        Minecraft.getInstance().gui.setScreen(new ItemPickerScreen(group, hand));
     }
 
     // ---- Layout ----
@@ -86,7 +97,7 @@ public class FilterPickerScreen extends Screen
         tilesBottom = centerY + radius + TILE / 2;
     }
 
-    // Rows of 9 (fewer if there are fewer filters), the whole grid centred on the screen. The last row starts at the left.
+    // Rows of 9 (fewer if there are fewer items), the whole grid centred on the screen. The last row starts at the left.
     private void layoutGrid(int count)
     {
         int step = TILE + GAP;
@@ -102,7 +113,7 @@ public class FilterPickerScreen extends Screen
         tilesBottom = top + rows * step - GAP;
     }
 
-    // The filter under the point, or -1
+    // The item under the point, or -1
     private int tileAt(double x, double y)
     {
         for (int index = 0; index < tileX.length; index++)
@@ -120,7 +131,7 @@ public class FilterPickerScreen extends Screen
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         hovered = tileAt(mouseX, mouseY);
 
-        // Each filter on a label, the hovered one bigger
+        // Each item on a label, the hovered one bigger
         for (int index = 0; index < tileX.length; index++)
         {
             int size = index == hovered ? TILE_HOVERED : TILE;
@@ -129,7 +140,7 @@ public class FilterPickerScreen extends Screen
             graphics.item(new ItemStack(choices.get(index)), tileX[index] - 8, tileY[index] - 8);
         }
 
-        // Under the tiles, on paper: the hovered filter's name, or what to do. Under them, so a long name never runs
+        // Under the tiles, on paper: the hovered item's name, or what to do (the group's title). Under them, so a long name never runs
         // across the tiles.
         String text = hovered >= 0 ? new ItemStack(choices.get(hovered)).getHoverName().getString() : title.getString();
         int paperWidth = Math.max(64, font.width(text) + 2 * PAPER_PADDING);
@@ -155,7 +166,7 @@ public class FilterPickerScreen extends Screen
             if (index >= 0)
             {
                 Identifier id = BuiltInRegistries.ITEM.getKey(choices.get(index));
-                ClientPacketDistributor.sendToServer(new FilterPicker.Pick(hand == InteractionHand.OFF_HAND, id));
+                ClientPacketDistributor.sendToServer(new ItemPicker.Pick(group.id(), hand == InteractionHand.OFF_HAND, id));
                 onClose();
                 return true;
             }

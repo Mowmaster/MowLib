@@ -7,7 +7,7 @@ import com.mowmaster.mowlib.items.filters.EnchantedCountFilterItem;
 import com.mowmaster.mowlib.items.filters.EnchantedExactFilterItem;
 import com.mowmaster.mowlib.items.filters.EnchantedFilterItem;
 import com.mowmaster.mowlib.items.filters.EnchantedFuzzyFilterItem;
-import com.mowmaster.mowlib.items.filters.FilterBaseItem;
+import com.mowmaster.mowlib.items.PickerBaseItem;
 import com.mowmaster.mowlib.items.filters.FoodFilterItem;
 import com.mowmaster.mowlib.items.filters.ItemFilterItem;
 import com.mowmaster.mowlib.items.filters.ItemStackFilterItem;
@@ -45,8 +45,8 @@ public class MowLibItems
 
     // ---- Filters ----
     // The blank filter is only a crafting ingredient for the others
-    // Holding it, the activation key opens the radial menu that turns it into any filter (FilterBaseItem)
-    public static final DeferredItem<Item> FILTER_BASE = ITEMS.registerItem("filter_base", FilterBaseItem::new);
+    // Holding it, the activation key opens the radial menu that turns it into any filter (picker/ItemPicker)
+    public static final DeferredItem<Item> FILTER_BASE = ITEMS.registerItem("filter_base", PickerBaseItem::new);
     public static final DeferredItem<ItemFilterItem> FILTER_ITEM = ITEMS.registerItem("filter_item", ItemFilterItem::new);
     public static final DeferredItem<ItemStackFilterItem> FILTER_ITEMSTACK = ITEMS.registerItem("filter_itemstack", ItemStackFilterItem::new);
     public static final DeferredItem<ModFilterItem> FILTER_MOD = ITEMS.registerItem("filter_mod", ModFilterItem::new);
@@ -71,6 +71,8 @@ public class MowLibItems
             FILTER_ENCHANTED_FUZZY, FILTER_FOOD, FILTER_TAG, FILTER_TAG_MACHINE);
 
     // ---- Work cards ----
+    // Holding it, the activation key opens the radial menu that turns it into any work card (picker/ItemPicker)
+    public static final DeferredItem<Item> WORKCARD_BASE = ITEMS.registerItem("workcard_base", PickerBaseItem::new);
     public static final DeferredItem<WorkCardAreaItem> WORKCARD_AREA = ITEMS.registerItem("workcard_area", WorkCardAreaItem::new);
     public static final DeferredItem<WorkCardLocationsItem> WORKCARD_LOCATIONS = ITEMS.registerItem("workcard_locations", WorkCardLocationsItem::new);
 

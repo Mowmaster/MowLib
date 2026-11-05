@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "STS",
+    "SSS"
+  ],
+  "key": {
+    "S": "minecraft:stick",
+    "T": "mowlib:tool_filter"
+  },
+  "result": {
+    "id": "mowlib:filter_base"
+  }
+}

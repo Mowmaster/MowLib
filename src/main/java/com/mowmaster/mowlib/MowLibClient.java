@@ -1,7 +1,9 @@
 package com.mowmaster.mowlib;
 
 import com.mowmaster.mowlib.client.ClientActivations;
-import com.mowmaster.mowlib.client.FilterPickerScreen;
+import com.mowmaster.mowlib.client.ItemPickerScreen;
+import com.mowmaster.mowlib.picker.ItemPicker;
+import com.mowmaster.mowlib.picker.PickerGroup;
 import com.mowmaster.mowlib.client.MowLibClientConfig;
 import com.mowmaster.mowlib.registry.MowLibItems;
 import net.minecraft.client.Minecraft;
@@ -47,10 +49,13 @@ public class MowLibClient
     {
         container.registerConfig(ModConfig.Type.CLIENT, MowLibClientConfig.SPEC);
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-        // The activation key while holding a Blank Filter: the radial menu of filters. A predicate (stack -> ...) so the
-        // item is only looked up when the key is pressed, long after registration.
-        ClientActivations.register(stack -> stack.is(MowLibItems.FILTER_BASE.get()),
-                (stack, hand) -> Minecraft.getInstance().gui.setScreen(new FilterPickerScreen(hand)));    }
+        // Picker groups' radial menus (picker/ItemPicker): how the client opens one, and the activation key opening it
+        // while holding a group's blank (the Blank Filter, the Blank Work Card, other mods' blanks). A predicate
+        // (stack -> ...), so groups are only looked up when the key is pressed, after every mod has registered its own.
+        ItemPicker.setClientOpener(ItemPickerScreen::open);
+        ClientActivations.register(stack -> ItemPicker.forBase(stack).map(PickerGroup::activationKey).orElse(false),
+                (stack, hand) -> ItemPicker.forBase(stack).ifPresent(group -> ItemPickerScreen.open(group, hand)));
+    }
 
     // Every colourable block from every mod gets one tint source per tint region (region N = model tintindex N).
     // Mods using MowLib must not register their own tint sources for IColorableBlocks.

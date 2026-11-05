@@ -1,6 +1,6 @@
 package com.mowmaster.mowlib.network;
 
-import com.mowmaster.mowlib.filter.FilterPicker;
+import com.mowmaster.mowlib.picker.ItemPicker;
 import com.mowmaster.mowlib.keys.KeyPayloads;
 import com.mowmaster.mowlib.reading.ReadingPayloads;
 import com.mowmaster.mowlib.MowLibReferences;
@@ -15,7 +15,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 @EventBusSubscriber(modid = MowLibReferences.MODID)
 public class MowLibNetwork
 {
-    private static final String VERSION = "5"; // 2: page payloads; 3: key actions and the reading HUD; 4: block key tools; 5: filter picker
+    private static final String VERSION = "6"; // 2: page payloads; 3: key actions and the reading HUD; 4: block key tools; 5: filter picker; 6: picker groups
 
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event)
@@ -37,8 +37,9 @@ public class MowLibNetwork
         registrar.playToServer(KeyPayloads.PageKeyTool.TYPE, KeyPayloads.PageKeyTool.STREAM_CODEC, KeyPayloads.PageKeyTool::handle);
         registrar.playToServer(KeyPayloads.BlockKeyTool.TYPE, KeyPayloads.BlockKeyTool.STREAM_CODEC, KeyPayloads.BlockKeyTool::handle);
 
-        // Client -> server: a filter picked from the Blank Filter's radial menu (filter/FilterPicker)
-        registrar.playToServer(FilterPicker.Pick.TYPE, FilterPicker.Pick.STREAM_CODEC, FilterPicker.Pick::handle);
+        // Picker groups' radial menus (picker/ItemPicker): the server opening one, and the client picking from one
+        registrar.playToClient(ItemPicker.Open.TYPE, ItemPicker.Open.STREAM_CODEC, ItemPicker.Open::handle);
+        registrar.playToServer(ItemPicker.Pick.TYPE, ItemPicker.Pick.STREAM_CODEC, ItemPicker.Pick::handle);
 
         // The reading HUD (reading/): what a looked-at block or mob holds, asked from the server
         registrar.playToServer(ReadingPayloads.BlockRequest.TYPE, ReadingPayloads.BlockRequest.STREAM_CODEC, ReadingPayloads::handleBlockRequest);

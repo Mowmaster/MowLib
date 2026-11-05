@@ -65,7 +65,7 @@ public class MowLibLanguageProvider extends LanguageProvider
         // ---- Filters (items/filters) ----
         addItem(MowLibItems.FILTER_BASE, "Blank Filter");
         add(MowLibItems.FILTER_BASE.get().getDescriptionId() + ".tooltip", "Press %s while holding it to pick a filter");
-        add("screen." + MODID + ".filter_picker", "Pick a filter");
+        add("picker." + MODID + ".filters", "Pick a filter");
         addItem(MowLibItems.FILTER_ITEM, "Item Filter");
         addItem(MowLibItems.FILTER_ITEMSTACK, "Exact Item Filter");
         addItem(MowLibItems.FILTER_MOD, "Mod Filter");
@@ -117,6 +117,9 @@ public class MowLibLanguageProvider extends LanguageProvider
         add(directionKey(FilterDirection.NEUTRAL), "Machine use");
 
         // ---- Work cards (items/workcards, workcard/WorkCardType) ----
+        addItem(MowLibItems.WORKCARD_BASE, "Blank Work Card");
+        add(MowLibItems.WORKCARD_BASE.get().getDescriptionId() + ".tooltip", "Press %s while holding it to pick a work card");
+        add("picker." + MODID + ".work_cards", "Pick a work card");
         addItem(MowLibItems.WORKCARD_AREA, "Area Work Card");
         addItem(MowLibItems.WORKCARD_LOCATIONS, "Locations Work Card");
         add(MODID + ".workcard_blockpos_first", "First corner set");
