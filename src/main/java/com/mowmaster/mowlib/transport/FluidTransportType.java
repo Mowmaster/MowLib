@@ -151,6 +151,21 @@ public class FluidTransportType extends TransportType<FluidResource>
     }
 
     @Override
+    public ItemStack filterEntryAt(Level level, BlockPos pos, Direction face)
+    {
+        // The crosshair passes through fluids and lands on the block behind, so also look at the space in front of
+        // the face (the water above a riverbed). getBucket: the fluid's bucket item (EMPTY_BUCKET... for none).
+        for (BlockPos at : new BlockPos[]{pos, pos.relative(face)})
+        {
+            FluidState fluid = level.getFluidState(at);
+            if (fluid.isEmpty()) continue;
+            ItemStack bucket = new ItemStack(fluid.getType().getBucket());
+            if (resourceFromFilterEntry(bucket) != null) return bucket;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
     public @Nullable FluidResource resourceFromFilterEntry(ItemStack entry)
     {
         FluidStack contained = FluidUtil.getFirstStackContained(entry);

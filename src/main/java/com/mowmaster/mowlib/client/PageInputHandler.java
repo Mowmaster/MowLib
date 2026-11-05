@@ -113,7 +113,8 @@ public final class PageInputHandler
             ItemStack stack = player.getItemInHand(hand);
             if (stack.getItem() instanceof IPageable pageable)
             {
-                pageable.setPage(stack, pageable.nextPage(stack, direction));
+                // IPageable#turnHeld: the next/previous page, unless the item gives the keys another job in the hand
+                pageable.turnHeld(stack, direction, player);
                 ClientPacketDistributor.sendToServer(new TurnHeldPagePayload(hand == InteractionHand.OFF_HAND, direction));
                 return;
             }

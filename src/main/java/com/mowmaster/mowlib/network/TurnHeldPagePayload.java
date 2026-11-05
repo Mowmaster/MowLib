@@ -36,7 +36,7 @@ public record TurnHeldPagePayload(boolean offhand, int direction) implements Cus
         int direction = Integer.signum(payload.direction());
         if (direction != 0 && stack.getItem() instanceof IPageable pageable)
         {
-            pageable.setPage(stack, pageable.nextPage(stack, direction));
+            pageable.turnHeld(stack, direction, player);
         }
     }
 }

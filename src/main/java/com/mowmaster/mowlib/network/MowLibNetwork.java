@@ -14,7 +14,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 @EventBusSubscriber(modid = MowLibReferences.MODID)
 public class MowLibNetwork
 {
-    private static final String VERSION = "3"; // 2: added the page payloads; 3: key actions and the reading HUD
+    private static final String VERSION = "4"; // 2: added the page payloads; 3: key actions and the reading HUD; 4: block key tools
 
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event)
@@ -34,6 +34,7 @@ public class MowLibNetwork
         registrar.playToServer(KeyPayloads.Place.TYPE, KeyPayloads.Place.STREAM_CODEC, KeyPayloads.Place::handle);
         registrar.playToServer(KeyPayloads.Pickup.TYPE, KeyPayloads.Pickup.STREAM_CODEC, KeyPayloads.Pickup::handle);
         registrar.playToServer(KeyPayloads.PageKeyTool.TYPE, KeyPayloads.PageKeyTool.STREAM_CODEC, KeyPayloads.PageKeyTool::handle);
+        registrar.playToServer(KeyPayloads.BlockKeyTool.TYPE, KeyPayloads.BlockKeyTool.STREAM_CODEC, KeyPayloads.BlockKeyTool::handle);
 
         // The reading HUD (reading/): what a looked-at block or mob holds, asked from the server
         registrar.playToServer(ReadingPayloads.BlockRequest.TYPE, ReadingPayloads.BlockRequest.STREAM_CODEC, ReadingPayloads::handleBlockRequest);

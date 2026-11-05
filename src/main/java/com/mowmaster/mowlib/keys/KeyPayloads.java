@@ -171,4 +171,39 @@ public final class KeyPayloads
             if (tool.usesPageKeys(stack, level, payload.pos(), player)) tool.onPageKey(stack, player, payload.pos(), direction);
         }
     }
+
+    // ---- Pick-up / place keys with an IBlockKeyTool held, at a block ----
+
+    // key: the IBlockKeyTool.BlockKey's position in its enum (0 pick up, 1 place); face: the side looked at
+    public record BlockKeyTool(boolean offhand, BlockPos pos, Direction face, int key) implements CustomPacketPayload
+    {
+        public static final Type<BlockKeyTool> TYPE = new Type<>(MowLibReferences.id("block_key_tool"));
+        public static final StreamCodec<ByteBuf, BlockKeyTool> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.BOOL, BlockKeyTool::offhand,
+                BlockPos.STREAM_CODEC, BlockKeyTool::pos,
+                Direction.STREAM_CODEC, BlockKeyTool::face,
+                ByteBufCodecs.VAR_INT, BlockKeyTool::key,
+                BlockKeyTool::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type()
+        {
+            return TYPE;
+        }
+
+        public static void handle(BlockKeyTool payload, IPayloadContext context)
+        {
+            if (!(context.player() instanceof ServerPlayer player)) return;
+            IBlockKeyTool.BlockKey[] keys = IBlockKeyTool.BlockKey.values();
+            if (payload.key() < 0 || payload.key() >= keys.length) return;
+            ItemStack stack = player.getItemInHand(payload.offhand() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+            if (!(stack.getItem() instanceof IBlockKeyTool tool)) return;
+            // Only within reach. (Nothing in the world is changed by these tools themselves, so no protection check here;
+            // a tool that does change the block must check level.mayInteract itself.)
+            if (!player.isWithinBlockInteractionRange(payload.pos(), 1.0)) return;
+            BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(payload.pos()), payload.face(), payload.pos(), false);
+            IBlockKeyTool.BlockKey key = keys[payload.key()];
+            if (tool.usesBlockKey(stack, player.level(), hit, player, key)) tool.onBlockKey(stack, player, hit, key);
+        }
+    }
 }

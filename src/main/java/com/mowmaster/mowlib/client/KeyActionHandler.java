@@ -3,6 +3,7 @@ package com.mowmaster.mowlib.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.keys.IActivatable;
+import com.mowmaster.mowlib.keys.IBlockKeyTool;
 import com.mowmaster.mowlib.keys.IPickupableBlock;
 import com.mowmaster.mowlib.keys.KeyPayloads;
 import net.minecraft.client.Minecraft;
@@ -70,12 +71,14 @@ public final class KeyActionHandler
         }
     }
 
-    // The held IKeyPlaceable block item (main hand first) against the looked-at face
+    // A held IBlockKeyTool that wants this key at the looked-at block (a filter adding/removing it) first; otherwise
+    // the held IKeyPlaceable block item (main hand first) against the looked-at face
     private static void placeHeld()
     {
         Player player = Minecraft.getInstance().player;
         BlockHitResult hit = ClientLook.lookedAtBlock();
         if (player == null || hit == null) return;
+        if (useBlockKeyTool(player, hit, IBlockKeyTool.BlockKey.PLACE)) return;
         boolean offhand;
         if (KeyPayloads.Place.isPlaceable(player.getMainHandItem())) offhand = false;
         else if (KeyPayloads.Place.isPlaceable(player.getOffhandItem())) offhand = true;
@@ -86,14 +89,32 @@ public final class KeyActionHandler
                 (float) (at.x - pos.getX()), (float) (at.y - pos.getY()), (float) (at.z - pos.getZ())));
     }
 
-    // The looked-at IPickupableBlock
+    // A held IBlockKeyTool that wants this key at the looked-at block first; otherwise the looked-at IPickupableBlock
     private static void pickUpLookedAt()
     {
         Minecraft minecraft = Minecraft.getInstance();
         BlockHitResult hit = ClientLook.lookedAtBlock();
-        if (minecraft.level == null || hit == null) return;
+        if (minecraft.level == null || minecraft.player == null || hit == null) return;
+        if (useBlockKeyTool(minecraft.player, hit, IBlockKeyTool.BlockKey.PICKUP)) return;
         if (!(minecraft.level.getBlockEntity(hit.getBlockPos()) instanceof IPickupableBlock)) return;
         ClientPacketDistributor.sendToServer(new KeyPayloads.Pickup(hit.getBlockPos()));
+    }
+
+    // Asks the server to run a held IBlockKeyTool (main hand first) that wants this key here. true if one does.
+    private static boolean useBlockKeyTool(Player player, BlockHitResult hit, IBlockKeyTool.BlockKey key)
+    {
+        for (InteractionHand hand : InteractionHand.values())
+        {
+            ItemStack held = player.getItemInHand(hand);
+            if (held.getItem() instanceof IBlockKeyTool tool && tool.usesBlockKey(held, player.level(), hit, player, key))
+            {
+                // ordinal(): the key's position in the enum, which is all the message needs to carry
+                ClientPacketDistributor.sendToServer(new KeyPayloads.BlockKeyTool(hand == InteractionHand.OFF_HAND,
+                        hit.getBlockPos(), hit.getDirection(), key.ordinal()));
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean canActivate(ItemStack stack)

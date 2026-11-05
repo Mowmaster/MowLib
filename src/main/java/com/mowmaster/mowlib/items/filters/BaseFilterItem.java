@@ -4,6 +4,8 @@ import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.FilterData;
 import com.mowmaster.mowlib.filter.FilterDirection;
 import com.mowmaster.mowlib.filter.ITransportFilter;
+import com.mowmaster.mowlib.keys.IActivatable;
+import com.mowmaster.mowlib.keys.IBlockKeyTool;
 import com.mowmaster.mowlib.paging.IPageable;
 import com.mowmaster.mowlib.registry.MowLibDataComponents;
 import com.mowmaster.mowlib.storage.IInventoryUsable;
@@ -14,6 +16,9 @@ import com.mowmaster.mowlib.transport.TransportTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.SlotAccess;
@@ -26,6 +31,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.transfer.resource.Resource;
 
 import org.jetbrains.annotations.Nullable;
@@ -45,11 +51,15 @@ import java.util.function.Consumer;
 //                                                                     item again updates its count)
 //   right-click an item onto the filter, or the filter onto an item = take that item off the list
 //   right-click the filter with an empty cursor, or the filter onto an empty slot = take the SELECTED item off
-//   scroll over the filter, or the page keys over it or while holding it = select the next/previous list item
-//                                                                     (IPageable; the tooltip marks it, and turning
-//                                                                     it in the hand names it over the hotbar)
+//   scroll over the filter, or the page keys over it  = select the next/previous list item (IPageable; the tooltip
+//                                                       marks it)
+// MowLib's keys (client/KeyActionHandler, PageInputHandler):
+//   page keys while holding it  = next/previous mode
+//   activation key (held, or over it in an inventory) = whitelist <-> blacklist, or allowed <-> disabled
+//   pick-up key at a block      = list that block (its item; in fluids mode a bucket of its fluid)
+//   place key at a block        = take it off the list
 // Subclasses decide what "matches" means; a match is let through by a whitelist and blocked by a blacklist.
-public abstract class BaseFilterItem extends Item implements ITransportFilter, IInventoryUsable, IPageable
+public abstract class BaseFilterItem extends Item implements ITransportFilter, IInventoryUsable, IPageable, IActivatable, IBlockKeyTool
 {
     // The most items one mode's list holds (a chest's worth)
     public static final int MAX_LIST_SIZE = 27;
@@ -199,7 +209,7 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter, I
         if (!level.isClientSide())
         {
             ItemStack filter = player.getOffhandItem();
-            if (player.isShiftKeyDown()) cycleMode(player, filter);
+            if (player.isShiftKeyDown()) announceMode(player, cycleMode(filter, 1));
             else if (canToggleBlacklist()) toggleBlacklist(player, filter);
         }
         return InteractionResult.SUCCESS;
@@ -232,51 +242,59 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter, I
     @Override
     public boolean usedWith(ItemStack self, ItemStack other, ClickAction action, Player player, InventoryClick click)
     {
-        TransportType<?> mode = getMode(self);
-        if (!usesListFor(mode)) return false;
-        FilterData data = getData(self);
-        FilterData.Entry entry = data.get(mode.getId());
-        List<ItemStackTemplate> list = new ArrayList<>(entry.list());
-
+        if (!usesListFor(getMode(self))) return false;
         if (action == ClickAction.PRIMARY)
         {
             if (other.isEmpty()) return false;
-            if (!acceptsListEntry(self, other))
-            {
-                InventoryClicks.playFail(player);
-                return true;
-            }
-            // The same item (same data) already listed: replaced, so its count is updated rather than listed twice
-            boolean replaced = list.removeIf(listed -> ItemStack.isSameItemSameComponents(listed.create(), other));
-            if (!replaced && list.size() >= MAX_LIST_SIZE)
-            {
-                InventoryClicks.playFail(player);
-                return true;
-            }
-            // fromNonEmptyStack: an immutable copy (item, count, data); the clicked stack itself is left alone
-            list.add(ItemStackTemplate.fromNonEmptyStack(other));
-            // The item just added becomes the selected one
-            self.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), entry.withList(list, list.size() - 1)));
-            InventoryClicks.playInsert(player);
+            if (addToList(self, other) == ListChange.DONE) InventoryClicks.playInsert(player);
+            else InventoryClicks.playFail(player);
             return true;
         }
-
         // Right-click: with an item, take that item off; with nothing, the selected one
+        if (removeFromList(self, other) == ListChange.DONE) InventoryClicks.playRemove(player);
+        else InventoryClicks.playFail(player);
+        return true;
+    }
+
+    // ---- Changing the current mode's list (the inventory clicks and the pick-up / place keys) ----
+
+    // How a change to the list went
+    public enum ListChange { DONE, REFUSED, FULL, MISSING }
+
+    // Lists a copy of `entry` (with its count) in the current mode; the same item already listed is replaced, so its
+    // count is updated rather than listed twice. The item just added becomes the selected one. `entry` isn't changed.
+    public ListChange addToList(ItemStack filter, ItemStack entry)
+    {
+        if (entry.isEmpty() || !acceptsListEntry(filter, entry)) return ListChange.REFUSED;
+        TransportType<?> mode = getMode(filter);
+        FilterData data = getData(filter);
+        FilterData.Entry modeEntry = data.get(mode.getId());
+        List<ItemStackTemplate> list = new ArrayList<>(modeEntry.list());
+        boolean replaced = list.removeIf(listed -> ItemStack.isSameItemSameComponents(listed.create(), entry));
+        if (!replaced && list.size() >= MAX_LIST_SIZE) return ListChange.FULL;
+        // fromNonEmptyStack: an immutable copy (item, count, data)
+        list.add(ItemStackTemplate.fromNonEmptyStack(entry));
+        filter.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), modeEntry.withList(list, list.size() - 1)));
+        return ListChange.DONE;
+    }
+
+    // Takes `entry` (the same item, same data) off the current mode's list; EMPTY takes the selected one off
+    public ListChange removeFromList(ItemStack filter, ItemStack entry)
+    {
+        TransportType<?> mode = getMode(filter);
+        FilterData data = getData(filter);
+        FilterData.Entry modeEntry = data.get(mode.getId());
+        List<ItemStackTemplate> list = new ArrayList<>(modeEntry.list());
         boolean removed;
-        if (other.isEmpty())
+        if (entry.isEmpty())
         {
             removed = !list.isEmpty();
-            if (removed) list.remove(entry.selectedIndex());
+            if (removed) list.remove(modeEntry.selectedIndex());
         }
-        else removed = list.removeIf(listed -> ItemStack.isSameItemSameComponents(listed.create(), other));
-        if (!removed)
-        {
-            InventoryClicks.playFail(player);
-            return true;
-        }
-        setList(self, mode, data, entry, list);
-        InventoryClicks.playRemove(player);
-        return true;
+        else removed = list.removeIf(listed -> ItemStack.isSameItemSameComponents(listed.create(), entry));
+        if (!removed) return ListChange.MISSING;
+        setList(filter, mode, data, modeEntry, list);
+        return ListChange.DONE;
     }
 
     private static void setList(ItemStack filter, TransportType<?> mode, FilterData data, FilterData.Entry entry, List<ItemStackTemplate> list)
@@ -324,12 +342,84 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter, I
         return Component.empty().append(entry.getHoverName()).append(" x" + entry.getCount());
     }
 
-    private static void cycleMode(Player player, ItemStack filter)
+    // ---- MowLib's keys ----
+
+    // Page keys while holding the filter: switch its mode (scrolling / the page keys over it in an inventory still
+    // select list items). Both sides change it; the server says which mode it's now in.
+    @Override
+    public void turnHeld(ItemStack stack, int direction, Player player)
+    {
+        TransportType<?> mode = cycleMode(stack, direction);
+        if (!player.level().isClientSide()) announceMode(player, mode);
+    }
+
+    // The held keys change the mode and say so themselves: no "Selected: ..." message over the hotbar
+    @Override
+    public boolean showsHeldPageMessages(ItemStack stack)
+    {
+        return false;
+    }
+
+    // Activation key (held, or over it in an inventory): whitelist <-> blacklist, or allowed <-> disabled
+    @Override
+    public boolean canActivate(ItemStack stack)
+    {
+        return canToggleBlacklist();
+    }
+
+    @Override
+    public void activate(ItemStack stack, ServerPlayer player)
+    {
+        toggleBlacklist(player, stack);
+    }
+
+    // Pick-up key at a block: list it (its item, or for fluids a bucket of its fluid). Place key: take it off.
+    // Only when the current mode lists things, the block means something for it (TransportType#filterEntryAt), and
+    // this filter can list it (the tag filters take only Tag Getters, so they never use the keys).
+    @Override
+    public boolean usesBlockKey(ItemStack stack, Level level, BlockHitResult hit, Player player, BlockKey key)
+    {
+        TransportType<?> mode = getMode(stack);
+        if (!usesListFor(mode)) return false;
+        ItemStack entry = mode.filterEntryAt(level, hit.getBlockPos(), hit.getDirection());
+        if (entry.isEmpty()) return false;
+        return acceptsListEntry(stack, entry);
+    }
+
+    @Override
+    public void onBlockKey(ItemStack stack, ServerPlayer player, BlockHitResult hit, BlockKey key)
+    {
+        ItemStack entry = getMode(stack).filterEntryAt(player.level(), hit.getBlockPos(), hit.getDirection());
+        Component name = describeListEntry(entry);
+        String prefix = MowLibReferences.MODID + ".filter.";
+        ListChange change = key == BlockKey.PICKUP ? addToList(stack, entry) : removeFromList(stack, entry);
+        Component message = switch (change)
+        {
+            case DONE -> Component.translatable(prefix + (key == BlockKey.PICKUP ? "block_added" : "block_removed"), name);
+            case MISSING -> Component.translatable(prefix + "block_missing", name);
+            case FULL -> Component.translatable(prefix + "list_full");
+            case REFUSED -> Component.translatable(prefix + "block_refused", name);
+        };
+        player.sendOverlayMessage(message);
+        if (change == ListChange.DONE)
+        {
+            player.level().playSound(null, player.blockPosition(), key == BlockKey.PICKUP ? SoundEvents.BUNDLE_INSERT : SoundEvents.BUNDLE_REMOVE_ONE,
+                    SoundSource.PLAYERS, 0.8f, 1f);
+        }
+    }
+
+    // The next (+1) or previous (-1) mode, in registry order, wrapping round. Returns the new mode.
+    private static TransportType<?> cycleMode(ItemStack filter, int direction)
     {
         List<TransportType<?>> types = TransportTypes.REGISTRY.stream().toList();
-        int next = (types.indexOf(getMode(filter)) + 1) % types.size();
+        int next = Math.floorMod(types.indexOf(getMode(filter)) + direction, types.size());
         TransportType<?> mode = types.get(next);
         filter.set(MowLibDataComponents.FILTER_MODE.get(), mode.getId());
+        return mode;
+    }
+
+    private static void announceMode(Player player, TransportType<?> mode)
+    {
         player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".filter_mode_changed").append(mode.getName()));
     }
 

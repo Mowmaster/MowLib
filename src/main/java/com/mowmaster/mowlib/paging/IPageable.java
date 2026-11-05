@@ -1,6 +1,7 @@
 package com.mowmaster.mowlib.paging;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +27,22 @@ public interface IPageable
         int count = getPageCount(stack);
         // Math.floorMod keeps the result positive: floorMod(-1, 8) is 7, where -1 % 8 would be -1
         return count <= 0 ? 0 : Math.floorMod(getPage(stack) + direction, count);
+    }
+
+    // The page keys pressed while holding it (client/PageInputHandler, network/TurnHeldPagePayload): runs on the
+    // client (to show the change straight away) and then on the server (which counts). Default: the next/previous
+    // page. An item can give the keys another job in the hand (a filter switches its mode); scrolling and the keys
+    // over it in an inventory still turn pages. Only send messages when !player.level().isClientSide().
+    default void turnHeld(ItemStack stack, int direction, Player player)
+    {
+        setPage(stack, nextPage(stack, direction));
+    }
+
+    // false: client/HeldPageMessages stays quiet for this item (e.g. its held keys do something else, with messages of
+    // their own)
+    default boolean showsHeldPageMessages(ItemStack stack)
+    {
+        return true;
     }
 
     // What to say over the hotbar when the page of the item in your hand changes (client/HeldPageMessages), e.g. a

@@ -210,6 +210,14 @@ public abstract class TransportType<R extends Resource>
         return null;
     }
 
+    // The filter list item that stands for this type at a looked-at block (a filter's pick-up / place keys): the
+    // block's item for items, a bucket of the fluid for fluids. face: the side looked at. EMPTY when there's nothing of
+    // this type there (the keys then do their normal job).
+    public ItemStack filterEntryAt(Level level, BlockPos pos, Direction face)
+    {
+        return ItemStack.EMPTY;
+    }
+
     // Same thing ignoring extra data (fuzzy filters): same item, same fluid
     public boolean isSameKind(R first, R second)
     {

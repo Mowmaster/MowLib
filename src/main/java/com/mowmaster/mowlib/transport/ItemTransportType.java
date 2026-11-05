@@ -194,6 +194,13 @@ public class ItemTransportType extends TransportType<ItemResource>
     }
 
     @Override
+    public ItemStack filterEntryAt(Level level, BlockPos pos, Direction face)
+    {
+        // new ItemStack(block): the block's item (EMPTY for blocks without one, like fire or a portal)
+        return new ItemStack(level.getBlockState(pos).getBlock());
+    }
+
+    @Override
     public @Nullable ItemResource resourceFromFilterEntry(ItemStack entry)
     {
         return entry.isEmpty() ? null : ItemResource.of(entry);

@@ -78,6 +78,12 @@ public class MowLibLanguageProvider extends LanguageProvider
         addItem(MowLibItems.FILTER_TAG_MACHINE, "Tag Filter (Machines)");
         add(MODID + ".filter.tooltip_howto", "Click items onto it to list them; scroll to select one, right-click to remove it");
         add(MODID + ".filter.selected", "Selected: %s");
+        // The pick-up / place keys at a block, holding a filter
+        add(MODID + ".filter.block_added", "Added to the filter: %s");
+        add(MODID + ".filter.block_removed", "Removed from the filter: %s");
+        add(MODID + ".filter.block_missing", "%s isn't on the filter");
+        add(MODID + ".filter.block_refused", "%s can't go on this filter");
+        add(MODID + ".filter.list_full", "The filter's list is full");
 
         // ---- Tag Getter (items/filters/TagGetterItem) ----
         addItem(MowLibItems.TAG_GETTER, "Tag Getter");

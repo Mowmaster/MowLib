@@ -49,7 +49,7 @@ public final class HeldPageMessages
         for (InteractionHand hand : InteractionHand.values())
         {
             ItemStack stack = player.getItemInHand(hand);
-            if (!(stack.getItem() instanceof IPageable pageable) || stack.getCount() != 1)
+            if (!(stack.getItem() instanceof IPageable pageable) || stack.getCount() != 1 || !pageable.showsHeldPageMessages(stack))
             {
                 LAST.remove(hand);
                 continue;

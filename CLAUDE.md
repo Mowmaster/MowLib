@@ -87,7 +87,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   block filters follow the same rules (`ITransportFilter.allowsMoving` / `limitStored`): a filter only acts in the
   direction it's set to. `items/filters/`: the 13 filters (`mowlib:filter_*`) on `BaseFilterItem`; a mode's list is set
   bundle-style in an inventory (click items onto the filter; nothing is used up; scroll / page keys select a list
-  item, which a right-click removes). `TagFilterItem` (`filter_tag`,
+  item, which a right-click removes). Held: page keys switch mode, the activation key toggles whitelist/blacklist,
+  pick-up / place keys add / remove the looked-at block (`TransportType#filterEntryAt`). `TagFilterItem` (`filter_tag`,
   `filter_tag_machine`) matches the selected tag of each `TagGetterItem` (`mowlib:tag_getter`, data
   `filter/TagGetterData`) on its list. Models are hand-written in `assets/mowlib/items` (one per transport mode); their frame is tinted black
   for a blacklist (`client/FilterListTint`, `mowlib:filter_list`), and amount-only modes (energy, experience:
@@ -108,7 +109,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - `datamaps/` - `CBBlockColor` (`{"color": "#RRGGBB"}`), `CBDataMaps.BLOCK_COLORS`.
 - `datagen/` - models (picker, dye), language, recipes, and `CBBlockColorProvider` (average texture colour of
   plain solid cubes).
-- `paging/` - pages on items (`IPageable`, with an optional `describePage` for the message over the hotbar) and block
+- `paging/` - pages on items (`IPageable`, with an optional `describePage` for the message over the hotbar and
+  `turnHeld` to give the page keys another job in the hand) and block
   entities (`IPageHolder`), turned for every mod by scroll or the page keys. `PageArrows` (clickable page-turn boxes). Paged storage: `PagedStorage` (block entities),
   `IPagedStorageItem` + `PagedStorageInteractions` (bundle-style clicks on `InventoryClicks`; `allowsTakeOut` can
   refuse a page), `PagedContents` (`mowlib:paged_contents`), `PagedContentsTooltip`. `PageText`: the one wording for
@@ -116,7 +118,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - `keys/` - the action keys' item/block side: `IActivatable` (activate key on a hovered or held item; the on/off
   mode in `mowlib:activated`), `IKeyPlaceable` (place key puts a block item down, skipping its right-click),
   `IPickupableBlock` (pick-up key, and any block's own pickup click: block -> item with contents), `IPageKeyTool`
-  (a held tool that takes the page keys at certain blocks), `KeyPayloads`.
+  (a held tool that takes the page keys at certain blocks), `IBlockKeyTool` (a held tool that takes the pick-up /
+  place keys at certain blocks: filters list / unlist the looked-at block), `KeyPayloads`.
 - `reading/` - the reading HUD for every mod, while `ReadingSight.canRead` (a helmet in `#mowlib:grants_reading`,
   or one with an enchantment in the enchantment tag `#mowlib:grants_reading`, or an added condition):
   - the paper: `IReadableBlock` (block entity or block) returns a `ReadingPaper` (lines, optional page grid,
@@ -126,7 +129,7 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   - `ReadingRegistry`: readers and label lines for blocks/mobs you can't implement an interface on
   - `ReadingPayloads`: the server questions
 - `network/` - `MowLibNetwork` registers the payloads: `select_page`, `turn_held_page`, `turn_block_page`,
-  `activate`, `place_held`, `pickup_block`, `page_key_tool`, `reading_block_request`, `reading_entity_request`
+  `activate`, `place_held`, `pickup_block`, `page_key_tool`, `block_key_tool`, `reading_block_request`, `reading_entity_request`
   (client -> server), `transfer_particles`, `reading_block`, `reading_entity` (server -> client). Bump its
   `VERSION` when a payload changes.
 - `knapping/` - hold items in both hands and right-click a block. Mods register `KnappingRecipe`s in
