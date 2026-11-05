@@ -158,6 +158,10 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   right-click's pace).
 
 ## Releases
+- MowLib is in alpha: nothing is released until beta. Don't bump `mod_version` or remind me to until then.
+- `CHANGELOG.md`: every change goes under **Unreleased** as it's made, as a "Check" line (can break or change
+  behaviour in a mod using MowLib) or a "New" line; when I bump `mod_version`, that section gets the version's name.
+  That's how the mods know what to look at when they update.
 - Semver in `gradle.properties` `mod_version`: patch = fixes only, minor = new features (only additions),
   major = anything breaking (removed/renamed public class, method or registry id; changed signature, save format or
   behaviour mods rely on).
@@ -186,6 +190,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   `"light_emission": 15` + `"neoforge_data": {"ambient_occlusion": false}`.
 
 ## Working with Claude
+- MowLib sessions work on MowLib only. Other mods' repos may be read for context (how they use something), but
+  their changes aren't tracked or made here; `CHANGELOG.md` tells them what to update.
 - Pull and read the repo only; never commit or push. I handle git.
 - Deliver changes as a zip of whole files at their repo paths, plus a list of files to delete.
 - For simple model fixes (a missing `tintindex`, `#`, texture key), just tell me the line to change; only send a model file when the geometry changes.
