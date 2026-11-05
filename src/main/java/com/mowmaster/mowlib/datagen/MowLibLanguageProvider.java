@@ -93,6 +93,9 @@ public class MowLibLanguageProvider extends LanguageProvider
         add(MODID + ".tooltip_mode", "Mode: ");
         add(MODID + ".filter_type", "Type: ");
         add(MODID + ".filter_type_whitelist", "Whitelist");
+        // Energy, experience and other amount-only modes (TransportType#isAmountOnly)
+        add(MODID + ".filter_type_allowed", "Allowed");
+        add(MODID + ".filter_type_disabled", "Disabled");
         add(MODID + ".filter_type_blacklist", "Blacklist");
         add(MODID + ".filter_type_above", "Above");
         add(MODID + ".filter_type_below", "Below");

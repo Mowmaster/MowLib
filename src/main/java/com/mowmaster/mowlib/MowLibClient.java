@@ -10,6 +10,8 @@ import com.mowmaster.mowlib.tint.IColorableBlock;
 import com.mowmaster.mowlib.client.ClientColorPaletteTooltip;
 import com.mowmaster.mowlib.client.ClientPagedContentsTooltip;
 import com.mowmaster.mowlib.client.MowLibKeyMappings;
+import com.mowmaster.mowlib.client.FilterBlacklistProperty;
+import com.mowmaster.mowlib.client.FilterListTint;
 import com.mowmaster.mowlib.client.PagedFullnessProperty;
 import com.mowmaster.mowlib.client.SelectedDyeTint;
 import com.mowmaster.mowlib.palette.ColorPaletteTooltip;
@@ -83,17 +85,21 @@ public class MowLibClient
         event.register(ColorPaletteTooltip.class, ClientColorPaletteTooltip::new);
     }
 
-    // "mowlib:selected_dye", an item model tint: the Color Palette (or any IDyeSource) in its selected colour
+    // Item model tints: "mowlib:selected_dye" (the Color Palette, or any IDyeSource, in its selected colour) and
+    // "mowlib:filter_list" (a filter's frame, black while its current mode is a blacklist / disabled)
     @SubscribeEvent
     public static void registerItemTintSources(RegisterColorHandlersEvent.ItemTintSources event)
     {
         event.register(MowLibReferences.id("selected_dye"), SelectedDyeTint.MAP_CODEC);
+        event.register(MowLibReferences.id("filter_list"), FilterListTint.MAP_CODEC);
     }
 
-    // "mowlib:paged_fullness", for item models that fill up (minecraft:range_dispatch)
+    // Range properties (minecraft:range_dispatch): "mowlib:paged_fullness" for item models that fill up, and
+    // "mowlib:filter_blacklist" (1 while a filter's current mode is a blacklist / disabled)
     @SubscribeEvent
     public static void registerRangeProperties(RegisterRangeSelectItemModelPropertyEvent event)
     {
         event.register(MowLibReferences.id("paged_fullness"), PagedFullnessProperty.MAP_CODEC);
+        event.register(MowLibReferences.id("filter_blacklist"), FilterBlacklistProperty.MAP_CODEC);
     }
 }

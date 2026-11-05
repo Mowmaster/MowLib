@@ -101,6 +101,21 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter, I
         return Component.translatable(MowLibReferences.MODID + (blacklist ? ".filter_type_blacklist" : ".filter_type_whitelist"));
     }
 
+    // The same for a mode: amount-only types (energy, experience) are simply Allowed or Disabled
+    protected Component listTypeName(TransportType<?> mode, boolean blacklist)
+    {
+        if (mode.isAmountOnly()) return Component.translatable(MowLibReferences.MODID + (blacklist ? ".filter_type_disabled" : ".filter_type_allowed"));
+        return listTypeName(blacklist);
+    }
+
+    // Whether this stack is a filter whose current mode is a blacklist (or disabled), for the item model: the black
+    // frame tint (client/FilterListTint) and the plain icon for a disabled amount-only mode (client/FilterBlacklistProperty).
+    // Filters that can't be toggled (restricted) never are.
+    public static boolean isBlacklisted(ItemStack stack)
+    {
+        return stack.getItem() instanceof BaseFilterItem filter && filter.canToggleBlacklist() && getEntry(stack, getMode(stack)).blacklist();
+    }
+
     // ---- ITransportFilter ----
 
     @Override
@@ -326,7 +341,7 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter, I
         boolean blacklist = !entry.blacklist();
         filter.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), entry.withBlacklist(blacklist)));
         player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".filter_type_changed")
-                .append(listTypeName(blacklist))
+                .append(listTypeName(mode, blacklist))
                 .withStyle(blacklist ? ChatFormatting.DARK_GRAY : ChatFormatting.WHITE));
     }
 
@@ -343,7 +358,7 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter, I
         tooltip.accept(Component.translatable(MowLibReferences.MODID + ".tooltip_mode").append(mode.getName()));
         if (canToggleBlacklist())
         {
-            tooltip.accept(Component.translatable(MowLibReferences.MODID + ".filter_type").append(listTypeName(entry.blacklist())).withStyle(ChatFormatting.WHITE));
+            tooltip.accept(Component.translatable(MowLibReferences.MODID + ".filter_type").append(listTypeName(mode, entry.blacklist())).withStyle(ChatFormatting.WHITE));
         }
         // The list, the selected item (the one a right-click removes) marked and brighter
         int selected = entry.selectedIndex();

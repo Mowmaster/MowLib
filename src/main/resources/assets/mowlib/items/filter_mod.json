@@ -8,34 +8,123 @@
         "when": "mowlib:items",
         "model": {
           "type": "minecraft:model",
-          "model": "mowlib:item/filters/filter_mod_items"
+          "model": "mowlib:item/filters/filter_mod_items",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "mowlib:filter_list"
+            }
+          ]
         }
       },
       {
         "when": "mowlib:fluids",
         "model": {
           "type": "minecraft:model",
-          "model": "mowlib:item/filters/filter_mod_fluids"
+          "model": "mowlib:item/filters/filter_mod_fluids",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "mowlib:filter_list"
+            }
+          ]
         }
       },
       {
         "when": "mowlib:energy",
         "model": {
-          "type": "minecraft:model",
-          "model": "mowlib:item/filters/filter_mod_energy"
+          "type": "minecraft:range_dispatch",
+          "property": "mowlib:filter_blacklist",
+          "entries": [
+            {
+              "threshold": 0.5,
+              "model": {
+                "type": "minecraft:model",
+                "model": "mowlib:item/filters/filter_disabled_energy",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "mowlib:filter_list"
+                  }
+                ]
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "mowlib:item/filters/filter_mod_energy",
+            "tints": [
+              {
+                "type": "minecraft:constant",
+                "value": -1
+              },
+              {
+                "type": "mowlib:filter_list"
+              }
+            ]
+          }
         }
       },
       {
         "when": "mowlib:experience",
         "model": {
-          "type": "minecraft:model",
-          "model": "mowlib:item/filters/filter_mod_experience"
+          "type": "minecraft:range_dispatch",
+          "property": "mowlib:filter_blacklist",
+          "entries": [
+            {
+              "threshold": 0.5,
+              "model": {
+                "type": "minecraft:model",
+                "model": "mowlib:item/filters/filter_disabled_experience",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "mowlib:filter_list"
+                  }
+                ]
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "mowlib:item/filters/filter_mod_experience",
+            "tints": [
+              {
+                "type": "minecraft:constant",
+                "value": -1
+              },
+              {
+                "type": "mowlib:filter_list"
+              }
+            ]
+          }
         }
       }
     ],
     "fallback": {
       "type": "minecraft:model",
-      "model": "mowlib:item/filters/filter_mod"
+      "model": "mowlib:item/filters/filter_mod",
+      "tints": [
+        {
+          "type": "minecraft:constant",
+          "value": -1
+        },
+        {
+          "type": "mowlib:filter_list"
+        }
+      ]
     }
   }
 }

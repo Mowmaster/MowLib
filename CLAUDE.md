@@ -89,7 +89,10 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   bundle-style in an inventory (click items onto the filter; nothing is used up; scroll / page keys select a list
   item, which a right-click removes). `TagFilterItem` (`filter_tag`,
   `filter_tag_machine`) matches the selected tag of each `TagGetterItem` (`mowlib:tag_getter`, data
-  `filter/TagGetterData`) on its list. Models are hand-written in `assets/mowlib/items` (one per transport mode).
+  `filter/TagGetterData`) on its list. Models are hand-written in `assets/mowlib/items` (one per transport mode); their frame is tinted black
+  for a blacklist (`client/FilterListTint`, `mowlib:filter_list`), and amount-only modes (energy, experience:
+  `TransportType#isAmountOnly`) read Allowed / Disabled and show the plain icon while disabled
+  (`client/FilterBlacklistProperty`, `mowlib:filter_blacklist`).
 - `workcard/` - `IWorkCard`, `IWorkCardHolder`, `WorkCardType`. `items/workcards/`: area + locations cards
   (`mowlib:work_positions`).
 - `items/` - `CBColorPickerItem` (`mowlib:color_picker`; picked colour from `ITintHolder` or the

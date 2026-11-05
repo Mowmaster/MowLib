@@ -190,10 +190,18 @@ public abstract class TransportType<R extends Resource>
 
     // ---- Filters ----
 
-    // Whether filters can be set up for this type by sneak-right-clicking an inventory with the filter
+    // Whether filters can list things of this type (items clicked onto the filter stand for them)
     public boolean usesFilterList()
     {
         return false;
+    }
+
+    // An amount and nothing else (energy, experience, and other mods' AmountResource types): there's nothing to tell
+    // apart, so a filter in this mode can only allow the type or disable it (shown as Allowed / Disabled, with the
+    // plain filter icon while disabled). Default: any type that has no filter list.
+    public boolean isAmountOnly()
+    {
+        return !usesFilterList();
     }
 
     // What an item in a filter's list stands for in this type (the item itself, the fluid in a bucket...). null = nothing.
