@@ -7,6 +7,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 // Where the reading HUD's two panels go (client/reading/ReadingHud), for every mod using it:
 // - [reading_paper]  the paper with a block's or item's details (default: the middle of the left edge)
 // - [reading_label]  the small label naming any other block or mob (default: the top middle)
+// And [picker_menu]: how many choices an item-picking menu (the Blank Filter's) shows in a ring before using a grid.
 // Each is pinned to a screen anchor, then moved by the offsets (positive x = right, positive y = down).
 public final class MowLibClientConfig
 {
@@ -25,6 +26,7 @@ public final class MowLibClientConfig
     public static final ModConfigSpec.IntValue LABEL_X;
     public static final ModConfigSpec.IntValue LABEL_Y;
     public static final ModConfigSpec.BooleanValue LABEL_AMOUNTS;
+    public static final ModConfigSpec.IntValue PICKER_RING_MAX;
 
     // A static block: runs once when the class loads, in order, so each push/pop wraps the values between them
     static
@@ -45,6 +47,11 @@ public final class MowLibClientConfig
         LABEL_X = BUILDER.comment("Moved this far right from there (negative: left)").defineInRange("x_offset", 0, -4000, 4000);
         LABEL_Y = BUILDER.comment("Moved this far down from there (negative: up)").defineInRange("y_offset", 0, -4000, 4000);
         LABEL_AMOUNTS = BUILDER.comment("Also show the energy, fluids and experience a block holds").define("show_amounts", true);
+        BUILDER.pop();
+
+        BUILDER.comment("Menus that pick an item, like the Blank Filter's (client/FilterPickerScreen)").push("picker_menu");
+        PICKER_RING_MAX = BUILDER.comment("Up to this many choices are shown in a ring; more are shown in a grid, 9 across")
+                .defineInRange("ring_max", 8, 0, 64);
         BUILDER.pop();
     }
 
