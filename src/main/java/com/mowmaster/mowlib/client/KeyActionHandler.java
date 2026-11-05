@@ -62,6 +62,8 @@ public final class KeyActionHandler
         for (InteractionHand hand : InteractionHand.values())
         {
             ItemStack stack = player.getItemInHand(hand);
+            // Something the key does on the client (the Blank Filter's radial menu) comes first
+            if (ClientActivations.activate(stack, hand)) return;
             if (!canActivate(stack)) continue;
             BlockHitResult hit = ClientLook.lookedAtBlock();
             Optional<BlockPos> at = hit != null && ((IActivatable) stack.getItem()).usesBlockActivation(stack)

@@ -3,6 +3,7 @@ package com.mowmaster.mowlib.datagen;
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.recipes.CBPickedDyeRecipe;
 import com.mowmaster.mowlib.recipes.ColorableItemDyeRecipe;
+import com.mowmaster.mowlib.recipes.FilterResetRecipe;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.registries.MultiRegistryBootstrap;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -33,5 +34,8 @@ public class MowLibRecipeProvider extends RecipeProvider
         // Any #mowlib:dyeable_in_crafting item + dyes -> the item with the dyes mixed into its colour
         SpecialRecipeBuilder.special(() -> ColorableItemDyeRecipe.INSTANCE)
                 .save(output, MowLibReferences.id("colorable_dye").toString());
+        // Any filter alone -> a Blank Filter
+        SpecialRecipeBuilder.special(() -> FilterResetRecipe.INSTANCE)
+                .save(output, MowLibReferences.id("filter_reset").toString());
     }
 }

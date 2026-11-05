@@ -64,6 +64,8 @@ public class MowLibLanguageProvider extends LanguageProvider
 
         // ---- Filters (items/filters) ----
         addItem(MowLibItems.FILTER_BASE, "Blank Filter");
+        add(MowLibItems.FILTER_BASE.get().getDescriptionId() + ".tooltip", "Press %s while holding it to pick a filter");
+        add("screen." + MODID + ".filter_picker", "Pick a filter");
         addItem(MowLibItems.FILTER_ITEM, "Item Filter");
         addItem(MowLibItems.FILTER_ITEMSTACK, "Exact Item Filter");
         addItem(MowLibItems.FILTER_MOD, "Mod Filter");

@@ -50,7 +50,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - `client/` - client-only. `CBBlockEntityTintSource` (one tint source per region for every `IColorableBlock`,
   registered by `MowLibClient`; a model face's `tintindex` = region; mods must not register their own),
   `MowLibKeyMappings` + `PageInputHandler` (page keys and scrolling; a held `keys/IPageKeyTool` gets them first),
-  `KeyActionHandler` (the activate / place / pick-up keys), `HeldPageMessages` (page turned in hand -> message over
+  `KeyActionHandler` (the activate / place / pick-up keys; `ClientActivations` for client-side activations such as
+  opening a screen), `HeldPageMessages` (page turned in hand -> message over
   the hotbar), `ClientPagedContentsTooltip`, `PagedFullnessProperty` (`mowlib:paged_fullness`),
   `SpinningItemRenderer`, `GhostItemRenderer`, `MowLibClientParticles`, `CBItemRenderer` (base for item-drawing block
   entity renderers), `FaceItemRenderer` (an item flat on a block face), `HudAnchor` (nine screen anchors for HUD
@@ -91,7 +92,10 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   pick-up / place keys add / remove the looked-at block (`TransportType#filterEntryAt`). `TagFilterItem` (`filter_tag`,
   `filter_tag_machine`) matches the selected tag of each `TagGetterItem` (`mowlib:tag_getter`, data
   `filter/TagGetterData`) on its list. The getter reads an item's tags when the item is clicked onto it, or a block's
-  block tags with the pick-up key; block tags also match the items that place those blocks. Models are hand-written in `assets/mowlib/items` (one per transport mode); their frame is tinted black
+  block tags with the pick-up key; block tags also match the items that place those blocks. The Blank Filter (`FilterBaseItem`): the activation key while holding it opens a radial menu of every filter
+  (`client/FilterPickerScreen`, `filter/FilterPicker`: any `ITransportFilter` item, from any mod) and swaps one Blank
+  Filter for the one clicked; any filter crafted alone turns back into a Blank Filter (`recipes/FilterResetRecipe`,
+  `mowlib:filter_reset`). Models are hand-written in `assets/mowlib/items` (one per transport mode); their frame is tinted black
   for a blacklist (`client/FilterListTint`, `mowlib:filter_list`), and amount-only modes (energy, experience:
   `TransportType#isAmountOnly`) read Allowed / Disabled and show the plain icon while disabled
   (`client/FilterBlacklistProperty`, `mowlib:filter_blacklist`).
@@ -130,7 +134,7 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   - `ReadingRegistry`: readers and label lines for blocks/mobs you can't implement an interface on
   - `ReadingPayloads`: the server questions
 - `network/` - `MowLibNetwork` registers the payloads: `select_page`, `turn_held_page`, `turn_block_page`,
-  `activate`, `place_held`, `pickup_block`, `page_key_tool`, `block_key_tool`, `reading_block_request`, `reading_entity_request`
+  `activate`, `place_held`, `pickup_block`, `page_key_tool`, `block_key_tool`, `pick_filter`, `reading_block_request`, `reading_entity_request`
   (client -> server), `transfer_particles`, `reading_block`, `reading_entity` (server -> client). Bump its
   `VERSION` when a payload changes.
 - `knapping/` - hold items in both hands and right-click a block. Mods register `KnappingRecipe`s in

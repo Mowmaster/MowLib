@@ -1,6 +1,10 @@
 package com.mowmaster.mowlib;
 
+import com.mowmaster.mowlib.client.ClientActivations;
+import com.mowmaster.mowlib.client.FilterPickerScreen;
 import com.mowmaster.mowlib.client.MowLibClientConfig;
+import com.mowmaster.mowlib.registry.MowLibItems;
+import net.minecraft.client.Minecraft;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
@@ -43,7 +47,10 @@ public class MowLibClient
     {
         container.registerConfig(ModConfig.Type.CLIENT, MowLibClientConfig.SPEC);
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-    }
+        // The activation key while holding a Blank Filter: the radial menu of filters. A predicate (stack -> ...) so the
+        // item is only looked up when the key is pressed, long after registration.
+        ClientActivations.register(stack -> stack.is(MowLibItems.FILTER_BASE.get()),
+                (stack, hand) -> Minecraft.getInstance().gui.setScreen(new FilterPickerScreen(hand)));    }
 
     // Every colourable block from every mod gets one tint source per tint region (region N = model tintindex N).
     // Mods using MowLib must not register their own tint sources for IColorableBlocks.

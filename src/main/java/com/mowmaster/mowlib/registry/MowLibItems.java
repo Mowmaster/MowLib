@@ -7,6 +7,7 @@ import com.mowmaster.mowlib.items.filters.EnchantedCountFilterItem;
 import com.mowmaster.mowlib.items.filters.EnchantedExactFilterItem;
 import com.mowmaster.mowlib.items.filters.EnchantedFilterItem;
 import com.mowmaster.mowlib.items.filters.EnchantedFuzzyFilterItem;
+import com.mowmaster.mowlib.items.filters.FilterBaseItem;
 import com.mowmaster.mowlib.items.filters.FoodFilterItem;
 import com.mowmaster.mowlib.items.filters.ItemFilterItem;
 import com.mowmaster.mowlib.items.filters.ItemStackFilterItem;
@@ -44,7 +45,8 @@ public class MowLibItems
 
     // ---- Filters ----
     // The blank filter is only a crafting ingredient for the others
-    public static final DeferredItem<Item> FILTER_BASE = ITEMS.registerSimpleItem("filter_base");
+    // Holding it, the activation key opens the radial menu that turns it into any filter (FilterBaseItem)
+    public static final DeferredItem<Item> FILTER_BASE = ITEMS.registerItem("filter_base", FilterBaseItem::new);
     public static final DeferredItem<ItemFilterItem> FILTER_ITEM = ITEMS.registerItem("filter_item", ItemFilterItem::new);
     public static final DeferredItem<ItemStackFilterItem> FILTER_ITEMSTACK = ITEMS.registerItem("filter_itemstack", ItemStackFilterItem::new);
     public static final DeferredItem<ModFilterItem> FILTER_MOD = ITEMS.registerItem("filter_mod", ModFilterItem::new);
