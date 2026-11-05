@@ -107,6 +107,16 @@ public class TagGetterItem extends Item implements IPageable, IInventoryUsable
         if (!data.isEmpty()) stack.set(MowLibDataComponents.TAG_GETTER.get(), data.withSelected(page));
     }
 
+    // Over the hotbar whenever the selected tag changes in the hand (right-click, the page keys): "Selected tag:
+    // #c:ingots", instead of MowLib's plain "Page 2/5" (client/HeldPageMessages)
+    @Override
+    public Component describePage(ItemStack stack, int page)
+    {
+        List<Identifier> tags = data(stack).tags();
+        if (page < 0 || page >= tags.size()) return Component.translatable(MowLibReferences.MODID + ".taggetter.empty");
+        return Component.translatable(MowLibReferences.MODID + ".taggetter.selected", "#" + tags.get(page)).withStyle(ChatFormatting.GOLD);
+    }
+
     // ---- In an inventory: click an item onto it (or it onto an item) to read its tags (InventoryClicks) ----
 
     @Override
@@ -151,11 +161,8 @@ public class TagGetterItem extends Item implements IPageable, IInventoryUsable
                 player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".taggetter.clear").withStyle(ChatFormatting.RED));
             }
             else if (!offhand.isEmpty()) read(level, player, getter, offhand);
-            else
-            {
-                setPage(getter, data(getter).selectedIndex() + 1);
-                announceSelected(player, getter);
-            }
+            // The next tag. The message over the hotbar comes from describePage (HeldPageMessages sees the change).
+            else setPage(getter, data(getter).selectedIndex() + 1);
         }
         return InteractionResult.SUCCESS;
     }
@@ -184,13 +191,6 @@ public class TagGetterItem extends Item implements IPageable, IInventoryUsable
             level.playSound(null, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 1f, 1.2f);
         }
         else player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".taggetter.none").withStyle(ChatFormatting.RED));
-    }
-
-    private static void announceSelected(Player player, ItemStack getter)
-    {
-        data(getter).selectedTag().ifPresent(tag -> player.sendOverlayMessage(
-                Component.translatable(MowLibReferences.MODID + ".taggetter.changed_to").withStyle(ChatFormatting.GOLD)
-                        .append(Component.literal("#" + tag).withStyle(ChatFormatting.WHITE))));
     }
 
     // ---- Tooltip: where the tags came from, then every tag, the selected one in gold ----

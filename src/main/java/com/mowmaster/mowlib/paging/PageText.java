@@ -49,6 +49,12 @@ public final class PageText
         return Component.translatable(PREFIX + "contents", page + 1, contents.pages(), stack(contents.stack(page)));
     }
 
+    // "Page 3/8: <what>", for paged things that aren't paged storage (a filter's list...)
+    public static MutableComponent line(int page, int pages, Component what)
+    {
+        return Component.translatable(PREFIX + "contents", page + 1, pages, what);
+    }
+
     // The same for the selected page
     public static MutableComponent selectedLine(PagedContents contents)
     {

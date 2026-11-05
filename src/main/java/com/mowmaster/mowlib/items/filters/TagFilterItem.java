@@ -5,6 +5,7 @@ import com.mowmaster.mowlib.filter.FilterDirection;
 import com.mowmaster.mowlib.transport.TransportType;
 import com.mowmaster.mowlib.transport.TransportTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
@@ -46,6 +47,15 @@ public class TagFilterItem extends BaseFilterItem
     protected boolean acceptsListEntry(ItemStack filter, ItemStack entry)
     {
         return TagGetterItem.selectedTag(entry).isPresent();
+    }
+
+    // A Tag Getter on the list is shown by its selected tag ("#c:ingots"), which is what the filter matches, not by
+    // its item name
+    @Override
+    protected Component describeListEntry(ItemStack entry)
+    {
+        Optional<Identifier> tag = TagGetterItem.selectedTag(entry);
+        return tag.isPresent() ? Component.literal("#" + tag.get()) : super.describeListEntry(entry);
     }
 
     @Override

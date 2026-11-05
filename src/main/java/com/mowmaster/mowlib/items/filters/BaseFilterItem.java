@@ -4,6 +4,7 @@ import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.FilterData;
 import com.mowmaster.mowlib.filter.FilterDirection;
 import com.mowmaster.mowlib.filter.ITransportFilter;
+import com.mowmaster.mowlib.paging.IPageable;
 import com.mowmaster.mowlib.registry.MowLibDataComponents;
 import com.mowmaster.mowlib.storage.IInventoryUsable;
 import com.mowmaster.mowlib.storage.InventoryClick;
@@ -27,6 +28,8 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.transfer.resource.Resource;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -41,9 +44,12 @@ import java.util.function.Consumer;
 //                                                                     restricted filter adds up; clicking the same
 //                                                                     item again updates its count)
 //   right-click an item onto the filter, or the filter onto an item = take that item off the list
-//   right-click the filter with an empty cursor, or the filter onto an empty slot = take the last item off the list
+//   right-click the filter with an empty cursor, or the filter onto an empty slot = take the SELECTED item off
+//   scroll over the filter, or the page keys over it or while holding it = select the next/previous list item
+//                                                                     (IPageable; the tooltip marks it, and turning
+//                                                                     it in the hand names it over the hotbar)
 // Subclasses decide what "matches" means; a match is let through by a whitelist and blocked by a blacklist.
-public abstract class BaseFilterItem extends Item implements ITransportFilter, IInventoryUsable
+public abstract class BaseFilterItem extends Item implements ITransportFilter, IInventoryUsable, IPageable
 {
     // The most items one mode's list holds (a chest's worth)
     public static final int MAX_LIST_SIZE = 27;
@@ -234,17 +240,18 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter, I
             }
             // fromNonEmptyStack: an immutable copy (item, count, data); the clicked stack itself is left alone
             list.add(ItemStackTemplate.fromNonEmptyStack(other));
-            setList(self, mode, data, entry, list);
+            // The item just added becomes the selected one
+            self.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), entry.withList(list, list.size() - 1)));
             InventoryClicks.playInsert(player);
             return true;
         }
 
-        // Right-click: with an item, take that item off; with nothing, the last one added
+        // Right-click: with an item, take that item off; with nothing, the selected one
         boolean removed;
         if (other.isEmpty())
         {
             removed = !list.isEmpty();
-            if (removed) list.removeLast();
+            if (removed) list.remove(entry.selectedIndex());
         }
         else removed = list.removeIf(listed -> ItemStack.isSameItemSameComponents(listed.create(), other));
         if (!removed)
@@ -260,6 +267,46 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter, I
     private static void setList(ItemStack filter, TransportType<?> mode, FilterData data, FilterData.Entry entry, List<ItemStackTemplate> list)
     {
         filter.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), entry.withList(list)));
+    }
+
+    // ---- IPageable: the "pages" are the current mode's list items; the selected page is the selected item ----
+
+    @Override
+    public int getPageCount(ItemStack stack)
+    {
+        return Math.max(1, getEntry(stack, getMode(stack)).list().size());
+    }
+
+    @Override
+    public int getPage(ItemStack stack)
+    {
+        return getEntry(stack, getMode(stack)).selectedIndex();
+    }
+
+    @Override
+    public void setPage(ItemStack stack, int page)
+    {
+        TransportType<?> mode = getMode(stack);
+        FilterData data = getData(stack);
+        FilterData.Entry entry = data.get(mode.getId());
+        if (!entry.list().isEmpty()) stack.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), entry.withSelected(page)));
+    }
+
+    // Over the hotbar when it's turned in the hand: "Selected: Cobblestone x16" (null with an empty list: MowLib's
+    // plain "Page 1/1")
+    @Override
+    public @Nullable Component describePage(ItemStack stack, int page)
+    {
+        List<ItemStackTemplate> list = getEntry(stack, getMode(stack)).list();
+        if (page < 0 || page >= list.size()) return null;
+        return Component.translatable(MowLibReferences.MODID + ".filter.selected", describeListEntry(list.get(page).create()));
+    }
+
+    // How a list item is shown (tooltip, hotbar message): "Cobblestone x16". The tag filters show the Tag Getter's
+    // selected tag instead.
+    protected Component describeListEntry(ItemStack entry)
+    {
+        return Component.empty().append(entry.getHoverName()).append(" x" + entry.getCount());
     }
 
     private static void cycleMode(Player player, ItemStack filter)
@@ -298,10 +345,13 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter, I
         {
             tooltip.accept(Component.translatable(MowLibReferences.MODID + ".filter_type").append(listTypeName(entry.blacklist())).withStyle(ChatFormatting.WHITE));
         }
-        for (ItemStackTemplate template : entry.list())
+        // The list, the selected item (the one a right-click removes) marked and brighter
+        int selected = entry.selectedIndex();
+        for (int index = 0; index < entry.list().size(); index++)
         {
-            ItemStack listed = template.create();
-            tooltip.accept(Component.literal(" - ").append(listed.getHoverName()).append(" x" + listed.getCount()).withStyle(ChatFormatting.DARK_GRAY));
+            boolean isSelected = index == selected;
+            tooltip.accept(Component.literal(isSelected ? " > " : " - ").append(describeListEntry(entry.list().get(index).create()))
+                    .withStyle(isSelected ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY));
         }
         // How to set it, while this mode's list is empty
         if (entry.list().isEmpty() && usesListFor(mode))

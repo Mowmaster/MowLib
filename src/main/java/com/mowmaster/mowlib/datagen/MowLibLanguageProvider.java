@@ -76,14 +76,16 @@ public class MowLibLanguageProvider extends LanguageProvider
         addItem(MowLibItems.FILTER_FOOD, "Food Filter");
         addItem(MowLibItems.FILTER_TAG, "Tag Filter");
         addItem(MowLibItems.FILTER_TAG_MACHINE, "Tag Filter (Machines)");
-        add(MODID + ".filter.tooltip_howto", "Click items onto it to list them (right-click to remove)");
+        add(MODID + ".filter.tooltip_howto", "Click items onto it to list them; scroll to select one, right-click to remove it");
+        add(MODID + ".filter.selected", "Selected: %s");
 
         // ---- Tag Getter (items/filters/TagGetterItem) ----
         addItem(MowLibItems.TAG_GETTER, "Tag Getter");
         add(MODID + ".taggetter.created", "Tags read: %s");
         add(MODID + ".taggetter.none", "That has no tags");
         add(MODID + ".taggetter.clear", "Tags cleared");
-        add(MODID + ".taggetter.changed_to", "Selected tag: ");
+        add(MODID + ".taggetter.selected", "Selected tag: %s");
+        add(MODID + ".taggetter.empty", "No tags");
         add(MODID + ".taggetter.tooltip_header", "Tags of %s:");
         add(MODID + ".taggetter.tooltip_howto", "Click an item onto it to read its tags");
 

@@ -1,6 +1,8 @@
 package com.mowmaster.mowlib.paging;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 // An item with pages, one of which is selected (a storage book, a manual...). Implement it on the Item class.
 // MowLib then lets players change the page without any code in the mod:
@@ -24,5 +26,13 @@ public interface IPageable
         int count = getPageCount(stack);
         // Math.floorMod keeps the result positive: floorMod(-1, 8) is 7, where -1 % 8 would be -1
         return count <= 0 ? 0 : Math.floorMod(getPage(stack) + direction, count);
+    }
+
+    // What to say over the hotbar when the page of the item in your hand changes (client/HeldPageMessages), e.g. a
+    // Tag Getter's "Selected tag: #c:ingots". null: MowLib's own wording ("Page 3/8", or what's on the page for paged
+    // storage items).
+    default @Nullable Component describePage(ItemStack stack, int page)
+    {
+        return null;
     }
 }

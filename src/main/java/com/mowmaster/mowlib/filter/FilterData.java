@@ -23,24 +23,56 @@ public record FilterData(Map<Identifier, Entry> entries)
 {
     public static final FilterData EMPTY = new FilterData(Map.of());
 
-    // ItemStackTemplate is the immutable form of an ItemStack (item, count, components) with a proper equals
-    public record Entry(boolean blacklist, List<ItemStackTemplate> list)
+    // ItemStackTemplate is the immutable form of an ItemStack (item, count, components) with a proper equals.
+    // selected: the list item picked with scroll / the page keys (the one a right-click removes).
+    public record Entry(boolean blacklist, List<ItemStackTemplate> list, int selected)
     {
-        public static final Entry EMPTY = new Entry(false, List.of());
+        public static final Entry EMPTY = new Entry(false, List.of(), 0);
 
         public static final Codec<Entry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.BOOL.optionalFieldOf("blacklist", false).forGetter(Entry::blacklist),
-                ItemStackTemplate.CODEC.listOf().optionalFieldOf("list", List.of()).forGetter(Entry::list))
+                ItemStackTemplate.CODEC.listOf().optionalFieldOf("list", List.of()).forGetter(Entry::list),
+                Codec.INT.optionalFieldOf("selected", 0).forGetter(Entry::selected))
                 .apply(instance, Entry::new));
+
+        // The constructor from before `selected`, so code written against it keeps working (first item selected)
+        public Entry(boolean blacklist, List<ItemStackTemplate> list)
+        {
+            this(blacklist, list, 0);
+        }
+
+        // Compact constructor: copies the list so it can't be changed afterwards
+        public Entry
+        {
+            list = List.copyOf(list);
+        }
+
+        // Always inside the list (0 when empty)
+        public int selectedIndex()
+        {
+            return list.isEmpty() ? 0 : Math.floorMod(selected, list.size());
+        }
 
         public Entry withBlacklist(boolean blacklist)
         {
-            return new Entry(blacklist, list);
+            return new Entry(blacklist, list, selected);
         }
 
+        // A new list; the selection stays at the same place (moved back if the list got shorter)
         public Entry withList(List<ItemStackTemplate> list)
         {
-            return new Entry(blacklist, List.copyOf(list));
+            return new Entry(blacklist, list, Math.clamp(selected, 0, Math.max(0, list.size() - 1)));
+        }
+
+        // A new list with this item selected
+        public Entry withList(List<ItemStackTemplate> list, int selected)
+        {
+            return new Entry(blacklist, list, Math.clamp(selected, 0, Math.max(0, list.size() - 1)));
+        }
+
+        public Entry withSelected(int index)
+        {
+            return new Entry(blacklist, list, list.isEmpty() ? 0 : Math.floorMod(index, list.size()));
         }
     }
 

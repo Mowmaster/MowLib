@@ -86,7 +86,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   get/set/allows, the offhand filter / Filter Tool clicks for `use()`, a whitelist summary for paged items). Held and
   block filters follow the same rules (`ITransportFilter.allowsMoving` / `limitStored`): a filter only acts in the
   direction it's set to. `items/filters/`: the 13 filters (`mowlib:filter_*`) on `BaseFilterItem`; a mode's list is set
-  bundle-style in an inventory (click items onto the filter; nothing is used up). `TagFilterItem` (`filter_tag`,
+  bundle-style in an inventory (click items onto the filter; nothing is used up; scroll / page keys select a list
+  item, which a right-click removes). `TagFilterItem` (`filter_tag`,
   `filter_tag_machine`) matches the selected tag of each `TagGetterItem` (`mowlib:tag_getter`, data
   `filter/TagGetterData`) on its list. Models are hand-written in `assets/mowlib/items` (one per transport mode).
 - `workcard/` - `IWorkCard`, `IWorkCardHolder`, `WorkCardType`. `items/workcards/`: area + locations cards
@@ -104,8 +105,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - `datamaps/` - `CBBlockColor` (`{"color": "#RRGGBB"}`), `CBDataMaps.BLOCK_COLORS`.
 - `datagen/` - models (picker, dye), language, recipes, and `CBBlockColorProvider` (average texture colour of
   plain solid cubes).
-- `paging/` - pages on items (`IPageable`) and block entities (`IPageHolder`), turned for every mod by scroll or
-  the page keys. `PageArrows` (clickable page-turn boxes). Paged storage: `PagedStorage` (block entities),
+- `paging/` - pages on items (`IPageable`, with an optional `describePage` for the message over the hotbar) and block
+  entities (`IPageHolder`), turned for every mod by scroll or the page keys. `PageArrows` (clickable page-turn boxes). Paged storage: `PagedStorage` (block entities),
   `IPagedStorageItem` + `PagedStorageInteractions` (bundle-style clicks on `InventoryClicks`; `allowsTakeOut` can
   refuse a page), `PagedContents` (`mowlib:paged_contents`), `PagedContentsTooltip`. `PageText`: the one wording for
   pages ("Page 3/8: 12 Bread") in the tooltip, hotbar message and reading HUD.

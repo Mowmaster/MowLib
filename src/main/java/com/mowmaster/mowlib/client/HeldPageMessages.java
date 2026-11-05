@@ -69,10 +69,13 @@ public final class HeldPageMessages
         }
     }
 
-    // "Page 3/8: 12 Bread", "Page 3/8: Empty", or just "Page 3/8" for paged items that don't store items (PageText:
-    // the same wording as the tooltip and the reading HUD)
+    // The item's own wording if it has one (IPageable#describePage: a Tag Getter's selected tag, a filter's selected
+    // item...), else "Page 3/8: 12 Bread", "Page 3/8: Empty", or just "Page 3/8" for paged items that don't store items
+    // (PageText: the same wording as the tooltip and the reading HUD)
     private static Component describePage(ItemStack stack, IPageable pageable, int page)
     {
+        Component own = pageable.describePage(stack, page);
+        if (own != null) return own;
         if (!(stack.getItem() instanceof IPagedStorageItem storage)) return PageText.page(page, pageable.getPageCount(stack));
         return PageText.line(storage.contents(stack), page);
     }
