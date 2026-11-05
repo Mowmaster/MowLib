@@ -2,6 +2,7 @@ package com.mowmaster.mowlib.registry;
 
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.FilterData;
+import com.mowmaster.mowlib.filter.TagGetterData;
 import com.mowmaster.mowlib.paging.PagedContents;
 import com.mowmaster.mowlib.palette.ColorPaletteContents;
 import com.mowmaster.mowlib.transport.TransportContents;
@@ -45,6 +46,10 @@ public class MowLibDataComponents
 
     // A filter item put into another item (a storage book, a tool...): see filter/HeldFilters. A component value must
     // never change once made, so the filter is kept as an ItemStackTemplate (an immutable item, count and components).
+    // A Tag Getter's tags and which one is selected (items/filters/TagGetterItem)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<TagGetterData>> TAG_GETTER =
+            COMPONENTS.registerComponentType("tag_getter", builder -> builder.persistent(TagGetterData.CODEC).networkSynchronized(TagGetterData.STREAM_CODEC));
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemStackTemplate>> HELD_FILTER =
             COMPONENTS.registerComponentType("held_filter", builder -> builder.persistent(ItemStackTemplate.CODEC).networkSynchronized(ItemStackTemplate.STREAM_CODEC));
 

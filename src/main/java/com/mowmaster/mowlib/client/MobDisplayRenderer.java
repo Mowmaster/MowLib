@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 import org.slf4j.Logger;
 
 import java.lang.ref.WeakReference;
@@ -108,6 +110,9 @@ public class MobDisplayRenderer
             sheep.setColor(display.sheepColor().orElse(DyeColor.WHITE));
             sheep.setSheared(display.sheared());
         }
+        // Burning: fire ticks make it count as on fire (it never ticks, so they never run out). Extracting then turns
+        // on its fire animation and lights it up fully, as vanilla does for burning mobs. Fire-immune mobs never burn.
+        entity.setRemainingFireTicks(display.onFire() ? 100 : 0);
         if (customize != null) customize.accept(entity);
 
         EntityRenderState renderState;
@@ -151,6 +156,17 @@ public class MobDisplayRenderer
         var renderer = dispatcher().getRenderer(shown.entity);
         renderer.submit(shown.entity, poseStack, submitNodeCollector, camera);
         poseStack.popPose();
+
+        // The fire, if it's burning: vanilla's flames, sized from the mob and always turned to face the camera (turned
+        // round the up axis only, as the dispatcher does it). Drawn in a pose that's scaled but not turned, since the
+        // flames do their own turning.
+        if (shown.entity.displayFireAnimation)
+        {
+            poseStack.pushPose();
+            poseStack.scale(shown.scale, shown.scale, shown.scale);
+            submitNodeCollector.submitFlame(poseStack, shown.entity, Mth.rotationAroundAxis(Mth.Y_AXIS, camera.orientation, new Quaternionf()));
+            poseStack.popPose();
+        }
     }
 
     // ---- Set-up ----

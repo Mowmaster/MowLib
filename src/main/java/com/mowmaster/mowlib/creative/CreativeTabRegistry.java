@@ -26,6 +26,7 @@ public class CreativeTabRegistry
                 output.accept(MowLibItems.WORKCARD_LOCATIONS);
                 output.accept(MowLibItems.TOOL_FILTER);
                 output.accept(MowLibItems.TOOL_WORK);
+                output.accept(MowLibItems.TAG_GETTER);
                 // var: the compiler works out the type (DeferredItem<? extends Item>) from the list
                 for (var item : MowLibItems.FILTERS) output.accept(item.get());
             }).build());

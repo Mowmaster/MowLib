@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-// What a Color Palette holds (the "mowlib:color_palette" data component): one of each dye, always sorted by colour,
+// What a Color Palette holds (the "mowlib:color_palette" data component): one of each dye, always sorted by name,
 // and the index of the selected one (the dye the palette paints with). Like every data component it's immutable:
 // the "with..." methods return a new ColorPaletteContents, which the item then sets on the stack.
 // ItemStackTemplate is the immutable form of an ItemStack (item, count, data) with a proper equals, which a component
@@ -112,7 +112,7 @@ public record ColorPaletteContents(List<ItemStackTemplate> dyes, int selected)
         List<ItemStackTemplate> sorted = new ArrayList<>(dyes);
         ItemStackTemplate added = ItemStackTemplate.fromNonEmptyStack(dye.copyWithCount(1));
         sorted.add(added);
-        sorted.sort(BY_COLOR);
+        sorted.sort(BY_NAME);
         // The first dye added becomes the selected one; otherwise the selection follows its dye to its new place
         ItemStackTemplate wasSelected = dyes.isEmpty() ? added : dyes.get(selectedIndex());
         return new ColorPaletteContents(sorted, sorted.indexOf(wasSelected));
@@ -128,15 +128,24 @@ public record ColorPaletteContents(List<ItemStackTemplate> dyes, int selected)
         return new ColorPaletteContents(left, left.isEmpty() ? 0 : Math.min(index, left.size() - 1));
     }
 
-    // ---- Sorting by colour ----
+    // ---- Sorting ----
 
     // Colours first, round the colour wheel (red, orange, yellow, green, blue, purple, pink), lighter before darker
-    // for the same hue; then the greys from white to black. Comparator.comparingInt builds a comparator from a
-    // number to compare by; thenComparing adds a tie-breaker.
+    // for the same hue; then the greys from white to black.
     private static final Comparator<ItemStackTemplate> BY_COLOR =
             Comparator.comparingInt((ItemStackTemplate dye) -> isGrey(rgbOf(dye)) ? 1 : 0)
                     .thenComparingDouble(dye -> isGrey(rgbOf(dye)) ? 0 : hue(rgbOf(dye)))
                     .thenComparingDouble(dye -> -brightness(rgbOf(dye)));
+
+    // By display name, A to Z, ignoring upper/lower case ("Black Dye", "Diamond Block Dye", "Red Dye"...); dyes with
+    // the same name (Custom Dyes from the same block, in different colours) by colour after that.
+    // Names are read where the sort runs: on the server that's the server's language (English), so the order is the
+    // same for every player whatever language they play in.
+    // Declared after BY_COLOR on purpose: static fields are set in order, and this one uses BY_COLOR.
+    // Comparator.comparing builds a comparator from a value to compare by; thenComparing adds a tie-breaker.
+    private static final Comparator<ItemStackTemplate> BY_NAME =
+            Comparator.comparing((ItemStackTemplate dye) -> dye.create().getHoverName().getString(), String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(BY_COLOR);
 
     private static int rgbOf(ItemStackTemplate dye)
     {

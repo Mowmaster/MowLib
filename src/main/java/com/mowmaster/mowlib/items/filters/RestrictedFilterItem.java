@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.neoforge.transfer.resource.Resource;
 
 // Lets everything in, but only up to an amount: the total count of the items in the list for that mode
-// (e.g. set from a chest holding 16 cobblestone, the holder stores at most 16 of anything; for fluids 16 mB).
+// (e.g. a stack of 16 cobblestone clicked onto it: the holder stores at most 16 of anything; for fluids 16 mB).
 // It can also go in another filter's list to add the limit to that filter (see BaseFilterItem#limit).
 public class RestrictedFilterItem extends BaseFilterItem
 {

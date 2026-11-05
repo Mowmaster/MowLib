@@ -5,6 +5,9 @@ import com.mowmaster.mowlib.filter.FilterData;
 import com.mowmaster.mowlib.filter.FilterDirection;
 import com.mowmaster.mowlib.filter.ITransportFilter;
 import com.mowmaster.mowlib.registry.MowLibDataComponents;
+import com.mowmaster.mowlib.storage.IInventoryUsable;
+import com.mowmaster.mowlib.storage.InventoryClick;
+import com.mowmaster.mowlib.storage.InventoryClicks;
 import com.mowmaster.mowlib.transport.TransportType;
 import com.mowmaster.mowlib.transport.TransportTypes;
 import net.minecraft.ChatFormatting;
@@ -12,18 +15,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.item.ItemUtil;
 import net.neoforged.neoforge.transfer.resource.Resource;
 
 import java.util.ArrayList;
@@ -33,11 +34,20 @@ import java.util.function.Consumer;
 // Shared filter behaviour (1.20's MowLibBaseFilter + BaseFilter). With the filter in the OFFHAND:
 //   right-click the air            = toggle whitelist/blacklist for the current mode
 //   sneak + right-click the air    = next mode (one per transport type: items, fluids, energy, experience, ...)
-//   sneak + right-click a container = set the current mode's list from its contents
 //   right-click a filter holder    = put the filter in, e.g. a pedestal (the filter tool in the offhand takes it out)
+// Setting the current mode's list, in an inventory, like a bundle (InventoryClicks), but nothing is ever used up:
+// the clicked item only shows the filter what to list, and stays where it is.
+//   left-click an item onto the filter, or the filter onto an item  = add it to the list (with its count, which the
+//                                                                     restricted filter adds up; clicking the same
+//                                                                     item again updates its count)
+//   right-click an item onto the filter, or the filter onto an item = take that item off the list
+//   right-click the filter with an empty cursor, or the filter onto an empty slot = take the last item off the list
 // Subclasses decide what "matches" means; a match is let through by a whitelist and blocked by a blacklist.
-public abstract class BaseFilterItem extends Item implements ITransportFilter
+public abstract class BaseFilterItem extends Item implements ITransportFilter, IInventoryUsable
 {
+    // The most items one mode's list holds (a chest's worth)
+    public static final int MAX_LIST_SIZE = 27;
+
     private final FilterDirection direction;
 
     protected BaseFilterItem(Properties properties, FilterDirection direction)
@@ -60,10 +70,18 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
         return type.usesFilterList();
     }
 
-    // Whether sneak-right-clicking a container sets the list for this type
+    // Whether items can be clicked onto the filter to set the list for this type (when not, clicks do what they
+    // normally would)
     protected boolean usesListFor(TransportType<?> type)
     {
         return type.usesFilterList();
+    }
+
+    // Whether this item may go on the list (e.g. the tag filters only take Tag Getters). Refused with the bundle's
+    // fail sound.
+    protected boolean acceptsListEntry(ItemStack filter, ItemStack entry)
+    {
+        return !entry.isEmpty();
     }
 
     protected boolean canToggleBlacklist()
@@ -166,34 +184,82 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
         return InteractionResult.SUCCESS;
     }
 
-    // Sneak + right-click a container: its contents become the list for the current mode
+    // ---- Setting the list: bundle-style inventory clicks (InventoryClicks does the guards and syncing) ----
+    // These run on both sides (the client shows the change straight away, like vanilla's bundle). Nothing is used up.
+
     @Override
-    public InteractionResult useOn(UseOnContext context)
+    public boolean overrideStackedOnOther(ItemStack self, Slot slot, ClickAction clickAction, Player player)
     {
-        Player player = context.getPlayer();
-        if (player == null || context.getHand() != InteractionHand.OFF_HAND || !player.isShiftKeyDown()) return InteractionResult.PASS;
+        return InventoryClicks.stackedOnOther(this, self, slot, clickAction, player);
+    }
 
-        Level level = context.getLevel();
-        ItemStack filter = context.getItemInHand();
-        TransportType<?> mode = getMode(filter);
-        if (!usesListFor(mode)) return InteractionResult.PASS;
+    @Override
+    public boolean overrideOtherStackedOnMe(ItemStack self, ItemStack other, Slot slot, ClickAction clickAction,
+                                            Player player, SlotAccess carriedItem)
+    {
+        return InventoryClicks.otherStackedOnMe(this, self, other, slot, clickAction, player, carriedItem);
+    }
 
-        ResourceHandler<ItemResource> inventory = level.getCapability(Capabilities.Item.BLOCK, context.getClickedPos(), context.getClickedFace());
-        if (inventory == null) return InteractionResult.PASS;
+    // The filter onto an empty slot: a right-click takes the last item off the list (a left-click puts it down)
+    @Override
+    public boolean usedOnEmptySlots(ItemStack self)
+    {
+        return true;
+    }
 
-        if (!level.isClientSide())
+    // `other` is the item clicked with or onto (or nothing). It's only looked at, never changed.
+    @Override
+    public boolean usedWith(ItemStack self, ItemStack other, ClickAction action, Player player, InventoryClick click)
+    {
+        TransportType<?> mode = getMode(self);
+        if (!usesListFor(mode)) return false;
+        FilterData data = getData(self);
+        FilterData.Entry entry = data.get(mode.getId());
+        List<ItemStackTemplate> list = new ArrayList<>(entry.list());
+
+        if (action == ClickAction.PRIMARY)
         {
-            List<ItemStackTemplate> list = new ArrayList<>();
-            for (int index = 0; index < inventory.size(); index++)
+            if (other.isEmpty()) return false;
+            if (!acceptsListEntry(self, other))
             {
-                ItemStack stack = ItemUtil.getStack(inventory, index);
-                if (!stack.isEmpty()) list.add(ItemStackTemplate.fromNonEmptyStack(stack));
+                InventoryClicks.playFail(player);
+                return true;
             }
-            FilterData data = getData(filter);
-            filter.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), data.get(mode.getId()).withList(list)));
-            player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".filter_changed").withStyle(mode.getColor()));
+            // The same item (same data) already listed: replaced, so its count is updated rather than listed twice
+            boolean replaced = list.removeIf(listed -> ItemStack.isSameItemSameComponents(listed.create(), other));
+            if (!replaced && list.size() >= MAX_LIST_SIZE)
+            {
+                InventoryClicks.playFail(player);
+                return true;
+            }
+            // fromNonEmptyStack: an immutable copy (item, count, data); the clicked stack itself is left alone
+            list.add(ItemStackTemplate.fromNonEmptyStack(other));
+            setList(self, mode, data, entry, list);
+            InventoryClicks.playInsert(player);
+            return true;
         }
-        return InteractionResult.SUCCESS;
+
+        // Right-click: with an item, take that item off; with nothing, the last one added
+        boolean removed;
+        if (other.isEmpty())
+        {
+            removed = !list.isEmpty();
+            if (removed) list.removeLast();
+        }
+        else removed = list.removeIf(listed -> ItemStack.isSameItemSameComponents(listed.create(), other));
+        if (!removed)
+        {
+            InventoryClicks.playFail(player);
+            return true;
+        }
+        setList(self, mode, data, entry, list);
+        InventoryClicks.playRemove(player);
+        return true;
+    }
+
+    private static void setList(ItemStack filter, TransportType<?> mode, FilterData data, FilterData.Entry entry, List<ItemStackTemplate> list)
+    {
+        filter.set(MowLibDataComponents.FILTER_DATA.get(), data.with(mode.getId(), entry.withList(list)));
     }
 
     private static void cycleMode(Player player, ItemStack filter)
@@ -236,6 +302,11 @@ public abstract class BaseFilterItem extends Item implements ITransportFilter
         {
             ItemStack listed = template.create();
             tooltip.accept(Component.literal(" - ").append(listed.getHoverName()).append(" x" + listed.getCount()).withStyle(ChatFormatting.DARK_GRAY));
+        }
+        // How to set it, while this mode's list is empty
+        if (entry.list().isEmpty() && usesListFor(mode))
+        {
+            tooltip.accept(Component.translatable(MowLibReferences.MODID + ".filter.tooltip_howto").withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 }

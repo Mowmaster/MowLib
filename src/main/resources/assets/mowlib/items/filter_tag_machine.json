@@ -1,0 +1,41 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "mowlib:filter_mode",
+    "cases": [
+      {
+        "when": "mowlib:items",
+        "model": {
+          "type": "minecraft:model",
+          "model": "mowlib:item/filters/filter_tag_machine_items"
+        }
+      },
+      {
+        "when": "mowlib:fluids",
+        "model": {
+          "type": "minecraft:model",
+          "model": "mowlib:item/filters/filter_tag_machine_fluids"
+        }
+      },
+      {
+        "when": "mowlib:energy",
+        "model": {
+          "type": "minecraft:model",
+          "model": "mowlib:item/filters/filter_tag_machine_energy"
+        }
+      },
+      {
+        "when": "mowlib:experience",
+        "model": {
+          "type": "minecraft:model",
+          "model": "mowlib:item/filters/filter_tag_machine_experience"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "mowlib:item/filters/filter_tag_machine"
+    }
+  }
+}

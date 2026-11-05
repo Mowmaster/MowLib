@@ -85,15 +85,18 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   `IFilterHolder` (block entities with a filter slot), `HeldFilters` (a filter inside an item, `mowlib:held_filter`:
   get/set/allows, the offhand filter / Filter Tool clicks for `use()`, a whitelist summary for paged items). Held and
   block filters follow the same rules (`ITransportFilter.allowsMoving` / `limitStored`): a filter only acts in the
-  direction it's set to. `items/filters/`: the 11 filters (`mowlib:filter_*`) on
-  `BaseFilterItem`; models are hand-written in `assets/mowlib/items` (one per transport mode).
+  direction it's set to. `items/filters/`: the 13 filters (`mowlib:filter_*`) on `BaseFilterItem`; a mode's list is set
+  bundle-style in an inventory (click items onto the filter; nothing is used up). `TagFilterItem` (`filter_tag`,
+  `filter_tag_machine`) matches the selected tag of each `TagGetterItem` (`mowlib:tag_getter`, data
+  `filter/TagGetterData`) on its list. Models are hand-written in `assets/mowlib/items` (one per transport mode).
 - `workcard/` - `IWorkCard`, `IWorkCardHolder`, `WorkCardType`. `items/workcards/`: area + locations cards
   (`mowlib:work_positions`).
 - `items/` - `CBColorPickerItem` (`mowlib:color_picker`; picked colour from `ITintHolder` or the
   `mowlib:block_colors` data map), `mowlib:custom_dye`. `items/tools/`: `MowLibToolItem` (offhand tools with a
-  tooltip), `FilterToolItem`, `CraftingToolItem` (stays in the grid, loses durability).
+  tooltip; comes back out of crafting grids), `FilterToolItem`, `CraftingToolItem` (stays in the grid, loses
+  durability).
 - `palette/` - `ColorPaletteItem` (`mowlib:color_palette`): bundle-like, one of each dye (vanilla + Custom Dye; a
-  duplicate is used up and voided), sorted by colour, max 64. The selected dye (`IPageable`: scroll / page keys) is
+  duplicate is used up and voided), sorted by name, max 64. The selected dye (`IPageable`: scroll / page keys) is
   what it paints with (`tint/IDyeSource`), and tints its model (`client/SelectedDyeTint`, `mowlib:selected_dye`).
   `ColorPaletteContents` (`mowlib:color_palette`), `ColorPaletteTooltip` + `client/ClientColorPaletteTooltip`.
 - `recipes/` - `CBPickedDyeRecipe` (`mowlib:picked_dye`: picker alone -> custom dye named after the picked block, `mowlib:picked_block`), `ColorableItemDyeRecipe`
@@ -130,7 +133,7 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   register the renderer for their own types (`SpinningItemRenderer::new`).
 - `ghost/GhostItem` + `client/GhostItemRenderer`: floating "missing input" items with labels.
 - `display/MobDisplay` + `client/MobDisplayRenderer`: a mob shown on a block (spin / face player / fixed; baby,
-  adult or a growing-up loop; sheep colour and sheared). Use the renderer inside your own block entity renderer, or
+  adult or a growing-up loop; sheep colour and sheared; on fire). Use the renderer inside your own block entity renderer, or
   `display/IMobDisplayHolder` + `client/MobDisplayBlockRenderer`. `#mowlib:mob_display_blacklist`: mobs never shown.
 - `util/` - `CBPixelBox` (pixel boxes: rotate incl. `rotateFromUp` for six-facing models, shapes, click-to-pixel),
   `MowLibOwner` + `MowLibFakePlayer`, `MowLibBlockActions` (break/place as a player), `MowLibXpUtils`,

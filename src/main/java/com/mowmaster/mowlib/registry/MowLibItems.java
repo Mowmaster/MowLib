@@ -12,6 +12,9 @@ import com.mowmaster.mowlib.items.filters.ItemFilterItem;
 import com.mowmaster.mowlib.items.filters.ItemStackFilterItem;
 import com.mowmaster.mowlib.items.filters.ModFilterItem;
 import com.mowmaster.mowlib.items.filters.RestrictedFilterItem;
+import com.mowmaster.mowlib.items.filters.TagFilterItem;
+import com.mowmaster.mowlib.items.filters.TagGetterItem;
+import com.mowmaster.mowlib.filter.FilterDirection;
 import com.mowmaster.mowlib.items.tools.FilterToolItem;
 import com.mowmaster.mowlib.items.tools.MowLibToolItem;
 import com.mowmaster.mowlib.items.workcards.WorkCardAreaItem;
@@ -52,11 +55,18 @@ public class MowLibItems
     public static final DeferredItem<EnchantedExactFilterItem> FILTER_ENCHANTED_EXACT = ITEMS.registerItem("filter_enchantedexact", EnchantedExactFilterItem::new);
     public static final DeferredItem<EnchantedFuzzyFilterItem> FILTER_ENCHANTED_FUZZY = ITEMS.registerItem("filter_enchantedfuzzy", EnchantedFuzzyFilterItem::new);
     public static final DeferredItem<FoodFilterItem> FILTER_FOOD = ITEMS.registerItem("filter_food", FoodFilterItem::new);
+    // Tag filters (match the selected tag of each Tag Getter on their list): for what goes in, and for machines
+    public static final DeferredItem<TagFilterItem> FILTER_TAG = ITEMS.registerItem("filter_tag",
+            properties -> new TagFilterItem(properties, FilterDirection.INSERT));
+    public static final DeferredItem<TagFilterItem> FILTER_TAG_MACHINE = ITEMS.registerItem("filter_tag_machine",
+            properties -> new TagFilterItem(properties, FilterDirection.NEUTRAL));
+    // Reads an item's tags, for the tag filters
+    public static final DeferredItem<TagGetterItem> TAG_GETTER = ITEMS.registerItem("tag_getter", TagGetterItem::new);
 
     // For creative tabs, in display order
     public static final List<DeferredItem<? extends Item>> FILTERS = List.of(FILTER_BASE, FILTER_ITEM, FILTER_ITEMSTACK, FILTER_MOD,
             FILTER_RESTRICTED, FILTER_DURABILITY, FILTER_ENCHANTED, FILTER_ENCHANTED_COUNT, FILTER_ENCHANTED_EXACT,
-            FILTER_ENCHANTED_FUZZY, FILTER_FOOD);
+            FILTER_ENCHANTED_FUZZY, FILTER_FOOD, FILTER_TAG, FILTER_TAG_MACHINE);
 
     // ---- Work cards ----
     public static final DeferredItem<WorkCardAreaItem> WORKCARD_AREA = ITEMS.registerItem("workcard_area", WorkCardAreaItem::new);

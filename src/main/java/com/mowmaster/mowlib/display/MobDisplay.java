@@ -32,8 +32,17 @@ import java.util.Optional;
 //             show as adults.
 // sheepColor: wool colour for sheep (empty = white); sheared: shows a sheared sheep. Ignored for other mobs.
 // size:       the largest the mob may be, in blocks. Bigger mobs are shrunk to fit; smaller ones keep their size.
-public record MobDisplay(EntityType<?> type, Facing facing, float yaw, Age age, Optional<DyeColor> sheepColor, boolean sheared, float size)
+// onFire:     drawn burning (vanilla's fire on the mob, lit up as burning mobs are). Mobs that can't burn (blazes,
+//             striders...) never show it.
+public record MobDisplay(EntityType<?> type, Facing facing, float yaw, Age age, Optional<DyeColor> sheepColor, boolean sheared,
+                         float size, boolean onFire)
 {
+    // The constructor from before onFire, so code written against it keeps working (not burning)
+    public MobDisplay(EntityType<?> type, Facing facing, float yaw, Age age, Optional<DyeColor> sheepColor, boolean sheared, float size)
+    {
+        this(type, facing, yaw, age, sheepColor, sheared, size, false);
+    }
+
     // Entity types that can't be drawn this way (they need a player profile, or are made of several parts).
     // data/mowlib/tags/entity_type/mob_display_blacklist.json; mods and datapacks can add to it.
     public static final TagKey<EntityType<?>> BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, MowLibReferences.id("mob_display_blacklist"));
@@ -74,7 +83,8 @@ public record MobDisplay(EntityType<?> type, Facing facing, float yaw, Age age, 
                     Age.CODEC.optionalFieldOf("age", Age.ADULT).forGetter(MobDisplay::age),
                     DyeColor.CODEC.optionalFieldOf("sheep_color").forGetter(MobDisplay::sheepColor),
                     Codec.BOOL.optionalFieldOf("sheared", false).forGetter(MobDisplay::sheared),
-                    Codec.FLOAT.optionalFieldOf("size", 1f).forGetter(MobDisplay::size))
+                    Codec.FLOAT.optionalFieldOf("size", 1f).forGetter(MobDisplay::size),
+                    Codec.BOOL.optionalFieldOf("on_fire", false).forGetter(MobDisplay::onFire))
             .apply(instance, MobDisplay::new));
 
     // For block entity update packets or your own payloads (through the codec: simple, and rarely sent)
@@ -83,7 +93,7 @@ public record MobDisplay(EntityType<?> type, Facing facing, float yaw, Age age, 
     // An adult, spinning, at most 1 block big
     public static MobDisplay of(EntityType<?> type)
     {
-        return new MobDisplay(type, Facing.SPIN, 0f, Age.ADULT, Optional.empty(), false, 1f);
+        return new MobDisplay(type, Facing.SPIN, 0f, Age.ADULT, Optional.empty(), false, 1f, false);
     }
 
     // Whether this type may be shown at all (it still has to be a living entity when it's made on the client)
@@ -94,42 +104,48 @@ public record MobDisplay(EntityType<?> type, Facing facing, float yaw, Age age, 
 
     public MobDisplay spinning()
     {
-        return new MobDisplay(type, Facing.SPIN, yaw, age, sheepColor, sheared, size);
+        return new MobDisplay(type, Facing.SPIN, yaw, age, sheepColor, sheared, size, onFire);
     }
 
     public MobDisplay facingPlayer()
     {
-        return new MobDisplay(type, Facing.FACE_PLAYER, yaw, age, sheepColor, sheared, size);
+        return new MobDisplay(type, Facing.FACE_PLAYER, yaw, age, sheepColor, sheared, size, onFire);
     }
 
     public MobDisplay fixed(float newYaw)
     {
-        return new MobDisplay(type, Facing.FIXED, newYaw, age, sheepColor, sheared, size);
+        return new MobDisplay(type, Facing.FIXED, newYaw, age, sheepColor, sheared, size, onFire);
     }
 
     public MobDisplay adult()
     {
-        return new MobDisplay(type, facing, yaw, Age.ADULT, sheepColor, sheared, size);
+        return new MobDisplay(type, facing, yaw, Age.ADULT, sheepColor, sheared, size, onFire);
     }
 
     public MobDisplay baby()
     {
-        return new MobDisplay(type, facing, yaw, Age.BABY, sheepColor, sheared, size);
+        return new MobDisplay(type, facing, yaw, Age.BABY, sheepColor, sheared, size, onFire);
     }
 
     public MobDisplay growingUp()
     {
-        return new MobDisplay(type, facing, yaw, Age.GROWING, sheepColor, sheared, size);
+        return new MobDisplay(type, facing, yaw, Age.GROWING, sheepColor, sheared, size, onFire);
     }
 
     // Optional.ofNullable: empty when color is null (white wool)
     public MobDisplay sheep(DyeColor color, boolean isSheared)
     {
-        return new MobDisplay(type, facing, yaw, age, Optional.ofNullable(color), isSheared, size);
+        return new MobDisplay(type, facing, yaw, age, Optional.ofNullable(color), isSheared, size, onFire);
+    }
+
+    // Burning (true) or not
+    public MobDisplay burning(boolean isOnFire)
+    {
+        return new MobDisplay(type, facing, yaw, age, sheepColor, sheared, size, isOnFire);
     }
 
     public MobDisplay withSize(float newSize)
     {
-        return new MobDisplay(type, facing, yaw, age, sheepColor, sheared, newSize);
+        return new MobDisplay(type, facing, yaw, age, sheepColor, sheared, newSize, onFire);
     }
 }
