@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 //   name a mod item that isn't registered yet when the recipe is created)
 // - consumeMainhand / consumeOffhand: whether one item is used up from that hand (creative players keep theirs)
 // (Generalised from Bibliomania's KnappingHandler, which replaced 1.20 MowLib's dual-handed crafting.)
+@Deprecated
 public record KnappingRecipe(Predicate<ItemStack> mainhand, Predicate<ItemStack> offhand, Predicate<BlockState> target,
                              Supplier<ItemStack> result, boolean consumeMainhand, boolean consumeOffhand)
 {

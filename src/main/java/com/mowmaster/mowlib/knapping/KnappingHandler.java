@@ -17,6 +17,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 // Runs KnappingRecipes: right-clicking a block with the right items in both hands makes the result, uses up the
 // held items the recipe says to, and plays the block's hit sound. @EventBusSubscriber puts this on the game event bus.
 // (Moved from Bibliomania's KnappingHandler, with the recipes taken out into KnappingRecipes.)
+@Deprecated
 @EventBusSubscriber(modid = MowLibReferences.MODID)
 public final class KnappingHandler
 {

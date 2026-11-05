@@ -14,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 //             BlockTags.LOGS, () -> new ItemStack(MyItems.KNIFE_HANDLE.get()))));
 //
 // The first recipe that matches wins.
+@Deprecated
 public final class KnappingRecipes
 {
     private KnappingRecipes() {}
