@@ -197,3 +197,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - For simple model fixes (a missing `tintindex`, `#`, texture key), just tell me the line to change; only send a model file when the geometry changes.
 - To check 26.3 APIs, read the public `neoforged/neoforge` repo (branch `26.3.x`) and the porting primers in `neoforged/.github` (`primers/26.1`, `26.2`, `26.3`). NeoForge's docs are in `neoforged/Documentation`.
 - The mods using MowLib: `Mowmaster/CrystalBlocks`, `Mowmaster/Pedestals`, `Mowmaster/Bibliomania` (branch `NeoForge-26x`).
+
+## To do
+- `client/FaceItemRenderer.light(BlockAndTintGetter, BlockPos, Direction)`: make it take a `Level`. Add a
+  `light(Level, BlockPos, Direction)` overload, mark the old one `@Deprecated` (comment: use the `Level` one), and
+  add a Check line under Unreleased in `CHANGELOG.md`. Remove this entry once it's done.
