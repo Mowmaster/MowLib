@@ -144,8 +144,6 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - `recipes/DualHandedRecipe` + `DualHandedCrafting`: Dual Handed crafting, as data. An offhand item, a main hand item
   and a right-clicked block (each optionally kept) make an item; JSON in `data/<ns>/mowlib/dual_handed_recipe/`, a
   synced world datapack registry (`DualHandedRecipe.KEY`). MowLib's: Filter Tool, Work Card Tool.
-- `knapping/` - hold items in both hands and right-click a block. Mods register `KnappingRecipe`s in
-  `KnappingRecipes` from common setup; `KnappingHandler` runs them.
 - `drops/` - bonus drops when a player breaks a block. Mods register `BonusDrop`s in `BonusDrops` from common
   setup; `BonusDropHandler` rolls every match.
 - `display/ISpinningItemHolder` + `client/SpinningItemRenderer`: a block entity's item spinning above it. Mods

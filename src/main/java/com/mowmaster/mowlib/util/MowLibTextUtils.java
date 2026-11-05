@@ -15,6 +15,16 @@ public final class MowLibTextUtils
     {
     }
 
+    // An effect's name and level as a potion's tooltip writes it: "Speed", "Harming II". Vanilla's own keys:
+    // "potion.withAmplifier" is "%s %s", "potion.potency.1" is "II" (amplifier 0 is level I, with no number).
+    public static MutableComponent effectName(MobEffectInstance effect)
+    {
+        Component name = effect.getEffect().value().getDisplayName();
+        return effect.getAmplifier() > 0
+                ? Component.translatable("potion.withAmplifier", name, Component.translatable("potion.potency." + effect.getAmplifier()))
+                : name.copy();
+    }
+
     // A potion's effects as its tooltip names them: "Harming II", "Speed, Strength"... (null if it has none)
     public static @Nullable Component potionEffects(ItemStack stack)
     {
@@ -23,11 +33,7 @@ public final class MowLibTextUtils
         MutableComponent text = null;
         for (MobEffectInstance effect : contents.getAllEffects())
         {
-            Component name = effect.getEffect().value().getDisplayName();
-            // Vanilla's own keys: "potion.withAmplifier" is "%s %s", "potion.potency.1" is "II"...
-            MutableComponent line = effect.getAmplifier() > 0
-                    ? Component.translatable("potion.withAmplifier", name, Component.translatable("potion.potency." + effect.getAmplifier()))
-                    : name.copy();
+            MutableComponent line = effectName(effect);
             if (text == null) text = line;
             else text.append(", ").append(line);
         }

@@ -15,7 +15,7 @@ import net.neoforged.fml.common.Mod;
 // (MowLibBlockEntities) pick up every mod's matching blocks by themselves.
 //
 // Everything that needs registering is registered here (DeferredRegisters) or by an @EventBusSubscriber class:
-// MowLibCapabilities, MowLibNetwork, CBDataMaps, MowLibClient (client only), KnappingHandler, BonusDropHandler.
+// MowLibCapabilities, MowLibNetwork, CBDataMaps, MowLibClient (client only), DualHandedCrafting, BonusDropHandler.
 @Mod(MowLibReferences.MODID)
 public class MowLib
 {

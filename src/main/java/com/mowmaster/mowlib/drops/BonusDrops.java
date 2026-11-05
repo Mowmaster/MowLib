@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 //     event.enqueueWork(() -> BonusDrops.register(BonusDrop.of(MyTags.KNIVES, MyTags.GRASS_PLANTS, 0.2f,
 //             () -> new ItemStack(MyItems.FIBERS.get()))));
 //
-// Unlike knapping, every matching bonus drop rolls, so several mods can add drops to the same block.
+// Unlike Dual Handed crafting (first match wins), every matching bonus drop rolls, so several mods can add drops to the same block.
 public final class BonusDrops
 {
     private BonusDrops() {}

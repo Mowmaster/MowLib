@@ -6,7 +6,6 @@ import com.mowmaster.mowlib.filter.ITransportFilter;
 import com.mowmaster.mowlib.items.tools.FilterToolItem;
 import com.mowmaster.mowlib.transport.TransportType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
@@ -20,7 +19,6 @@ import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -165,12 +163,10 @@ public final class StorageInteractions
         {
             return action.apply(ItemAccess.forPlayerSlot(player, slot.getContainerSlot()));
         }
-        NonNullList<ItemStack> copy = NonNullList.withSize(2, ItemStack.EMPTY);
-        copy.set(0, slot.getItem().copy());
-        ItemStacksResourceHandler holder = new ItemStacksResourceHandler(copy);
-        T result = action.apply(ItemAccess.forHandlerIndex(holder, 0));
-        slot.set(holder.getResource(0).toStack(holder.getAmountAsInt(0)));
-        giveToPlayer(player, holder.getResource(1).toStack(holder.getAmountAsInt(1)));
+        TwoSlotItemAccess holder = new TwoSlotItemAccess(slot.getItem());
+        T result = action.apply(holder.access());
+        slot.set(holder.result());
+        giveToPlayer(player, holder.extra());
         return result;
     }
 

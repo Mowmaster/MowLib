@@ -1,6 +1,7 @@
 package com.mowmaster.mowlib.reading;
 
 import com.mowmaster.mowlib.transport.TransportType;
+import com.mowmaster.mowlib.util.MowLibTextUtils;
 import com.mowmaster.mowlib.transport.TransportTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -104,9 +105,8 @@ public final class ReadingLabels
     private static Component effect(MobEffectInstance instance)
     {
         Holder<MobEffect> effect = instance.getEffect();
-        MutableComponent line = Component.translatable(effect.value().getDescriptionId());
-        // Amplifier 0 is level I: "enchantment.level.2" is vanilla's "II"
-        if (instance.getAmplifier() > 0) line.append(" ").append(Component.translatable("enchantment.level." + (instance.getAmplifier() + 1)));
+        // "Speed II", worded as potion tooltips do (MowLibTextUtils, shared with potion descriptions), then the time left
+        MutableComponent line = MowLibTextUtils.effectName(instance);
         line.append(" " + (instance.isInfiniteDuration() ? "∞" : time(instance.getDuration())));
         // getTooltipFormatting: blue for beneficial, red for harmful, like potion tooltips
         return line.withStyle(effect.value().getCategory().getTooltipFormatting());

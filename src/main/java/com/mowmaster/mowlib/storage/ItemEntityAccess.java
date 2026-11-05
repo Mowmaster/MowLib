@@ -1,42 +1,38 @@
 package com.mowmaster.mowlib.storage;
 
-import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
-import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 // Lets an item lying in the world be used like an item in an inventory, so its fluid/energy capabilities can be
-// emptied (e.g. a magnet pulling the fluid out of a bucket on the ground). The stack is copied into a small 2-slot
-// handler: slot 0 is the item itself, slot 1 catches anything that can't go back into slot 0 (one empty bucket out
-// of a stack of full ones...). After a committed transaction, writeBack puts the results back into the world.
+// emptied (e.g. a magnet pulling the fluid out of a bucket on the ground). The work is TwoSlotItemAccess's (the item
+// copied into a 2-slot holder); after a committed transaction, writeBack puts the results back into the world.
 public class ItemEntityAccess
 {
     private final ItemEntity entity;
-    private final ItemStacksResourceHandler handler;
+    private final TwoSlotItemAccess holder;
 
     public ItemEntityAccess(ItemEntity entity)
     {
         this.entity = entity;
-        this.handler = new ItemStacksResourceHandler(NonNullList.of(ItemStack.EMPTY, entity.getItem().copy(), ItemStack.EMPTY));
+        this.holder = new TwoSlotItemAccess(entity.getItem());
     }
 
     // Pass this to an item capability (ItemAccess.getCapability or a type's getItemHandler)
     public ItemAccess access()
     {
-        return ItemAccess.forHandlerIndex(handler, 0);
+        return holder.access();
     }
 
-    // The entity gets slot 0; anything in slot 1 is dropped next to it
+    // The entity gets the item as it is now; anything extra is dropped next to it
     public void writeBack(ServerLevel level)
     {
-        ItemStack main = ItemUtil.getStack(handler, 0);
+        ItemStack main = holder.result();
         if (main.isEmpty()) entity.discard();
         else entity.setItem(main);
 
-        ItemStack extra = ItemUtil.getStack(handler, 1);
+        ItemStack extra = holder.extra();
         if (!extra.isEmpty())
         {
             ItemEntity dropped = new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), extra);
