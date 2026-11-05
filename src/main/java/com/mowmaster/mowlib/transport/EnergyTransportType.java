@@ -90,31 +90,38 @@ public class EnergyTransportType extends TransportType<AmountResource>
         return StreamCodec.unit(ENERGY);
     }
 
-    // A storage (index 0, holding ENERGY) seen as a NeoForge EnergyHandler. A record holding what it wraps.
+    // A storage seen as a NeoForge EnergyHandler: all its slots together (a storage with several energy slots, like a
+    // library's energy books, counts as one battery; one with none reads as empty instead of failing). Putting in and
+    // taking out use the storage's own index-free insert/extract, so it decides which slots fill first.
+    // A record holding what it wraps.
     public record EnergyView(ResourceHandler<AmountResource> storage) implements EnergyHandler
     {
         @Override
         public long getAmountAsLong()
         {
-            return storage.getAmountAsLong(0);
+            long total = 0;
+            for (int index = 0; index < storage.size(); index++) total += storage.getAmountAsLong(index);
+            return total;
         }
 
         @Override
         public long getCapacityAsLong()
         {
-            return storage.getCapacityAsLong(0, ENERGY);
+            long total = 0;
+            for (int index = 0; index < storage.size(); index++) total += storage.getCapacityAsLong(index, ENERGY);
+            return total;
         }
 
         @Override
         public int insert(int amount, TransactionContext transaction)
         {
-            return amount <= 0 ? 0 : storage.insert(0, ENERGY, amount, transaction);
+            return amount <= 0 ? 0 : storage.insert(ENERGY, amount, transaction);
         }
 
         @Override
         public int extract(int amount, TransactionContext transaction)
         {
-            return amount <= 0 ? 0 : storage.extract(0, ENERGY, amount, transaction);
+            return amount <= 0 ? 0 : storage.extract(ENERGY, amount, transaction);
         }
     }
 

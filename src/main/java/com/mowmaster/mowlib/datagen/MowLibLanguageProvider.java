@@ -102,6 +102,41 @@ public class MowLibLanguageProvider extends LanguageProvider
         add(workCardKey(WorkCardType.LOCATIONS), "Locations");
         add(workCardKey(WorkCardType.MACHINES), "Machines");
         add(workCardKey(WorkCardType.AREA_OR_LOCATIONS), "Area or Locations");
+
+        // Action keys (client/KeyActionHandler, keys/) and activation messages
+        add("key.mowlib.activate", "Activate item");
+        add("key.mowlib.place", "Place held block");
+        add("key.mowlib.pickup", "Pick up looked-at block");
+        add("message.mowlib.activated", "%s activated");
+
+        // Held page messages (client/HeldPageMessages)
+        add("message.mowlib.page", "Page %1$s/%2$s");
+        add("message.mowlib.page_empty", "Page %1$s/%2$s: empty");
+        add("message.mowlib.page_item", "Page %1$s/%2$s: %3$s x%4$s");
+
+        // Reading HUD lines (reading/ReadingPapers, ReadingLabels)
+        add("hud.mowlib.page", "%1$s (Page %2$s/%3$s)");
+        add("hud.mowlib.page_item", "%1$s %2$s");
+        add("hud.mowlib.empty_page", "Empty page");
+        add("hud.mowlib.filter", "Filter: %s");
+        add("hud.mowlib.grows_up", "Grows up in: %s");
+        add("hud.mowlib.breed_cooldown", "Can breed again in: %s");
+        add("hud.mowlib.in_love", "In love");
+        add("hud.mowlib.can_breed", "Ready to breed");
+
+        // The client config screen (MowLibClientConfig)
+        add("mowlib.configuration.title", "MowLib Settings");
+        add("mowlib.configuration.section.mowlib.client.toml", "Screen settings");
+        add("mowlib.configuration.section.mowlib.client.toml.title", "MowLib Screen Settings");
+        add("mowlib.configuration.reading_paper", "Reading HUD: paper");
+        add("mowlib.configuration.reading_label", "Reading HUD: label");
+        add("mowlib.configuration.enabled", "Enabled");
+        add("mowlib.configuration.anchor", "Screen position");
+        add("mowlib.configuration.x_offset", "Move right (pixels)");
+        add("mowlib.configuration.y_offset", "Move down (pixels)");
+        add("mowlib.configuration.max_width", "Widest text (pixels)");
+        add("mowlib.configuration.held_items", "Show held items");
+        add("mowlib.configuration.show_amounts", "Show stored energy and fluids");
     }
 
     // The same keys FilterDirection#getName and WorkCardType#getName build

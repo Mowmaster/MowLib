@@ -29,8 +29,12 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   signatures follows the Releases rules.
 
 ## What's here
-- Root: `MowLib` (registers everything), `MowLibClient` (client registrations), `MowLibReferences` (`MODID`,
-  `id(path)`), `MowLibCapabilities` (bulk storage item capability).
+- Root: `MowLib` (registers everything), `MowLibClient` (client registrations, the client config), `MowLibReferences`
+  (`MODID`, `id(path)`), `MowLibCapabilities` (bulk storage item capability).
+- `blockentity/CBSyncedBlockEntity`: base for block entities whose saved data is also the client's copy (`sync()`,
+  `getUpdateTag`, `getUpdatePacket`).
+- `block/HorizontalFacing`: static helpers for four-way `FACING` blocks (placement towards/away from the player,
+  `rotate`, `mirror`, `quarterTurns`).
 - `registry/` - `MowLibItems`, `MowLibBlockEntities`, `MowLibDataComponents`, `MowLibRecipes`.
   `creative/CreativeTabRegistry`: the MowLib creative tab.
 - `tint/` - colourable blocks
@@ -45,9 +49,13 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   - `CBTintBlockEntity` (`mowlib:tint_block_entity`): the plain block entity, a `CBTintData` plus slab handling.
 - `client/` - client-only. `CBBlockEntityTintSource` (one tint source per region for every `IColorableBlock`,
   registered by `MowLibClient`; a model face's `tintindex` = region; mods must not register their own),
-  `MowLibKeyMappings` + `PageInputHandler` (page keys and scrolling), `ClientPagedContentsTooltip`,
-  `PagedFullnessProperty` (`mowlib:paged_fullness`), `SpinningItemRenderer`, `GhostItemRenderer`,
-  `MowLibClientParticles`.
+  `MowLibKeyMappings` + `PageInputHandler` (page keys and scrolling; a held `keys/IPageKeyTool` gets them first),
+  `KeyActionHandler` (the activate / place / pick-up keys), `HeldPageMessages` (page turned in hand -> message over
+  the hotbar), `ClientPagedContentsTooltip`, `PagedFullnessProperty` (`mowlib:paged_fullness`),
+  `SpinningItemRenderer`, `GhostItemRenderer`, `MowLibClientParticles`, `CBItemRenderer` (base for item-drawing block
+  entity renderers), `FaceItemRenderer` (an item flat on a block face), `HudAnchor` (nine screen anchors for HUD
+  panels), `MowLibClientConfig` (`mowlib-client.toml`: where the reading HUD's panels go).
+  `client/reading/ReadingHud`: the reading HUD (see `reading/`).
 - `storage/`
   - `CBBulkItemHandler`: NeoForge `ResourceStacksResourceHandler<ItemResource>`. Each slot holds one item type and
     an int amount up to `capacity` (never an `ItemStack`, those cap at 99 when saved). Saved via
@@ -63,7 +71,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   `AmountResource`/`AmountStorage` for amount-only types, `TransportContents` (`mowlib:transport_contents`).
   `ExperienceTransportType` makes the `mowlib:experience_handler` block + item capabilities.
 - `filter/` - `ITransportFilter`, `FilterData` (`mowlib:filter_data`, `mowlib:filter_mode`), `FilterDirection`,
-  `IFilterHolder` (block entities with a filter slot). `items/filters/`: the 11 filters (`mowlib:filter_*`) on
+  `IFilterHolder` (block entities with a filter slot), `HeldFilters` (a filter inside an item, `mowlib:held_filter`:
+  get/set/allows, the offhand filter / Filter Tool clicks for `use()`, a whitelist summary for paged items). `items/filters/`: the 11 filters (`mowlib:filter_*`) on
   `BaseFilterItem`; models are hand-written in `assets/mowlib/items` (one per transport mode).
 - `workcard/` - `IWorkCard`, `IWorkCardHolder`, `WorkCardType`. `items/workcards/`: area + locations cards
   (`mowlib:work_positions`).
@@ -83,8 +92,22 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   the page keys. `PageArrows` (clickable page-turn boxes). Paged storage: `PagedStorage` (block entities),
   `IPagedStorageItem` + `PagedStorageInteractions` (bundle-style clicks), `PagedContents`
   (`mowlib:paged_contents`), `PagedContentsTooltip`.
-- `network/` - `MowLibNetwork` registers the payloads: `select_page`, `turn_held_page`, `turn_block_page`
-  (client -> server), `transfer_particles` (server -> client). Bump its `VERSION` when a payload changes.
+- `keys/` - the action keys' item/block side: `IActivatable` (activate key on a hovered or held item; the on/off
+  mode in `mowlib:activated`), `IKeyPlaceable` (place key puts a block item down, skipping its right-click),
+  `IPickupableBlock` (pick-up key, and any block's own pickup click: block -> item with contents), `IPageKeyTool`
+  (a held tool that takes the page keys at certain blocks), `KeyPayloads`.
+- `reading/` - the reading HUD for every mod, while `ReadingSight.canRead` (a helmet in `#mowlib:grants_reading`,
+  or one with an enchantment in the enchantment tag `#mowlib:grants_reading`, or an added condition):
+  - the paper: `IReadableBlock` (block entity or block) returns a `ReadingPaper` (lines, optional page grid,
+    optional server lines from `IServerReadable`); `IReadableItem` for held items and items shown by blocks;
+    `ReadingPapers` has the common papers (an item's, a paged item's) and lines (`hud.mowlib.*`)
+  - the label: any other block or mob, with what the server says it holds (`ReadingLabels`)
+  - `ReadingRegistry`: readers and label lines for blocks/mobs you can't implement an interface on
+  - `ReadingPayloads`: the server questions
+- `network/` - `MowLibNetwork` registers the payloads: `select_page`, `turn_held_page`, `turn_block_page`,
+  `activate`, `place_held`, `pickup_block`, `page_key_tool`, `reading_block_request`, `reading_entity_request`
+  (client -> server), `transfer_particles`, `reading_block`, `reading_entity` (server -> client). Bump its
+  `VERSION` when a payload changes.
 - `knapping/` - hold items in both hands and right-click a block. Mods register `KnappingRecipe`s in
   `KnappingRecipes` from common setup; `KnappingHandler` runs them.
 - `drops/` - bonus drops when a player breaks a block. Mods register `BonusDrop`s in `BonusDrops` from common
@@ -97,7 +120,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   `display/IMobDisplayHolder` + `client/MobDisplayBlockRenderer`. `#mowlib:mob_display_blacklist`: mobs never shown.
 - `util/` - `CBPixelBox` (pixel boxes: rotate incl. `rotateFromUp` for six-facing models, shapes, click-to-pixel),
   `MowLibOwner` + `MowLibFakePlayer`, `MowLibBlockActions` (break/place as a player), `MowLibXpUtils`,
-  `MowLibTextUtils`, `MowLibParticles`.
+  `MowLibTextUtils`, `MowLibParticles`, `LeftClickCooldown` (keeps cancelled left-click block actions to
+  right-click's pace).
 
 ## Releases
 - Semver in `gradle.properties` `mod_version`: patch = fixes only, minor = new features (only additions),

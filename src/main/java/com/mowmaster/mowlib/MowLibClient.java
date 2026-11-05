@@ -1,5 +1,10 @@
 package com.mowmaster.mowlib;
 
+import com.mowmaster.mowlib.client.MowLibClientConfig;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import com.mowmaster.mowlib.client.CBBlockEntityTintSource;
 import com.mowmaster.mowlib.tint.IColorableBlock;
 import com.mowmaster.mowlib.client.ClientColorPaletteTooltip;
@@ -30,6 +35,14 @@ import java.util.List;
 @EventBusSubscriber(modid = MowLibReferences.MODID, value = Dist.CLIENT)
 public class MowLibClient
 {
+    // This player's screen settings (where the reading HUD's panels go), and the in-game config screen for them
+    // (Mods > MowLib > Config). FML hands a @Mod class's constructor its ModContainer.
+    public MowLibClient(ModContainer container)
+    {
+        container.registerConfig(ModConfig.Type.CLIENT, MowLibClientConfig.SPEC);
+        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
     // Every colourable block from every mod gets one tint source per tint region (region N = model tintindex N).
     // Mods using MowLib must not register their own tint sources for IColorableBlocks.
     @SubscribeEvent
@@ -49,13 +62,17 @@ public class MowLibClient
         }
     }
 
-    // The page keys (Options > Controls > Key Binds > MowLib). A custom category must be registered as well.
+    // MowLib's keys (Options > Controls > Key Binds > MowLib): the page keys and the action keys. A custom category must
+    // be registered as well.
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event)
     {
         event.registerCategory(MowLibKeyMappings.CATEGORY);
         event.register(MowLibKeyMappings.PAGE_NEXT);
         event.register(MowLibKeyMappings.PAGE_PREVIOUS);
+        event.register(MowLibKeyMappings.ACTIVATE);
+        event.register(MowLibKeyMappings.PLACE);
+        event.register(MowLibKeyMappings.PICKUP);
     }
 
     // Every mod's paged storage items get the page grid tooltip; the Color Palette shows all its dyes

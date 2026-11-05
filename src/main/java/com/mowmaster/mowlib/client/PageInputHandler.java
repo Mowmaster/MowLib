@@ -1,5 +1,7 @@
 package com.mowmaster.mowlib.client;
 
+import com.mowmaster.mowlib.keys.IPageKeyTool;
+import com.mowmaster.mowlib.keys.KeyPayloads;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.network.SelectPagePayload;
@@ -90,8 +92,21 @@ public final class PageInputHandler
         Player player = minecraft.player;
         if (player == null || minecraft.level == null) return;
 
-        // The looked-at block first
         BlockHitResult hit = lookedAtBlock(minecraft);
+        // A held IPageKeyTool that wants the keys at the looked-at block (a priority tool...) comes first
+        if (hit != null)
+        {
+            for (InteractionHand hand : InteractionHand.values())
+            {
+                ItemStack held = player.getItemInHand(hand);
+                if (held.getItem() instanceof IPageKeyTool tool && tool.usesPageKeys(held, minecraft.level, hit.getBlockPos(), player))
+                {
+                    ClientPacketDistributor.sendToServer(new KeyPayloads.PageKeyTool(hand == InteractionHand.OFF_HAND, hit.getBlockPos(), direction));
+                    return;
+                }
+            }
+        }
+        // Then the looked-at block
         if (hit != null && minecraft.level.getBlockEntity(hit.getBlockPos()) instanceof IPageHolder)
         {
             ClientPacketDistributor.sendToServer(new TurnBlockPagePayload(hit.getBlockPos(), direction));

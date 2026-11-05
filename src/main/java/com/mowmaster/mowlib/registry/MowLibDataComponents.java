@@ -7,12 +7,14 @@ import com.mowmaster.mowlib.palette.ColorPaletteContents;
 import com.mowmaster.mowlib.transport.TransportContents;
 import com.mowmaster.mowlib.transport.TransportType;
 import com.mowmaster.mowlib.transport.TransportTypes;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -40,6 +42,15 @@ public class MowLibDataComponents
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<FilterData>> FILTER_DATA =
             COMPONENTS.registerComponentType("filter_data", builder -> builder.persistent(FilterData.CODEC).networkSynchronized(FilterData.STREAM_CODEC));
+
+    // A filter item put into another item (a storage book, a tool...): see filter/HeldFilters. A component value must
+    // never change once made, so the filter is kept as an ItemStackTemplate (an immutable item, count and components).
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemStackTemplate>> HELD_FILTER =
+            COMPONENTS.registerComponentType("held_filter", builder -> builder.persistent(ItemStackTemplate.CODEC).networkSynchronized(ItemStackTemplate.STREAM_CODEC));
+
+    // Whether an item with an on/off mode is on (keys/IActivatable#toggle; the activation key flips it)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ACTIVATED =
+            COMPONENTS.registerComponentType("activated", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
     // A work card's selected positions
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<BlockPos>>> WORK_POSITIONS =
