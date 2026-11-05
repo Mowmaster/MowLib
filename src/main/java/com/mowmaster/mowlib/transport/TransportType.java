@@ -164,10 +164,28 @@ public abstract class TransportType<R extends Resource>
         return null;
     }
 
-    // One line for a tooltip, e.g. "Water: 16000mB"
+    // An amount written with this type's unit: "16000 mB" for fluids, "500 FE" for energy, plain for the rest.
+    // Override to add a unit.
+    public String amountText(long amount)
+    {
+        return String.valueOf(amount);
+    }
+
+    // One line for a tooltip, e.g. "Water: 16000 mB"
     public Component describeAmount(R resource, int amount)
     {
-        return Component.empty().append(getName()).append(": " + amount);
+        return Component.empty().append(getName()).append(": " + amountText(amount));
+    }
+
+    // How full a storage slot is, the one way MowLib writes it (storages' describe(), the reading HUD's labels):
+    // "Water: 1000 mB / 16000 mB", "Energy: 500 FE / 10000 FE", or for an empty slot "Fluids: 0 mB / 16000 mB".
+    // In the type's colour.
+    public Component describeStored(R resource, long amount, long capacity)
+    {
+        Component what = resource.isEmpty()
+                ? Component.empty().append(getName()).append(": " + amountText(0))
+                : describeAmount(resource, (int) Math.min(Integer.MAX_VALUE, amount));
+        return Component.empty().append(what).append(" / " + amountText(capacity)).withStyle(color);
     }
 
     // ---- Filters ----

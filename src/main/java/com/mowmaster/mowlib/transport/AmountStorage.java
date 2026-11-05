@@ -128,12 +128,12 @@ public class AmountStorage implements TransportStorage<AmountResource>
         return extracted;
     }
 
-    // "Energy: 500/10000"
+    // "Energy: 500 FE / 10000 FE" (TransportType#describeStored)
     @Override
     public @Nullable Component describe()
     {
         if (amount <= 0) return null;
-        return Component.empty().append(type.getName()).append(": " + amount + "/" + getAllowedCapacity()).withStyle(type.getColor());
+        return type.describeStored(resource, amount, getAllowedCapacity());
     }
 
     // ---- Saving ----

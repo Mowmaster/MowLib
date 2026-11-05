@@ -42,9 +42,12 @@ public class MowLibLanguageProvider extends LanguageProvider
         add("key.category." + MODID + ".mowlib", "MowLib");
         add("key." + MODID + ".page_next", "Next Page");
         add("key." + MODID + ".page_previous", "Previous Page");
-        add("tooltip." + MODID + ".paged.page", "Page %1$s/%2$s: %3$s");
-        add("tooltip." + MODID + ".paged.empty_page", "Empty");
         add("tooltip." + MODID + ".paged.fullness", "Holds %1$s / %2$s");
+        // How pages are worded everywhere: the tooltip, the message over the hotbar, the reading HUD (paging/PageText)
+        add("page." + MODID + ".page", "Page %1$s/%2$s");
+        add("page." + MODID + ".contents", "Page %1$s/%2$s: %3$s");
+        add("page." + MODID + ".stack", "%1$s %2$s");
+        add("page." + MODID + ".empty", "Empty");
 
         // ---- Transport types (TransportType#getName: transport_type.<namespace>.<path>) ----
         add("transport_type." + MODID + ".items", "Items");
@@ -109,15 +112,7 @@ public class MowLibLanguageProvider extends LanguageProvider
         add("key.mowlib.pickup", "Pick up looked-at block");
         add("message.mowlib.activated", "%s activated");
 
-        // Held page messages (client/HeldPageMessages)
-        add("message.mowlib.page", "Page %1$s/%2$s");
-        add("message.mowlib.page_empty", "Page %1$s/%2$s: empty");
-        add("message.mowlib.page_item", "Page %1$s/%2$s: %3$s x%4$s");
-
         // Reading HUD lines (reading/ReadingPapers, ReadingLabels)
-        add("hud.mowlib.page", "%1$s (Page %2$s/%3$s)");
-        add("hud.mowlib.page_item", "%1$s %2$s");
-        add("hud.mowlib.empty_page", "Empty page");
         add("hud.mowlib.filter", "Filter: %s");
         add("hud.mowlib.grows_up", "Grows up in: %s");
         add("hud.mowlib.breed_cooldown", "Can breed again in: %s");

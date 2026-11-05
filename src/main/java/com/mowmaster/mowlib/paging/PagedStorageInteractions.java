@@ -1,6 +1,8 @@
 package com.mowmaster.mowlib.paging;
 
-import net.minecraft.sounds.SoundEvents;
+import com.mowmaster.mowlib.storage.IInventoryUsable;
+import com.mowmaster.mowlib.storage.InventoryClick;
+import com.mowmaster.mowlib.storage.InventoryClicks;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -27,6 +29,9 @@ import java.util.Optional;
 //   Empty-handed, right-click this item: takes the selected page out onto your cursor.
 // These run on both sides (the client predicts), like vanilla's bundle. (Moved from Bibliomania's BookItem.)
 // IPagedStorageItem#allowsTakeOut can refuse the take-out clicks for a page (it's in use).
+//
+// The guards (one item, slot may change, syncing) are InventoryClicks', shared with every MowLib bundle-style item.
+// An item that is also an IInventoryUsable with clicks of its own can call usedWith from its own usedWith instead.
 public final class PagedStorageInteractions
 {
     private PagedStorageInteractions() {}
@@ -34,92 +39,14 @@ public final class PagedStorageInteractions
     // Holding the paged item, clicking a slot
     public static boolean stackedOnOther(IPagedStorageItem item, ItemStack self, Slot slot, ClickAction clickAction, Player player)
     {
-        if (self.getCount() != 1) return false;
-        ItemStack other = slot.getItem();
-
-        // An item that can't be filled by hand: let the click do what it normally would
-        if (clickAction == ClickAction.PRIMARY && !other.isEmpty() && item.allowsInsert(self))
-        {
-            int fits = item.insert(self, other, true);
-            if (fits > 0)
-            {
-                // safeTake respects slots you can't take from (e.g. crafting results); store what actually came out
-                ItemStack taken = slot.safeTake(other.getCount(), fits, player);
-                item.insert(self, taken, false);
-                playInsert(player);
-            }
-            else
-            {
-                player.playSound(SoundEvents.BUNDLE_INSERT_FAIL, 1f, 1f);
-            }
-            slotsChanged(player);
-            return true;
-        }
-        if (clickAction == ClickAction.SECONDARY && other.isEmpty())
-        {
-            if (!item.allowsTakeOut(self, item.contents(self).selectedPage()))
-            {
-                player.playSound(SoundEvents.BUNDLE_INSERT_FAIL, 1f, 1f);
-                return true;
-            }
-            ItemStack removed = item.extractSelected(self);
-            if (!removed.isEmpty())
-            {
-                ItemStack left = slot.safeInsert(removed);
-                if (!left.isEmpty()) item.insert(self, left, false); // the slot didn't take it all: put the rest back
-                playRemove(player);
-            }
-            slotsChanged(player);
-            return true;
-        }
-        return false;
+        return InventoryClicks.stackedOnOther(usable(item), self, slot, clickAction, player);
     }
 
     // Holding something (or nothing), clicking the paged item
     public static boolean otherStackedOnMe(IPagedStorageItem item, ItemStack self, ItemStack other, Slot slot,
                                            ClickAction clickAction, Player player, SlotAccess carriedItem)
     {
-        if (self.getCount() != 1) return false;
-
-        if (clickAction == ClickAction.PRIMARY && !other.isEmpty() && item.allowsInsert(self))
-        {
-            if (slot.allowModification(player))
-            {
-                int inserted = item.insert(self, other, false);
-                if (inserted > 0)
-                {
-                    other.shrink(inserted);
-                    playInsert(player);
-                }
-                else
-                {
-                    player.playSound(SoundEvents.BUNDLE_INSERT_FAIL, 1f, 1f);
-                }
-            }
-            slotsChanged(player);
-            return true;
-        }
-        if (clickAction == ClickAction.SECONDARY && other.isEmpty())
-        {
-            if (!item.allowsTakeOut(self, item.contents(self).selectedPage()))
-            {
-                player.playSound(SoundEvents.BUNDLE_INSERT_FAIL, 1f, 1f);
-                return true;
-            }
-            if (slot.allowModification(player))
-            {
-                ItemStack removed = item.extractSelected(self);
-                if (!removed.isEmpty())
-                {
-                    carriedItem.set(removed);
-                    playRemove(player);
-                }
-            }
-            slotsChanged(player);
-            return true;
-        }
-        // Anything else (e.g. left-click with an empty hand picks the item up as normal)
-        return false;
+        return InventoryClicks.otherStackedOnMe(usable(item), self, other, slot, clickAction, player, carriedItem);
     }
 
     // Every page, empty ones included, drawn by client/ClientPagedContentsTooltip
@@ -128,19 +55,64 @@ public final class PagedStorageInteractions
         return Optional.of(new PagedContentsTooltip(item.contents(stack), item.pageCapacity(stack)));
     }
 
-    private static void playInsert(Player player)
+    // The clicks themselves (see the class comment). `other` is the item clicked with or onto; `click` says where it is.
+    public static boolean usedWith(IPagedStorageItem item, ItemStack self, ItemStack other, ClickAction action, Player player, InventoryClick click)
     {
-        player.playSound(SoundEvents.BUNDLE_INSERT, 0.8f, 0.8f + player.level().getRandom().nextFloat() * 0.4f);
+        // Left-click with/onto an item: store as much as fits. An item that can't be filled by hand: the click does
+        // what it normally would.
+        if (action == ClickAction.PRIMARY && !other.isEmpty())
+        {
+            if (!item.allowsInsert(self)) return false;
+            int fits = item.insert(self, other, true);
+            if (fits > 0)
+            {
+                // take: from a slot through safeTake (respects slots you can't take from); store what actually came
+                ItemStack taken = click.take(other, fits, player);
+                item.insert(self, taken, false);
+                InventoryClicks.playInsert(player);
+            }
+            else InventoryClicks.playFail(player);
+            return true;
+        }
+        // Right-click onto an empty slot, or with an empty cursor: the selected page comes out there
+        if (action == ClickAction.SECONDARY && other.isEmpty())
+        {
+            if (!item.allowsTakeOut(self, item.contents(self).selectedPage()))
+            {
+                InventoryClicks.playFail(player);
+                return true;
+            }
+            ItemStack removed = item.extractSelected(self);
+            if (!removed.isEmpty())
+            {
+                ItemStack left = click.putTaken(removed, player);
+                if (!left.isEmpty()) item.insert(self, left, false); // it didn't all fit there: put the rest back
+                InventoryClicks.playRemove(player);
+            }
+            return true;
+        }
+        return false;
     }
 
-    private static void playRemove(Player player)
+    // The paged item seen as an IInventoryUsable, so InventoryClicks can run its clicks. A record holding the item.
+    private static IInventoryUsable usable(IPagedStorageItem item)
     {
-        player.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8f, 0.8f + player.level().getRandom().nextFloat() * 0.4f);
+        return new Usable(item);
     }
 
-    // Tells the open container the item changed, so the change is sent to the client
-    private static void slotsChanged(Player player)
+    private record Usable(IPagedStorageItem item) implements IInventoryUsable
     {
-        player.containerMenu.slotsChanged(player.getInventory());
+        @Override
+        public boolean usedWith(ItemStack self, ItemStack other, ClickAction action, Player player, InventoryClick click)
+        {
+            return PagedStorageInteractions.usedWith(item, self, other, action, player, click);
+        }
+
+        // Right-click an empty slot: the selected page comes out into it
+        @Override
+        public boolean usedOnEmptySlots(ItemStack self)
+        {
+            return true;
+        }
     }
 }

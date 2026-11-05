@@ -1,5 +1,6 @@
 package com.mowmaster.mowlib.util;
 
+import com.mowmaster.mowlib.block.HorizontalFacing;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -67,16 +68,13 @@ public record CBPixelBox(double minX, double minY, double minZ, double maxX, dou
         return boxes.stream().map(CBPixelBox::toShape).reduce(Shapes.empty(), Shapes::or);
     }
 
-    // Quarter turns of "y" from a north-facing model to the given horizontal facing (north 0, east 1, south 2, west 3)
+    // Quarter turns of "y" from a north-facing model to the given horizontal facing (north 0, east 1, south 2, west 3).
+    // Deprecated: the same as HorizontalFacing.quarterTurns, which is where facing helpers live now. Still works;
+    // removed in the next major version.
+    @Deprecated
     public static int quarterTurns(Direction facing)
     {
-        return switch (facing)
-        {
-            case EAST -> 1;
-            case SOUTH -> 2;
-            case WEST -> 3;
-            default -> 0;
-        };
+        return HorizontalFacing.quarterTurns(facing);
     }
 
     // The clicked point in pixels, nudged slightly into the face that was hit so it lands inside the clicked element
@@ -115,7 +113,7 @@ public record CBPixelBox(double minX, double minY, double minZ, double maxX, dou
     // Quarter turns of "y" from an up-facing model to facing (after xQuarterTurnsFromUp)
     public static int yQuarterTurnsFromUp(Direction facing)
     {
-        return facing.getAxis().isVertical() ? 0 : quarterTurns(facing);
+        return facing.getAxis().isVertical() ? 0 : HorizontalFacing.quarterTurns(facing);
     }
 
     // This up-facing box turned to face facing, the same way the blockstate turns the model

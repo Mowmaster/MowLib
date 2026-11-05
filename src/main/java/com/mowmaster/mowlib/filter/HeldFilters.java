@@ -1,5 +1,6 @@
 package com.mowmaster.mowlib.filter;
 
+import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.items.filters.BaseFilterItem;
 import com.mowmaster.mowlib.items.tools.FilterToolItem;
 import com.mowmaster.mowlib.paging.PagedContents;
@@ -7,6 +8,7 @@ import com.mowmaster.mowlib.registry.MowLibDataComponents;
 import com.mowmaster.mowlib.storage.StorageInteractions;
 import com.mowmaster.mowlib.transport.TransportType;
 import com.mowmaster.mowlib.transport.TransportTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -26,11 +28,15 @@ import java.util.List;
 import java.util.Map;
 
 // A MowLib filter (any ITransportFilter item) kept inside another item, as the mowlib:held_filter component. The item
-// then only takes what the filter allows (its own code asks allows()). Blocks keep theirs with IFilterHolder instead;
-// a block placed from such an item copies the filter across in applyImplicitComponents / collectImplicitComponents.
+// then checks what moves in and out of it with holderAllows. Blocks keep theirs with IFilterHolder instead; a block
+// placed from such an item copies the filter across in applyImplicitComponents / collectImplicitComponents.
+// Held filters follow the same rules as a block's (ITransportFilter.allowsMoving / limitStored): a filter only acts
+// in the direction it's set to. An INSERT filter decides what may go into the item, an EXTRACT filter what may be
+// taken out, a NEUTRAL filter what a machine-like item works on; a filter set to another direction lets everything
+// through. Only INSERT filters limit how much the item stores.
 // Putting a filter in and out: right-click the air holding the item in the main hand, with
 // - a filter in the offhand: it goes in (one; not while the item has one)
-// - MowLib's Filter Tool in the offhand: it comes out, into the inventory
+// - MowLib's Filter Tool in the offhand: it comes out, into the inventory (or "no filter to remove", as for blocks)
 // Call useOnHeld from the item's use():
 //   InteractionResult result = HeldFilters.useOnHeld(level, player, hand, true);
 //   if (result != null) return result;
@@ -64,23 +70,46 @@ public final class HeldFilters
         return stack.getItem() instanceof ITransportFilter;
     }
 
-    // Whether a filter lets a resource of a type through. No filter (EMPTY, or not a filter) lets everything through.
+    // Whether a filter lets a resource of a type move this way. No filter, or one set to another direction: allowed.
+    public static <R extends Resource> boolean allows(ItemStack filter, TransportType<R> type, R resource, FilterDirection direction)
+    {
+        return ITransportFilter.allowsMoving(filter, type, resource, direction);
+    }
+
+    // Going in (INSERT), the common case
     public static <R extends Resource> boolean allows(ItemStack filter, TransportType<R> type, R resource)
     {
-        if (!(filter.getItem() instanceof ITransportFilter transportFilter)) return true;
-        return transportFilter.allows(filter, type, resource);
+        return allows(filter, type, resource, FilterDirection.INSERT);
     }
 
-    // Items only, the common case
+    // Items going in, the most common case
     public static boolean allows(ItemStack filter, ItemResource resource)
     {
-        return allows(filter, TransportTypes.ITEMS.get(), resource);
+        return allows(filter, TransportTypes.ITEMS.get(), resource, FilterDirection.INSERT);
     }
 
-    // Whether the item holding a filter lets this resource in
+    // Whether the item holding a filter lets this resource move this way
+    public static <R extends Resource> boolean holderAllows(ItemStack holder, TransportType<R> type, R resource, FilterDirection direction)
+    {
+        return allows(get(holder), type, resource, direction);
+    }
+
+    // Whether the item holding a filter lets this item in
     public static boolean holderAllows(ItemStack holder, ItemResource resource)
     {
         return allows(get(holder), resource);
+    }
+
+    // Whether the item holding a filter lets this item be taken out
+    public static boolean holderAllowsExtract(ItemStack holder, ItemResource resource)
+    {
+        return holderAllows(holder, TransportTypes.ITEMS.get(), resource, FilterDirection.EXTRACT);
+    }
+
+    // The most of a resource the item may store with its filter (a restricted filter...): only INSERT filters limit it
+    public static <R extends Resource> int holderLimit(ItemStack holder, TransportType<R> type, R resource, int capacity)
+    {
+        return ITransportFilter.limitStored(get(holder), type, resource, capacity);
     }
 
     // The filter in/out clicks (see the class comment). mayInsert: whether this item takes a filter right now (a
@@ -100,14 +129,22 @@ public final class HeldFilters
             }
             return InteractionResult.SUCCESS;
         }
-        if (offhand.getItem() instanceof FilterToolItem && !get(holder).isEmpty())
+        if (offhand.getItem() instanceof FilterToolItem)
         {
             if (!level.isClientSide())
             {
                 ItemStack filter = get(holder);
-                set(holder, ItemStack.EMPTY);
-                StorageInteractions.giveToPlayer(player, filter);
-                level.playSound(null, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 1f, 0.8f);
+                if (filter.isEmpty())
+                {
+                    // The same message a block without a filter gives (StorageInteractions.removeFilter)
+                    player.sendOverlayMessage(Component.translatable(MowLibReferences.MODID + ".tool_filter_missing"));
+                }
+                else
+                {
+                    set(holder, ItemStack.EMPTY);
+                    StorageInteractions.giveToPlayer(player, filter);
+                    level.playSound(null, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 1f, 0.8f);
+                }
             }
             return InteractionResult.SUCCESS;
         }
@@ -115,12 +152,13 @@ public final class HeldFilters
     }
 
     // For showing a whitelist-filtered paged item: each item it holds with its total over all pages, then the
-    // filter's other items at 0. Null (show it page by page instead) without a filter, with a blacklist, or when it
-    // holds something the filter doesn't allow.
+    // filter's other items at 0. Null (show it page by page instead) without an INSERT filter (only those decide what
+    // it holds), with a blacklist, or when it holds something the filter doesn't allow.
     public static @Nullable List<ResourceStack<ItemResource>> summary(ItemStack holder, PagedContents contents)
     {
         ItemStack filter = get(holder);
-        if (!(filter.getItem() instanceof ITransportFilter transportFilter) || transportFilter.isBlacklist(filter)) return null;
+        if (!ITransportFilter.applies(filter, FilterDirection.INSERT)) return null;
+        if (((ITransportFilter) filter.getItem()).isBlacklist(filter)) return null;
         // LinkedHashMap: keeps the order things were first found in; merge adds to an item already there
         Map<ItemResource, Integer> totals = new LinkedHashMap<>();
         for (ResourceStack<ItemResource> stack : contents.stacks())

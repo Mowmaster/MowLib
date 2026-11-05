@@ -68,11 +68,8 @@ public final class ReadingLabels
             long amount = handler.getAmountAsLong(index);
             long capacity = handler.getCapacityAsLong(index, resource);
             if (capacity <= 0 && amount <= 0) continue;
-            // "Water: 2000mB / 16000", or for an empty slot "Fluids: 0 / 16000"
-            Component what = resource.isEmpty()
-                    ? Component.empty().append(type.getName()).append(": 0")
-                    : type.describeAmount(resource, (int) Math.min(Integer.MAX_VALUE, amount));
-            lines.add(Component.empty().append(what).append(" / " + capacity).withStyle(type.getColor()));
+            // "Water: 2000 mB / 16000 mB", or for an empty slot "Fluids: 0 mB / 16000 mB": the type's own wording
+            lines.add(type.describeStored(resource, amount, capacity));
         }
     }
 

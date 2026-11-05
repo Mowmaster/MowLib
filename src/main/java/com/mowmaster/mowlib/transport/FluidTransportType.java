@@ -131,7 +131,14 @@ public class FluidTransportType extends TransportType<FluidResource>
     @Override
     public Component describeAmount(FluidResource resource, int amount)
     {
-        return Component.empty().append(resource.getHoverName()).append(": " + amount + "mB");
+        return Component.empty().append(resource.getHoverName()).append(": " + amountText(amount));
+    }
+
+    // Millibuckets (1000 mB = a bucket)
+    @Override
+    public String amountText(long amount)
+    {
+        return amount + " mB";
     }
 
     // ---- Filters ----
@@ -205,15 +212,13 @@ public class FluidTransportType extends TransportType<FluidResource>
             host.onStorageChanged(type);
         }
 
-        // "Water: 1000/16000"
+        // "Water: 1000 mB / 16000 mB" (TransportType#describeStored)
         @Override
         public @Nullable Component describe()
         {
-            FluidStack stored = FluidUtil.getStack(this, 0);
+            FluidResource stored = getResource(0);
             if (stored.isEmpty()) return null;
-            return Component.empty().append(stored.getHoverName())
-                    .append(": " + stored.getAmount() + "/" + getCapacity())
-                    .withStyle(type.getColor());
+            return type.describeStored(stored, getAmountAsLong(0), getCapacity());
         }
     }
 

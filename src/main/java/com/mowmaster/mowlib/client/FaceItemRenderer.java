@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.LightCoordsUtil;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 
 // Draws an item lying flat on one face of a block (an item frame's look: resolve it with ItemDisplayContext.FIXED), for
 // block entity renderers. Call it from submit() with the pose stack at the block's corner (as renderers get it).

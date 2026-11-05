@@ -120,26 +120,14 @@ public final class StorageInteractions
     public static <R extends Resource> int fillFromHeld(Player player, InteractionHand hand, TransportType<R> type, ResourceHandler<R> into, int amount)
     {
         ResourceHandler<R> held = type.getItemHandler(heldAccess(player, hand));
-        if (held == null) return 0;
-        try (Transaction transaction = Transaction.openRoot())
-        {
-            int moved = type.transfer(held, into, amount, transaction);
-            if (moved > 0) transaction.commit();
-            return moved;
-        }
+        return held == null ? 0 : move(type, held, into, amount);
     }
 
     // The other way: fills the held item from a storage. Returns how much moved.
     public static <R extends Resource> int emptyIntoHeld(Player player, InteractionHand hand, TransportType<R> type, ResourceHandler<R> from, int amount)
     {
         ResourceHandler<R> held = type.getItemHandler(heldAccess(player, hand));
-        if (held == null) return 0;
-        try (Transaction transaction = Transaction.openRoot())
-        {
-            int moved = type.transfer(from, held, amount, transaction);
-            if (moved > 0) transaction.commit();
-            return moved;
-        }
+        return held == null ? 0 : move(type, from, held, amount);
     }
 
     // ---- Filters ----

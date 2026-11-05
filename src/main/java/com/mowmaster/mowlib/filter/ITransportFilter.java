@@ -23,4 +23,28 @@ public interface ITransportFilter
 
     // For a whitelist/blacklist indicator on the holder (the current mode's setting)
     boolean isBlacklist(ItemStack filter);
+
+    // ---- The rules for a filter in a holder, the same wherever it's held (IFilterHolder for blocks, HeldFilters for
+    // items). Static: called as ITransportFilter.applies(...), on any stack. ----
+
+    // Whether this stack is a filter that applies to things moving this way: a filter only acts in the direction it's
+    // set to (INSERT: what goes in; EXTRACT: what's taken out; NEUTRAL: what a machine works on)
+    static boolean applies(ItemStack filter, FilterDirection direction)
+    {
+        return filter.getItem() instanceof ITransportFilter transportFilter && transportFilter.getDirection(filter) == direction;
+    }
+
+    // Whether a resource may move this way past this filter. No filter, or one set to another direction: allowed.
+    static <R extends Resource> boolean allowsMoving(ItemStack filter, TransportType<R> type, R resource, FilterDirection direction)
+    {
+        if (!applies(filter, direction)) return true;
+        return ((ITransportFilter) filter.getItem()).allows(filter, type, resource);
+    }
+
+    // The most of a resource the holder may store with this filter: only INSERT filters limit it
+    static <R extends Resource> int limitStored(ItemStack filter, TransportType<R> type, R resource, int capacity)
+    {
+        if (!applies(filter, FilterDirection.INSERT)) return capacity;
+        return ((ITransportFilter) filter.getItem()).limit(filter, type, resource, capacity);
+    }
 }

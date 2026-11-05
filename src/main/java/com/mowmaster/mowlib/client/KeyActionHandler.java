@@ -6,14 +6,12 @@ import com.mowmaster.mowlib.keys.IActivatable;
 import com.mowmaster.mowlib.keys.IPickupableBlock;
 import com.mowmaster.mowlib.keys.KeyPayloads;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -21,7 +19,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -39,8 +36,7 @@ public final class KeyActionHandler
     public static void onScreenKey(ScreenEvent.KeyPressed.Pre event)
     {
         if (!MowLibKeyMappings.ACTIVATE.isActiveAndMatches(InputConstants.getKey(event.getKeyEvent()))) return;
-        if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
-        Slot slot = screen.getHoveredSlot(); // public getter added by NeoForge
+        Slot slot = ClientLook.hoveredSlot(event.getScreen());
         if (slot == null || !canActivate(slot.getItem())) return;
         ClientPacketDistributor.sendToServer(new KeyPayloads.Activate(slot.index, Optional.empty()));
         event.setCanceled(true); // the key did its job; nothing else should use it
@@ -66,7 +62,7 @@ public final class KeyActionHandler
         {
             ItemStack stack = player.getItemInHand(hand);
             if (!canActivate(stack)) continue;
-            BlockHitResult hit = lookedAtBlock();
+            BlockHitResult hit = ClientLook.lookedAtBlock();
             Optional<BlockPos> at = hit != null && ((IActivatable) stack.getItem()).usesBlockActivation(stack)
                     ? Optional.of(hit.getBlockPos()) : Optional.empty();
             ClientPacketDistributor.sendToServer(new KeyPayloads.Activate(hand == InteractionHand.MAIN_HAND ? KeyPayloads.MAIN_HAND : KeyPayloads.OFF_HAND, at));
@@ -78,7 +74,7 @@ public final class KeyActionHandler
     private static void placeHeld()
     {
         Player player = Minecraft.getInstance().player;
-        BlockHitResult hit = lookedAtBlock();
+        BlockHitResult hit = ClientLook.lookedAtBlock();
         if (player == null || hit == null) return;
         boolean offhand;
         if (KeyPayloads.Place.isPlaceable(player.getMainHandItem())) offhand = false;
@@ -94,7 +90,7 @@ public final class KeyActionHandler
     private static void pickUpLookedAt()
     {
         Minecraft minecraft = Minecraft.getInstance();
-        BlockHitResult hit = lookedAtBlock();
+        BlockHitResult hit = ClientLook.lookedAtBlock();
         if (minecraft.level == null || hit == null) return;
         if (!(minecraft.level.getBlockEntity(hit.getBlockPos()) instanceof IPickupableBlock)) return;
         ClientPacketDistributor.sendToServer(new KeyPayloads.Pickup(hit.getBlockPos()));
@@ -103,12 +99,5 @@ public final class KeyActionHandler
     private static boolean canActivate(ItemStack stack)
     {
         return stack.getItem() instanceof IActivatable activatable && activatable.canActivate(stack);
-    }
-
-    // What the crosshair is on, if it's a block (hitResult is worked out each frame)
-    private static @Nullable BlockHitResult lookedAtBlock()
-    {
-        HitResult hitResult = Minecraft.getInstance().hitResult;
-        return hitResult instanceof BlockHitResult hit && hitResult.getType() == HitResult.Type.BLOCK ? hit : null;
     }
 }

@@ -3,6 +3,7 @@ package com.mowmaster.mowlib.reading;
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.filter.HeldFilters;
 import com.mowmaster.mowlib.paging.IPagedStorageItem;
+import com.mowmaster.mowlib.paging.PageText;
 import com.mowmaster.mowlib.paging.PagedContents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -46,9 +47,9 @@ public final class ReadingPapers
     // A paged storage item (IPagedStorageItem):
     // - with a whitelist filter (HeldFilters) and only allowed items in it: its name, the filter, afterName, then each
     //   item it holds with its total over all pages (no page grid)
-    // - otherwise: "Name (Page 3/16)", what's on the open page, the filter (if any), afterName, the rest of its
-    //   tooltip, then the open page's item's own tooltip if it has more to say (enchantments, potions), and the page
-    //   grid under it all
+    // - otherwise: its name, "Page 3/16: 12 Bread" (PageText, the same wording as the tooltip and the hotbar message),
+    //   the filter (if any), afterName, the rest of its tooltip, then the open page's item's own tooltip if it has
+    //   more to say (enchantments, potions), and the page grid under it all
     // afterName: extra lines under the name (a priority...); shown: other items whose tooltips are worth adding (a
     // trade's items...)
     public static ReadingPaper pagedItem(ItemStack stack, Level level, Player player, List<Component> afterName, List<ItemStack> shown)
@@ -63,14 +64,14 @@ public final class ReadingPapers
             lines.add(stack.getHoverName());
             lines.add(hud("filter", filter.getHoverName()));
             lines.addAll(afterName);
-            for (ResourceStack<ItemResource> each : summary) lines.add(hud("page_item", each.amount(), each.resource().toStack(1).getHoverName()));
+            for (ResourceStack<ItemResource> each : summary) lines.add(PageText.stack(each.resource(), each.amount()));
             return ReadingPaper.of(lines);
         }
         List<Component> tooltip = tooltip(stack, level, player);
         int page = pages.selectedPage();
-        lines.add(hud("page", tooltip.isEmpty() ? stack.getHoverName() : tooltip.getFirst(), page + 1, pages.pages()));
+        lines.add(tooltip.isEmpty() ? stack.getHoverName() : tooltip.getFirst());
+        lines.add(PageText.line(pages, page));
         ResourceStack<ItemResource> open = pages.stack(page);
-        lines.add(open.isEmpty() ? hud("empty_page") : hud("page_item", open.amount(), open.resource().getHoverName()));
         if (!filter.isEmpty()) lines.add(hud("filter", filter.getHoverName()));
         lines.addAll(afterName);
         // getFirst / subList: the tooltip without its first line (the name, already used above)

@@ -90,6 +90,13 @@ public class EnergyTransportType extends TransportType<AmountResource>
         return StreamCodec.unit(ENERGY);
     }
 
+    // Forge Energy, the unit NeoForge's EnergyHandler counts in
+    @Override
+    public String amountText(long amount)
+    {
+        return amount + " FE";
+    }
+
     // A storage seen as a NeoForge EnergyHandler: all its slots together (a storage with several energy slots, like a
     // library's energy books, counts as one battery; one with none reads as empty instead of failing). Putting in and
     // taking out use the storage's own index-free insert/extract, so it decides which slots fill first.

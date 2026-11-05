@@ -7,23 +7,18 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
 // Draws a Color Palette's tooltip picture (ColorPaletteTooltip): a line naming the selected dye, then every dye in a
 // grid (in its sorted order), the selected one outlined in white. Vanilla's bundle tooltip only shows a few items;
-// this shows them all. Registered by MowLibClient. Same drawing style as ClientPagedContentsTooltip.
+// this shows them all. Registered by MowLibClient. Slots drawn by SlotGrid, like ClientPagedContentsTooltip.
 // In 26.x tooltips "extract" what to draw (extractImage) into a GuiGraphicsExtractor, which the game draws later.
 public class ClientColorPaletteTooltip implements ClientTooltipComponent
 {
-    private static final int SLOT = 18;          // slot size in pixels, the same as inventory slots
     private static final int COLUMNS = 8;
     private static final int LINE_HEIGHT = 10;
     private static final int GAP = 2;            // between the text and the grid
 
     // Colours are 0xAARRGGBB (alpha first)
-    private static final int SLOT_BORDER = 0xFF373737;
-    private static final int SLOT_FILL = 0xFF8B8B8B;
-    private static final int SELECTED = 0xFFFFFFFF;
     private static final int TEXT = 0xFFFFFFFF;
 
     private final ColorPaletteContents contents;
@@ -38,22 +33,16 @@ public class ClientColorPaletteTooltip implements ClientTooltipComponent
         return Math.min(COLUMNS, contents.size());
     }
 
-    private int rows()
-    {
-        // Rounds up: 10 dyes in rows of 8 is 2 rows
-        return (contents.size() + COLUMNS - 1) / COLUMNS;
-    }
-
     @Override
     public int getHeight(Font font)
     {
-        return LINE_HEIGHT + (contents.isEmpty() ? 0 : GAP + rows() * SLOT + GAP);
+        return LINE_HEIGHT + (contents.isEmpty() ? 0 : GAP + SlotGrid.rows(contents.size(), COLUMNS) * SlotGrid.SLOT + GAP);
     }
 
     @Override
     public int getWidth(Font font)
     {
-        return Math.max(columns() * SLOT, font.width(selectedLine()));
+        return Math.max(columns() * SlotGrid.SLOT, font.width(selectedLine()));
     }
 
     @Override
@@ -66,26 +55,12 @@ public class ClientColorPaletteTooltip implements ClientTooltipComponent
         int selected = contents.selectedIndex();
         for (int index = 0; index < contents.size(); index++)
         {
-            int slotX = x + (index % COLUMNS) * SLOT;
-            int slotY = gridTop + (index / COLUMNS) * SLOT;
-
-            // Slot: a dark square with a lighter one inside
-            graphics.fill(slotX, slotY, slotX + SLOT, slotY + SLOT, SLOT_BORDER);
-            graphics.fill(slotX + 1, slotY + 1, slotX + SLOT - 1, slotY + SLOT - 1, SLOT_FILL);
-            if (index == selected) outline(graphics, slotX, slotY);
-
-            ItemStack dye = contents.dyes().get(index).create();
-            graphics.item(dye, slotX + 1, slotY + 1);
+            int slotX = SlotGrid.slotX(x, index, COLUMNS);
+            int slotY = SlotGrid.slotY(gridTop, index, COLUMNS, 0);
+            SlotGrid.slot(graphics, slotX, slotY, SlotGrid.TOOLTIP_BORDER, SlotGrid.TOOLTIP_FILL);
+            if (index == selected) SlotGrid.outline(graphics, slotX, slotY, SlotGrid.SELECTED);
+            SlotGrid.item(graphics, font, contents.dyes().get(index).create(), slotX, slotY, 1);
         }
-    }
-
-    // A 1-pixel white frame just inside the slot
-    private static void outline(GuiGraphicsExtractor graphics, int x, int y)
-    {
-        graphics.fill(x, y, x + SLOT, y + 1, SELECTED);
-        graphics.fill(x, y + SLOT - 1, x + SLOT, y + SLOT, SELECTED);
-        graphics.fill(x, y, x + 1, y + SLOT, SELECTED);
-        graphics.fill(x + SLOT - 1, y, x + SLOT, y + SLOT, SELECTED);
     }
 
     // "Selected: Red Dye" or "No dyes"

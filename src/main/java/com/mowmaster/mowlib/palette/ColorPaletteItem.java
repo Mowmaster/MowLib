@@ -2,6 +2,9 @@ package com.mowmaster.mowlib.palette;
 
 import com.mowmaster.mowlib.paging.IPageable;
 import com.mowmaster.mowlib.registry.MowLibDataComponents;
+import com.mowmaster.mowlib.storage.IInventoryUsable;
+import com.mowmaster.mowlib.storage.InventoryClick;
+import com.mowmaster.mowlib.storage.InventoryClicks;
 import com.mowmaster.mowlib.tint.IDyeSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.SlotAccess;
@@ -29,7 +32,7 @@ import java.util.Optional;
 // - Scroll over it, or press the page keys over it: selects the next/previous dye (IPageable, see PageInputHandler).
 // Held in the hand, the page keys select the next/previous dye too. Unlike a bundle, right-clicking with it in the
 // world never empties it.
-public class ColorPaletteItem extends Item implements IDyeSource, IPageable
+public class ColorPaletteItem extends Item implements IDyeSource, IPageable, IInventoryUsable
 {
     public ColorPaletteItem(Properties properties)
     {
@@ -111,82 +114,59 @@ public class ColorPaletteItem extends Item implements IDyeSource, IPageable
         return taken;
     }
 
-    // ---- Bundle-style inventory clicks (these run on both sides; the client predicts, like vanilla's bundle) ----
+    // ---- Bundle-style inventory clicks, through MowLib's shared InventoryClicks (the guards and syncing) ----
+    // These run on both sides; the client predicts, like vanilla's bundle.
 
-    // Holding the palette on the cursor, clicking a slot
     @Override
     public boolean overrideStackedOnOther(ItemStack self, Slot slot, ClickAction clickAction, Player player)
     {
-        if (self.getCount() != 1) return false;
-        ItemStack other = slot.getItem();
-
-        // Left-click a dye: one goes in. Anything that isn't a dye: the click does what it normally would.
-        if (clickAction == ClickAction.PRIMARY && ColorPaletteContents.isDye(other))
-        {
-            InsertResult result = check(self, other);
-            if (result != InsertResult.REJECTED)
-            {
-                // Take it out of the slot first: safeTake respects slots you can't take from (e.g. crafting
-                // results), and gives back EMPTY then
-                ItemStack taken = slot.safeTake(1, 1, player);
-                if (taken.isEmpty()) result = InsertResult.REJECTED;
-                else insert(self, taken);
-            }
-            playInsertSound(player, result);
-            slotsChanged(player);
-            return true;
-        }
-        // Right-click an empty slot: the selected dye goes into it
-        if (clickAction == ClickAction.SECONDARY && other.isEmpty())
-        {
-            ItemStack removed = extractSelected(self);
-            if (!removed.isEmpty())
-            {
-                ItemStack left = slot.safeInsert(removed);
-                if (!left.isEmpty()) insert(self, left); // the slot didn't take it: put it back
-                playRemoveSound(player);
-            }
-            slotsChanged(player);
-            return true;
-        }
-        return false;
+        return InventoryClicks.stackedOnOther(this, self, slot, clickAction, player);
     }
 
-    // Holding something (or nothing) on the cursor, clicking the palette
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack self, ItemStack other, Slot slot, ClickAction clickAction,
                                             Player player, SlotAccess carriedItem)
     {
-        if (self.getCount() != 1) return false;
+        return InventoryClicks.otherStackedOnMe(this, self, other, slot, clickAction, player, carriedItem);
+    }
 
-        // Left-click with a dye: one goes in (the rest stays on the cursor)
-        if (clickAction == ClickAction.PRIMARY && ColorPaletteContents.isDye(other))
+    // Right-click an empty slot with the palette: the selected dye comes out into it
+    @Override
+    public boolean usedOnEmptySlots(ItemStack self)
+    {
+        return true;
+    }
+
+    // `other` is the item clicked with or onto (or nothing); `click` says where it is
+    @Override
+    public boolean usedWith(ItemStack self, ItemStack other, ClickAction action, Player player, InventoryClick click)
+    {
+        // Left-click with/onto a dye: one goes in. Anything that isn't a dye: the click does what it normally would.
+        if (action == ClickAction.PRIMARY && ColorPaletteContents.isDye(other))
         {
-            if (slot.allowModification(player))
+            InsertResult result = check(self, other);
+            if (result != InsertResult.REJECTED)
             {
-                InsertResult result = insert(self, other);
-                if (result != InsertResult.REJECTED) other.shrink(1);
-                playInsertSound(player, result);
+                // take: from a slot through safeTake (EMPTY from slots you can't take from)
+                ItemStack taken = click.take(other, 1, player);
+                if (taken.isEmpty()) result = InsertResult.REJECTED;
+                else insert(self, taken);
             }
-            slotsChanged(player);
+            playInsertSound(player, result);
             return true;
         }
-        // Right-click with an empty cursor: the selected dye comes out onto the cursor
-        if (clickAction == ClickAction.SECONDARY && other.isEmpty())
+        // Right-click onto an empty slot, or with an empty cursor: the selected dye comes out there
+        if (action == ClickAction.SECONDARY && other.isEmpty())
         {
-            if (slot.allowModification(player))
+            ItemStack removed = extractSelected(self);
+            if (!removed.isEmpty())
             {
-                ItemStack removed = extractSelected(self);
-                if (!removed.isEmpty())
-                {
-                    carriedItem.set(removed);
-                    playRemoveSound(player);
-                }
+                ItemStack left = click.putTaken(removed, player);
+                if (!left.isEmpty()) insert(self, left); // it didn't fit there: put it back
+                InventoryClicks.playRemove(player);
             }
-            slotsChanged(player);
             return true;
         }
-        // Anything else (e.g. left-click with an empty cursor picks the palette up as normal)
         return false;
     }
 
@@ -205,27 +185,16 @@ public class ColorPaletteItem extends Item implements IDyeSource, IPageable
         return new ItemStackTemplate(this, 1);
     }
 
-    // ---- Sounds and syncing ----
+    // ---- Sounds ----
 
     private static void playInsertSound(Player player, InsertResult result)
     {
         switch (result)
         {
-            case STORED -> player.playSound(SoundEvents.BUNDLE_INSERT, 0.8f, 0.8f + player.level().getRandom().nextFloat() * 0.4f);
+            case STORED -> InventoryClicks.playInsert(player);
             // Lower pitch: it went in, but was thrown away
             case DUPLICATE -> player.playSound(SoundEvents.BUNDLE_INSERT, 0.8f, 0.5f);
-            case REJECTED -> player.playSound(SoundEvents.BUNDLE_INSERT_FAIL, 1f, 1f);
+            case REJECTED -> InventoryClicks.playFail(player);
         }
-    }
-
-    private static void playRemoveSound(Player player)
-    {
-        player.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8f, 0.8f + player.level().getRandom().nextFloat() * 0.4f);
-    }
-
-    // Tells the open container the item changed, so the change is sent to the client
-    private static void slotsChanged(Player player)
-    {
-        player.containerMenu.slotsChanged(player.getInventory());
     }
 }

@@ -3,6 +3,7 @@ package com.mowmaster.mowlib.client.reading;
 import com.mowmaster.mowlib.MowLibReferences;
 import com.mowmaster.mowlib.client.HudAnchor;
 import com.mowmaster.mowlib.client.MowLibClientConfig;
+import com.mowmaster.mowlib.client.SlotGrid;
 import com.mowmaster.mowlib.paging.IPagedStorageItem;
 import com.mowmaster.mowlib.paging.PagedContents;
 import com.mowmaster.mowlib.reading.IReadableItem;
@@ -81,8 +82,8 @@ public final class ReadingHud
     // Ask the server about the looked-at block or mob every 10 ticks (twice a second)
     private static final int ASK_EVERY = 10;
 
-    // The page grid: slot size, at most 9 across, never wider than this part of the screen
-    private static final int SLOT = 18;
+    // The page grid (slots drawn by SlotGrid): at most 9 across, never wider than this part of the screen
+    private static final int SLOT = SlotGrid.SLOT;
     private static final int MAX_COLUMNS = 9;
     private static final float GRID_SCREEN_SHARE = 0.33f;
     private static final int GRID_GAP = 4;
@@ -288,7 +289,7 @@ public final class ReadingHud
         if (pages != null && pages.pages() > 0)
         {
             columns = Math.clamp((int) (screenWidth * GRID_SCREEN_SHARE - 2 * PAPER_PADDING) / SLOT, 1, Math.min(MAX_COLUMNS, pages.pages()));
-            int totalRows = (pages.pages() + columns - 1) / columns;
+            int totalRows = SlotGrid.rows(pages.pages(), columns);
             int textRoom = Math.min(paperLines.size(), 4) * LINE_HEIGHT;
             rows = Math.clamp((room - textRoom - GRID_GAP) / SLOT, 1, totalRows);
             int openRow = pages.selectedPage() / columns;
@@ -325,26 +326,14 @@ public final class ReadingHud
         int last = Math.min(pages.pages(), first + rows * columns);
         for (int page = first; page < last; page++)
         {
-            int slotX = left + (page % columns) * SLOT;
-            int slotY = top + (page / columns - firstRow) * SLOT;
-            graphics.fill(slotX + 1, slotY + 1, slotX + SLOT - 1, slotY + SLOT - 1, SLOT_FILL);
-            outline(graphics, slotX, slotY, page == pages.selectedPage() ? INK : SLOT_EDGE);
+            int slotX = SlotGrid.slotX(left, page, columns);
+            int slotY = SlotGrid.slotY(top, page, columns, firstRow);
+            SlotGrid.fill(graphics, slotX, slotY, SLOT_FILL);
+            SlotGrid.outline(graphics, slotX, slotY, page == pages.selectedPage() ? INK : SLOT_EDGE);
             ResourceStack<ItemResource> stack = pages.stack(page);
-            if (stack.isEmpty()) continue;
             // One item drawn, with the page's whole amount as its count (a page can hold more than a stack)
-            ItemStack shown = stack.resource().toStack(1);
-            graphics.item(shown, slotX + 1, slotY + 1);
-            graphics.itemDecorations(font, shown, slotX + 1, slotY + 1, stack.amount() > 1 ? String.valueOf(stack.amount()) : null);
+            if (!stack.isEmpty()) SlotGrid.item(graphics, font, stack.resource().toStack(1), slotX, slotY, stack.amount());
         }
-    }
-
-    // A 1-pixel frame round a slot
-    private static void outline(GuiGraphicsExtractor graphics, int x, int y, int color)
-    {
-        graphics.fill(x, y, x + SLOT, y + 1, color);
-        graphics.fill(x, y + SLOT - 1, x + SLOT, y + SLOT, color);
-        graphics.fill(x, y + 1, x + 1, y + SLOT - 1, color);
-        graphics.fill(x + SLOT - 1, y + 1, x + SLOT, y + SLOT - 1, color);
     }
 
     private static void drawLabel(GuiGraphicsExtractor graphics, Font font)

@@ -11,20 +11,17 @@ import com.mowmaster.mowlib.paging.IPageHolder;
 import com.mowmaster.mowlib.paging.IPageable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import org.jetbrains.annotations.Nullable;
 
 // Page turning for every IPageable item and IPageHolder block entity, from any mod:
 // - In an inventory, over an IPageable item: scroll (down = next, like the bundle) or press a page key.
@@ -63,9 +60,7 @@ public final class PageInputHandler
     // Returns true if the mouse was over a paged item (so the event was used)
     private static boolean selectOnHoveredSlot(Screen screen, int direction)
     {
-        // <?> is a wildcard: any container screen, whatever menu type it has
-        if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return false;
-        Slot slot = containerScreen.getHoveredSlot(); // public getter added by NeoForge
+        Slot slot = ClientLook.hoveredSlot(screen);
         if (slot == null) return false;
         ItemStack stack = slot.getItem();
         if (!(stack.getItem() instanceof IPageable pageable) || stack.getCount() != 1) return false;
@@ -92,7 +87,7 @@ public final class PageInputHandler
         Player player = minecraft.player;
         if (player == null || minecraft.level == null) return;
 
-        BlockHitResult hit = lookedAtBlock(minecraft);
+        BlockHitResult hit = ClientLook.lookedAtBlock();
         // A held IPageKeyTool that wants the keys at the looked-at block (a priority tool...) comes first
         if (hit != null)
         {
@@ -123,14 +118,5 @@ public final class PageInputHandler
                 return;
             }
         }
-    }
-
-    @Nullable
-    private static BlockHitResult lookedAtBlock(Minecraft minecraft)
-    {
-        // hitResult is what the crosshair is on, worked out each frame
-        HitResult hitResult = minecraft.hitResult;
-        if (hitResult instanceof BlockHitResult blockHit && hitResult.getType() == HitResult.Type.BLOCK) return blockHit;
-        return null;
     }
 }

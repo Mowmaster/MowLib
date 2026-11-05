@@ -1,22 +1,18 @@
 package com.mowmaster.mowlib.tint;
 
+import com.mowmaster.mowlib.blockentity.CBSyncedBlockEntity;
 import com.mowmaster.mowlib.registry.MowLibBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 // The block entity of every plain IColorableBlock (mowlib:tint_block_entity). Its colours live in a CBTintData,
 // the same class storage block entities use, so saving, syncing and the item colour work the same everywhere.
-public class CBTintBlockEntity extends BlockEntity implements ITintHolder
+// Extends CBSyncedBlockEntity for the client copy (getUpdateTag / getUpdatePacket).
+public class CBTintBlockEntity extends CBSyncedBlockEntity implements ITintHolder
 {
     // Colours are stored as 0xRRGGBB with no alpha, so -1 can never be a real colour
     public static final int UNDYED = -1;
@@ -93,18 +89,7 @@ public class CBTintBlockEntity extends BlockEntity implements ITintHolder
     }
 
     // ---- Syncing to the client ----
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries)
-    {
-        return tints.updateTag();
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket()
-    {
-        return ClientboundBlockEntityDataPacket.create(this); // uses getUpdateTag
-    }
+    // CBSyncedBlockEntity sends clients everything saveAdditional writes, which here is only the colours.
 
     // ---- Item <-> block (data components) ----
 

@@ -1,5 +1,6 @@
 package com.mowmaster.mowlib.paging;
 
+import com.mowmaster.mowlib.block.HorizontalFacing;
 import com.mowmaster.mowlib.util.CBPixelBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,7 +34,7 @@ public record PageArrows(CBPixelBox back, CBPixelBox forward, boolean topOnly)
     {
         if (topOnly && hitResult.getDirection() != Direction.UP) return 0;
         Vec3 pixel = CBPixelBox.pixelInside(hitResult);
-        int turns = CBPixelBox.quarterTurns(facing);
+        int turns = HorizontalFacing.quarterTurns(facing);
         if (back.rotateY(turns).contains(pixel)) return -1;
         if (forward.rotateY(turns).contains(pixel)) return 1;
         return 0;

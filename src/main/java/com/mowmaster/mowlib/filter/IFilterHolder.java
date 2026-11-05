@@ -26,20 +26,17 @@ public interface IFilterHolder
         return !getFilter().isEmpty();
     }
 
-    // Only a filter set to this direction applies; no filter allows everything
+    // Only a filter set to this direction applies; no filter allows everything (the same rule as filters held in
+    // items, HeldFilters: both use ITransportFilter.allowsMoving)
     default <R extends Resource> boolean filterAllows(TransportType<R> type, R resource, FilterDirection direction)
     {
-        ItemStack filter = getFilter();
-        if (!(filter.getItem() instanceof ITransportFilter transportFilter) || transportFilter.getDirection(filter) != direction) return true;
-        return transportFilter.allows(filter, type, resource);
+        return ITransportFilter.allowsMoving(getFilter(), type, resource, direction);
     }
 
     // Limits only come from INSERT filters
     default <R extends Resource> int filterLimit(TransportType<R> type, R resource, int capacity)
     {
-        ItemStack filter = getFilter();
-        if (!(filter.getItem() instanceof ITransportFilter transportFilter) || transportFilter.getDirection(filter) != FilterDirection.INSERT) return capacity;
-        return transportFilter.limit(filter, type, resource, capacity);
+        return ITransportFilter.limitStored(getFilter(), type, resource, capacity);
     }
 
     // For machines that read the filter themselves (breakers, placers...): only NEUTRAL filters apply
