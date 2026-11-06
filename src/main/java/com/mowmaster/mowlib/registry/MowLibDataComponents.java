@@ -1,6 +1,7 @@
 package com.mowmaster.mowlib.registry;
 
 import com.mowmaster.mowlib.MowLibReferences;
+import com.mowmaster.mowlib.compacting.CompactingContents;
 import com.mowmaster.mowlib.filter.FilterData;
 import com.mowmaster.mowlib.filter.TagGetterData;
 import com.mowmaster.mowlib.paging.PagedContents;
@@ -56,6 +57,10 @@ public class MowLibDataComponents
     // Whether an item with an on/off mode is on (keys/IActivatable#toggle; the activation key flips it)
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ACTIVATED =
             COMPONENTS.registerComponentType("activated", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+
+    // What a compacting storage item holds (compacting/CompactingContents: its chain of tiers and one pool)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompactingContents>> COMPACTING_CONTENTS =
+            COMPONENTS.registerComponentType("compacting_contents", builder -> builder.persistent(CompactingContents.CODEC).networkSynchronized(CompactingContents.STREAM_CODEC));
 
     // A work card's selected positions
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<BlockPos>>> WORK_POSITIONS =

@@ -82,6 +82,9 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   Items holding one type (tanks, batteries, tomes): `ITransportStorageItem`, `ItemTransportStorage` (opens the
   item's `mowlib:transport_contents` as a storage), `TransportItemInteractions` (bucket-style inventory clicks with
   any item of the type, fill bar).
+- `compacting/` - compacting storage: `CompactingContents` (`mowlib:compacting_contents`), `CompactingChains`
+  (`mowlib:compacting` item data map, then two-way crafting recipes), `Compacting` (insert / extract / tooltip),
+  `ICompactingItem` + `CompactingItemHandler`.
 - `filter/` - `ITransportFilter`, `FilterData` (`mowlib:filter_data`, `mowlib:filter_mode`), `FilterDirection`,
   `IFilterHolder` (block entities with a filter slot), `HeldFilters` (a filter inside an item, `mowlib:held_filter`:
   get/set/allows, the offhand filter / Filter Tool clicks for `use()`, a whitelist summary for paged items). Held and

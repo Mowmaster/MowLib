@@ -160,6 +160,11 @@ public class MowLibLanguageProvider extends LanguageProvider
         add("mowlib.configuration.max_width", "Widest text (pixels)");
         add("mowlib.configuration.held_items", "Show held items");
         add("mowlib.configuration.show_amounts", "Show stored energy and fluids");
+
+        // Compacting storage tooltips (compacting/Compacting)
+        add("tooltip.mowlib.compacting.empty", "Empty: put in any item that compacts (gold nuggets, ingots or blocks...). Holds %s of its most compact form");
+        add("tooltip.mowlib.compacting.tier", "%1$s %2$s");
+        add("tooltip.mowlib.compacting.capacity", "Holds up to %1$s %2$s");
     }
 
     // The same keys FilterDirection#getName and WorkCardType#getName build
