@@ -24,6 +24,26 @@ public class MowLibLanguageProvider extends LanguageProvider
     {
         add("itemGroup." + MODID, "MowLib");
 
+        // ---- Linking (link/LinkingToolItem, link/LinkResult) ----
+        add("message." + MODID + ".link.added_send", "Linked: the saved block sends to this one");
+        add("message." + MODID + ".link.added_receive", "Linked: this block sends to the saved one");
+        add("message." + MODID + ".link.removed", "Link removed");
+        add("message." + MODID + ".link.out_of_range", "Linking failed: out of range");
+        add("message." + MODID + ".link.self", "A block can't link to itself");
+        add("message." + MODID + ".link.full", "Linking failed: no room for more links");
+        add("message." + MODID + ".link.not_linkable", "That block can't be linked");
+        add("message." + MODID + ".link.saved_once", "Saved for one link: %s, %s, %s");
+        add("message." + MODID + ".link.saved_sticky", "Saved for many links: %s, %s, %s");
+        add("message." + MODID + ".link.cleared", "Saved position cleared");
+        add("message." + MODID + ".link.mode_send", "%s: Send To");
+        add("message." + MODID + ".link.mode_receive", "%s: Receive From");
+        add("tooltip." + MODID + ".link.mode_send", "Mode: Send To (the saved block sends to the one you click)");
+        add("tooltip." + MODID + ".link.mode_receive", "Mode: Receive From (the block you click sends to the saved one)");
+        add("tooltip." + MODID + ".link.selected", "Saved for one link: %s, %s, %s");
+        add("tooltip." + MODID + ".link.selected_sticky", "Saved for many links: %s, %s, %s");
+        add("tooltip." + MODID + ".link.unselected", "Nothing saved");
+        add("tooltip." + MODID + ".link.howto", "Right-click: save / link. Sneak + right-click: save for many links (again or in the air: clear). %s: switch mode");
+
         // ---- Colour picker and custom dye (items/CBColorPickerItem) ----
         addItem(MowLibItems.COLOR_PICKER, "Color Picker");
         addItem(MowLibItems.CUSTOM_DYE, "Custom Dye");

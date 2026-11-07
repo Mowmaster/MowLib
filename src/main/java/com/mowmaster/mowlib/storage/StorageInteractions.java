@@ -176,6 +176,19 @@ public final class StorageInteractions
         return ItemAccess.forPlayerCursor(player, player.containerMenu);
     }
 
+    // The item on the cursor (a bucket, a tank, a battery...) used on a storage, in an open container: an item holding
+    // the type empties into the storage, otherwise the storage fills the item. The cursor item can change in place
+    // (bucket -> water bucket); the menu sends it to the client. For one tank of several, pass that tank's own view
+    // (FluidTransportType.Storage#tank). Server only. Returns how much moved.
+    public static <R extends Resource> int useCursorContainer(Player player, TransportType<R> type, ResourceHandler<R> storage)
+    {
+        if (player.containerMenu.getCarried().isEmpty()) return 0;
+        ResourceHandler<R> item = type.getItemHandler(cursorAccess(player));
+        if (item == null) return 0;
+        int moved = move(type, item, storage, Integer.MAX_VALUE);
+        return moved > 0 ? moved : move(type, storage, item, Integer.MAX_VALUE);
+    }
+
     // Moves up to `amount` of a type between two handlers, committed (TransportType#transfer, so the type's own rules
     // apply). Returns how much moved. The handlers must hold the type's resource: the casts are only safe then.
     @SuppressWarnings("unchecked")

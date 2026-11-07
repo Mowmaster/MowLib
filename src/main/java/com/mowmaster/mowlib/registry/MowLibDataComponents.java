@@ -12,6 +12,7 @@ import com.mowmaster.mowlib.transport.TransportTypes;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.util.Unit;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -53,6 +54,12 @@ public class MowLibDataComponents
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemStackTemplate>> HELD_FILTER =
             COMPONENTS.registerComponentType("held_filter", builder -> builder.persistent(ItemStackTemplate.CODEC).networkSynchronized(ItemStackTemplate.STREAM_CODEC));
+
+    // A linking tool's saved block (link/LinkingToolItem), and whether it stays for many links
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> LINKED_POS =
+            COMPONENTS.registerComponentType("linked_pos", builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> LINK_STICKY =
+            COMPONENTS.registerComponentType("link_sticky", builder -> builder.persistent(Unit.CODEC).networkSynchronized(Unit.STREAM_CODEC));
 
     // Whether an item with an on/off mode is on (keys/IActivatable#toggle; the activation key flips it)
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ACTIVATED =

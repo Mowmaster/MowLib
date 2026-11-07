@@ -16,6 +16,22 @@ public interface TransportStorageHost
     // Must already work while the storages are being made (createStorage is called from your constructor).
     int getCapacity(TransportType<?> type);
 
+    // The most of one resource a single slot may hold. normalLimit is what the storage allows on its own (items: the
+    // item's max stack size, at most 99). Return more for bigger slots: ItemTransportType.Storage then holds up to
+    // that many of one item per slot and saves the amounts itself (an ItemStack can only be saved up to 99).
+    // Read every time, like getCapacity. Only item storages ask this so far.
+    default <R extends Resource> int getSlotLimit(TransportType<R> type, R resource, int normalLimit)
+    {
+        return normalLimit;
+    }
+
+    // How many separate tanks a fluid storage has (FluidTransportType.Storage): each holds one fluid, up to
+    // getCapacity(FLUIDS) mB. Read when the storage is made and by Storage#resize. At least 1.
+    default int getTankCount(TransportType<?> type)
+    {
+        return 1;
+    }
+
     // false if the holder's filter blocks this resource in this direction (no filter: always true).
     // IFilterHolder#filterAllows does this for a block entity holding one filter item.
     default <R extends Resource> boolean filterAllows(TransportType<R> type, R resource, FilterDirection direction)

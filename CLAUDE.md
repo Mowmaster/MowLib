@@ -75,7 +75,8 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
     into this slot"; shared bundle sounds.
 - `transport/` - `TransportType` registry (`mowlib:transport_type`; items/fluids/energy/experience built in). A
   type = how to store, reach (block/entity/item handlers), save, filter, drop, absorb and show one kind of thing;
-  machine numbers (rates, sizes) belong to the machine (`TransportStorageHost#getCapacity`). `TransportStorage`,
+  machine numbers (rates, sizes) belong to the machine (`TransportStorageHost#getCapacity`; `getSlotLimit` for item
+  slots bigger than a stack, saved as `bulk_stacks`; `getTankCount` for several fluid tanks, `Storage#tank(i)` views). `TransportStorage`,
   `AmountResource`/`AmountStorage` for amount-only types, `TransportContents` (`mowlib:transport_contents`).
   Amounts are written one way: `TransportType#amountText` (unit) and `describeStored` ("Water: 1000 mB / 16000 mB").
   `ExperienceTransportType` makes the `mowlib:experience_handler` block + item capabilities.
@@ -85,6 +86,14 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - `compacting/` - compacting storage: `CompactingContents` (`mowlib:compacting_contents`), `CompactingChains`
   (`mowlib:compacting` item data map, then two-way crafting recipes), `Compacting` (insert / extract / tooltip),
   `ICompactingItem` + `CompactingItemHandler`.
+- `link/` - links between block entities: `ILinkable` (implement on the sender; links stored in its `LinkList`: one
+  direction per pair, range cube, max links, toggle / flip, `links` save key, `removeLinksTo` when one is broken),
+  `LinkResult`, `LinkingToolItem` (base item, mods register their own: one-time / sticky saved block, Send To /
+  Receive From on the activation key, `mowlib:linked_pos` / `mowlib:link_sticky`). Client: `client/LinkBeams`
+  (automatic while a linking tool is held), `client/LinkOutlines` (toggled outlines), `client/BeamRenderer`.
+  `blockentity/ClientLoadedBlockEntities`: client-side set of opted-in block entities (`all(type, level)`).
+- GUI helpers: `client/PaperGui` (paper look: sprite, ink, slot frames, ghost items, icon toggles),
+  `client/StorageGauge` (fill gauge for any transport storage slot). `StorageInteractions.useCursorContainer`.
 - `filter/` - `ITransportFilter`, `FilterData` (`mowlib:filter_data`, `mowlib:filter_mode`), `FilterDirection`,
   `IFilterHolder` (block entities with a filter slot), `HeldFilters` (a filter inside an item, `mowlib:held_filter`:
   get/set/allows, the offhand filter / Filter Tool clicks for `use()`, a whitelist summary for paged items). Held and
