@@ -15,7 +15,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+//? if >=26.3 {
 import net.neoforged.neoforge.registries.NewDatapackRegistryEvent;
+//?} else
+/*import net.neoforged.neoforge.registries.DataPackRegistryEvent;*/
 
 // Dual Handed crafting: hold one thing in the offhand and another in the main hand, right-click a certain block, and get
 // an item. Either input can be used up or kept, and the block can be destroyed. (1.20's dual-handed crafting, back as data.) DualHandedCrafting runs them.
@@ -69,10 +72,20 @@ public record DualHandedRecipe(Ingredient offhand, Ingredient mainhand, HolderSe
         return offhand.test(player.getOffhandItem()) && mainhand.test(player.getMainHandItem()) && state.is(block);
     }
 
-    // A world datapack registry, synced to clients with the same codec (so clients must have MowLib, which they do)
+    // A world datapack registry, synced to clients with the same codec (so clients must have MowLib, which they do).
+    // Stonecutter: 26.1 names the event DataPackRegistryEvent.NewRegistry and the method dataPackRegistry (the same
+    // thing: loaded from datapacks with the world, the third argument syncs it to clients).
+    //? if >=26.3 {
     @SubscribeEvent
     public static void registerRegistry(NewDatapackRegistryEvent event)
     {
         event.worldRegistry(KEY, CODEC, CODEC);
     }
+    //?} else {
+    /*@SubscribeEvent
+    public static void registerRegistry(DataPackRegistryEvent.NewRegistry event)
+    {
+        event.dataPackRegistry(KEY, CODEC, CODEC);
+    }
+    *///?}
 }

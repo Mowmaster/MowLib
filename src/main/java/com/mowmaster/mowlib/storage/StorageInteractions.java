@@ -7,6 +7,7 @@ import com.mowmaster.mowlib.items.tools.FilterToolItem;
 import com.mowmaster.mowlib.transport.TransportType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+//? if >=26.3
 import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -94,7 +95,11 @@ public final class StorageInteractions
     // Into the inventory, or dropped at the player's feet if it's full. The client is sent the inventory change.
     public static void giveToPlayer(Player player, ItemStack stack)
     {
+        // Stonecutter: 26.3 added the Prediction argument (SERVER_ONLY: the server works it out and tells the client)
+        //? if >=26.3 {
         if (!stack.isEmpty()) player.getInventory().placeItemBackInInventory(stack, Prediction.SERVER_ONLY);
+        //?} else
+        /*if (!stack.isEmpty()) player.getInventory().placeItemBackInInventory(stack);*/
     }
 
     // ---- Other types ----

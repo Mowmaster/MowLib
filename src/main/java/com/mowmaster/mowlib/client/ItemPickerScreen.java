@@ -66,7 +66,7 @@ public class ItemPickerScreen extends Screen
     // Opens the menu (client). Since 26.2 screens are set on the Gui (Minecraft#gui), not on Minecraft itself.
     public static void open(PickerGroup group, InteractionHand hand)
     {
-        Minecraft.getInstance().gui.setScreen(new ItemPickerScreen(group, hand));
+        Minecraft.getInstance().setScreen(new ItemPickerScreen(group, hand));
     }
 
     // ---- Layout ----

@@ -104,13 +104,18 @@ public final class KeyPayloads
             Vec3 hit = Vec3.atLowerCornerOf(payload.pos()).add(clamp(payload.x()), clamp(payload.y()), clamp(payload.z()));
             BlockHitResult hitResult = new BlockHitResult(hit, payload.face(), payload.pos(), false);
             BlockItem item = (BlockItem) stack.getItem();
-            // 26.3: a swing says how it's swung; read before placing, as placing can use the stack up
+            // 26.3: a swing says how it's swung; read before placing, as placing can use the stack up.
+            // Stonecutter: before 26.3 there's no swing animation; swing(hand, true) is the whole call.
+            //? if >=26.3
             var swing = stack.getInteractAnimation();
             // BlockItem#place: the normal placing of a block item (sound, block entity data, using up the item)
             if (item.place(new BlockPlaceContext(player.level(), player, hand, stack, hitResult)).consumesAction())
             {
                 // true: send the swing to clients (the placing player's included: the key press didn't swing locally)
+                //? if >=26.3 {
                 player.swing(hand, swing, true);
+                //?} else
+                /*player.swing(hand, true);*/
             }
         }
 
@@ -139,7 +144,10 @@ public final class KeyPayloads
             if (!player.isWithinBlockInteractionRange(payload.pos(), 1.0) || !level.mayInteract(player, payload.pos())) return;
             if (IPickupableBlock.pickUpAt(level, payload.pos(), player))
             {
+                //? if >=26.3 {
                 player.swing(InteractionHand.MAIN_HAND, player.getMainHandItem().getInteractAnimation(), true);
+                //?} else
+                /*player.swing(InteractionHand.MAIN_HAND, true);*/
             }
         }
     }

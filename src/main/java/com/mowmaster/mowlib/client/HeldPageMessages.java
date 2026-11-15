@@ -60,11 +60,19 @@ public final class HeldPageMessages
             // Only a page change of the same book in the same place counts (not switching to another book), and only
             // while no screen is open (scrolling over the book in an inventory shows it in the tooltip already)
             // ... and not while the reading HUD's paper is showing this item (the page is on the paper already)
+            // Stonecutter: 26.2 moved the open screen to gui.screen() and the hotbar message to gui.hud
+            //? if >=26.2 {
+            boolean noScreen = minecraft.gui.screen() == null;
+            //?} else
+            /*boolean noScreen = minecraft.screen == null;*/
             if (before != null && before.slot() == now.slot() && before.item() == now.item() && before.page() != now.page()
-                    && minecraft.gui.screen() == null && !ReadingHud.showsHeld(player, stack))
+                    && noScreen && !ReadingHud.showsHeld(player, stack))
             {
                 // false: plain white text (true makes it cycle colours, like the "now playing" message)
+                //? if >=26.2 {
                 minecraft.gui.hud.setOverlayMessage(describePage(stack, pageable, now.page()), false);
+                //?} else
+                /*minecraft.gui.setOverlayMessage(describePage(stack, pageable, now.page()), false);*/
             }
         }
     }

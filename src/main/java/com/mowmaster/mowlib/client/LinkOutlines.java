@@ -123,7 +123,14 @@ public final class LinkOutlines
         {
             poseStack.pushPose();
             poseStack.translate(outline.pos().getX() - camera.x, outline.pos().getY() - camera.y, outline.pos().getZ() - camera.z);
+            // Stonecutter: shape outlines became a render feature in 26.2; before that, ShapeRenderer drew the lines
+            // straight into the game's line buffer (how NeoForge 26.1's own debug outlines do it)
+            //? if >=26.2 {
             event.getSubmitNodeCollector().submitShapeOutline(poseStack, outline.shape(), RenderTypes.lines(), outline.color(), LINE_WIDTH, false);
+            //?} else {
+            /*com.mojang.blaze3d.vertex.VertexConsumer lines = net.minecraft.client.Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderTypes.lines());
+            net.minecraft.client.renderer.ShapeRenderer.renderShape(poseStack, lines, outline.shape(), 0, 0, 0, outline.color(), LINE_WIDTH);
+            *///?}
             poseStack.popPose();
         }
     }

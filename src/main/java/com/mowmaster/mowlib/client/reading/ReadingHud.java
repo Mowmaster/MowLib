@@ -271,8 +271,11 @@ public final class ReadingHud
     private static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker)
     {
         Minecraft minecraft = Minecraft.getInstance();
-        // F1 hides the HUD
+        // F1 hides the HUD. Stonecutter: before 26.2 that was the hideGui option
+        //? if >=26.2 {
         if (minecraft.gui.hud.isHidden()) return;
+        //?} else
+        /*if (minecraft.options.hideGui) return;*/
         if (!paperLines.isEmpty()) drawPaper(graphics, minecraft.font);
         if (labelShown) drawLabel(graphics, minecraft.font);
     }

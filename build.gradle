@@ -27,6 +27,17 @@ stonecutter {
     replacements.string(current.parsed.matches('>=26.2')) {
         replace 'Minecraft.getInstance().setScreen(', 'Minecraft.getInstance().gui.setScreen('
     }
+    // 26.3 renamed PoseStack#mulPose to rotate (only written as poseStack.rotate( so other rotate( calls stay)
+    replacements.string(current.parsed.matches('>=26.3')) {
+        replace 'poseStack.mulPose(', 'poseStack.rotate('
+    }
+
+    // Files left out of older versions. Datagen only ever runs from 26.3 (its output in src/generated is shared), and
+    // its recipe/registry datagen API is 26.3-only, so 26.1.2 doesn't compile it at all. Paths are relative to
+    // src/main/java; ** = everything below.
+    files {
+        disable(current.parsed.matches('<26.3'), 'com/mowmaster/mowlib/datagen/**')
+    }
 }
 
 sourceSets.main.resources {
