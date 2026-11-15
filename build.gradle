@@ -5,15 +5,6 @@ plugins {
     id 'idea'
 }
 
-tasks.named('wrapper', Wrapper).configure {
-    // Define wrapper values here so as to not have to always do so when updating gradlew.properties.
-    // Switching this to Wrapper.DistributionType.ALL will download the full gradle sources that comes with
-    // documentation attached on cursor hover of gradle classes and methods. However, this comes with increased
-    // file size for Gradle. If you do switch this to ALL, run the Gradle wrapper task twice afterwards.
-    // (Verify by checking gradle/wrapper/gradle-wrapper.properties to see if distributionUrl now points to `-all`)
-    distributionType = Wrapper.DistributionType.BIN
-}
-
 // Stonecutter runs this file once per Minecraft version (versions/26.3, versions/26.1.2), each time as that version's
 // own Gradle project, with its versions/<v>/gradle.properties added to the root one. So inside here, file('x') means
 // versions/<v>/x; anything shared (generated resources, templates) uses rootProject.file('x') instead.
