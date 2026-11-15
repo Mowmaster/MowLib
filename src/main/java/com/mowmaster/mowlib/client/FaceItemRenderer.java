@@ -27,7 +27,12 @@ public final class FaceItemRenderer
     // The light for things drawn on a face: the light of the space in front of it (inside a solid block it's dark)
     public static int light(BlockAndTintGetter level, BlockPos pos, Direction face)
     {
+        // Stonecutter: 26.2 moved getLightCoords from LevelRenderer to LightCoordsUtil. The line after "else" is the 26.1
+        // one, kept in a /* */ comment while 26.3 is active (switching versions swaps which line is commented out).
+        //? if >=26.2 {
         return LightCoordsUtil.getLightCoords(level, pos.relative(face));
+        //?} else
+        /*return net.minecraft.client.renderer.LevelRenderer.getLightCoords(level, pos.relative(face));*/
     }
 
     public static void submit(PoseStack poseStack, SubmitNodeCollector collector, ItemStackRenderState item, Direction face,

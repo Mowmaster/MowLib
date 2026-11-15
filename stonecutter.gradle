@@ -1,0 +1,8 @@
+plugins {
+    id 'dev.kikugie.stonecutter'
+}
+
+// The "active" version: the one the files in src/ are written for right now, and the one the IDE compiles and runs.
+// Don't edit this by hand: switch with the Gradle tasks Stonecutter adds (group "stonecutter", e.g. "Set active
+// project to 26.1.2"), which rewrites the //? comments in src/ and this line together. Keep it on 26.3 when you commit.
+stonecutter.active '26.3'
