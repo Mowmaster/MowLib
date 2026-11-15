@@ -115,7 +115,7 @@ public final class KeyPayloads
                 //? if >=26.3 {
                 player.swing(hand, swing, true);
                 //?} else
-                /*player.swing(hand, true);*/
+                //player.swing(hand, true);
             }
         }
 
@@ -147,7 +147,7 @@ public final class KeyPayloads
                 //? if >=26.3 {
                 player.swing(InteractionHand.MAIN_HAND, player.getMainHandItem().getInteractAnimation(), true);
                 //?} else
-                /*player.swing(InteractionHand.MAIN_HAND, true);*/
+                //player.swing(InteractionHand.MAIN_HAND, true);
             }
         }
     }

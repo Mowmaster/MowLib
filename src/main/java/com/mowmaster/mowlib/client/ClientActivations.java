@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 // Things the activation key (MowLibKeyMappings.ACTIVATE) does on the CLIENT for a held item, such as opening a screen
 // (the Blank Filter's radial menu). Checked before the server-side IActivatable, main hand first. Client only: register
 // from your client class (MowLibClient registers the Blank Filter's).
-//   ClientActivations.register(stack -> stack.is(MyItems.THING.get()), (stack, hand) -> Minecraft.getInstance().setScreen(...));
+//   ClientActivations.register(stack -> stack.is(MyItems.THING.get()), (stack, hand) -> Minecraft.getInstance().gui.setScreen(...));
 public final class ClientActivations
 {
     private ClientActivations() {}

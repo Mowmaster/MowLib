@@ -64,7 +64,7 @@ public final class HeldPageMessages
             //? if >=26.2 {
             boolean noScreen = minecraft.gui.screen() == null;
             //?} else
-            /*boolean noScreen = minecraft.screen == null;*/
+            //boolean noScreen = minecraft.screen == null;
             if (before != null && before.slot() == now.slot() && before.item() == now.item() && before.page() != now.page()
                     && noScreen && !ReadingHud.showsHeld(player, stack))
             {
@@ -72,7 +72,7 @@ public final class HeldPageMessages
                 //? if >=26.2 {
                 minecraft.gui.hud.setOverlayMessage(describePage(stack, pageable, now.page()), false);
                 //?} else
-                /*minecraft.gui.setOverlayMessage(describePage(stack, pageable, now.page()), false);*/
+                //minecraft.gui.setOverlayMessage(describePage(stack, pageable, now.page()), false);
             }
         }
     }

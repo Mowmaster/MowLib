@@ -275,7 +275,7 @@ public final class ReadingHud
         //? if >=26.2 {
         if (minecraft.gui.hud.isHidden()) return;
         //?} else
-        /*if (minecraft.options.hideGui) return;*/
+        //if (minecraft.options.hideGui) return;
         if (!paperLines.isEmpty()) drawPaper(graphics, minecraft.font);
         if (labelShown) drawLabel(graphics, minecraft.font);
     }

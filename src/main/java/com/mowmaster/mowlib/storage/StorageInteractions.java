@@ -99,7 +99,7 @@ public final class StorageInteractions
         //? if >=26.3 {
         if (!stack.isEmpty()) player.getInventory().placeItemBackInInventory(stack, Prediction.SERVER_ONLY);
         //?} else
-        /*if (!stack.isEmpty()) player.getInventory().placeItemBackInInventory(stack);*/
+        //if (!stack.isEmpty()) player.getInventory().placeItemBackInInventory(stack);
     }
 
     // ---- Other types ----
