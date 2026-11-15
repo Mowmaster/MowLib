@@ -108,7 +108,7 @@ public final class KeyPayloads
             // Stonecutter: before 26.3 there's no swing animation; swing(hand, true) is the whole call.
             //? if >=26.3
             var swing = stack.getInteractAnimation();
-            // BlockItem#place: the normal placing of a block item (sound, block entity data, using up the item)
+            //BlockItem#place: the normal placing of a block item (sound, block entity data, using up the item)
             if (item.place(new BlockPlaceContext(player.level(), player, hand, stack, hitResult)).consumesAction())
             {
                 // true: send the swing to clients (the placing player's included: the key press didn't swing locally)

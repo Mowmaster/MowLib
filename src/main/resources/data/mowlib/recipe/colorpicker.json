@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:dyes",
+    "#c:dyes",
+    "#c:dyes",
+    "minecraft:glass_bottle"
+  ],
+  "result": {
+    "id": "mowlib:color_picker"
+  }
+}
