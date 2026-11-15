@@ -4,13 +4,48 @@ What changed in each alpha, and what a mod using MowLib should check when it upd
 "Check" lines are what can break or change behaviour in a mod; "New" lines are additions a mod may want to use.
 Changes go under **Unreleased** as they're made; when `mod_version` is bumped, that section gets the version's name.
 
-## Unreleased (after 0.0.4)
+## Unreleased (after 0.0.5)
+
+### Check
+- **MowLib builds for two Minecraft versions now: 26.3 and 26.1.2** (one set of sources, Stonecutter). Each is
+  published under its own Maven name: `com.mowmaster.mowlib:mowlib-26.3` and `com.mowmaster.mowlib:mowlib-26.1.2`
+  (was `com.mowmaster.mowlib:mowlib`). In each mod's `build.gradle`, ask for the one matching the mod's Minecraft
+  version; the version range stays as it is:
+  `jarJar(implementation(group: 'com.mowmaster.mowlib', name: "mowlib-${minecraft_version}")) { ... }`
+  Then delete the old `~/.m2/repository/com/mowmaster/mowlib/mowlib/` folder, or the mod keeps building against
+  the last MowLib published under the old name without any error.
+- **On 26.1.2, a few things run older code** (same behaviour intended; check them in game if your mod uses them):
+  link outlines (drawn with `ShapeRenderer`), Dual Handed recipe loading (`DataPackRegistryEvent.NewRegistry`),
+  key place / pick-up swings (no swing animation before 26.3), `StorageInteractions.giveToPlayer`, the hotbar page
+  message and the reading HUD's F1 hiding. MowLib's datagen exists only in the 26.3 build.
+- **Fluid storages can have several tanks** (`TransportStorageHost#getTankCount`, default 1, so existing storages
+  are unchanged). Code reading a fluid storage's `getResource(0)` only sees the first tank; use `size()` /
+  `FluidTransportType.Storage#tank(i)` for all of them. Placing fluid in the world takes from the first tank whose
+  fluid fits.
+- **Item storages may hold more than a stack per slot** (`TransportStorageHost#getSlotLimit`, default a normal
+  stack). Only storages that allow it save differently (`bulk_stacks` instead of `stacks`); loading reads either.
+
+### New
+- **Links** (`link/`): `ILinkable` + `LinkList` (links between block entities: direction, range, max links,
+  toggle / flip, `removeLinksTo`), `LinkResult`, `LinkingToolItem` (base item for mods' linking tools:
+  `mowlib:linked_pos`, `mowlib:link_sticky`). Client: `client/LinkBeams`, `client/LinkOutlines`,
+  `client/BeamRenderer`; `blockentity/ClientLoadedBlockEntities`.
+- **GUI helpers:** `client/PaperGui` (the paper look: sprite, ink, slot frames, ghost items, icon toggles),
+  `client/StorageGauge` (a fill gauge and tooltip for any transport storage slot),
+  `StorageInteractions.useCursorContainer` (the cursor item used on a storage in an open container).
+
+## 0.0.5
 
 ### Check
 - **Knapping deprecated** (`knapping/`: `KnappingRecipe`, `KnappingRecipes`, `KnappingHandler`). It still works
   for now but will be removed; move recipes to Dual Handed recipes: JSON in
   `data/<namespace>/mowlib/dual_handed_recipe/` (see `recipes/DualHandedRecipe`). Uses of `KnappingRecipes.register`
   show deprecation warnings.
+
+### New
+- **Compacting storage** (`compacting/`): `CompactingContents` (`mowlib:compacting_contents`), `CompactingChains`
+  (the `mowlib:compacting` item data map, then two-way crafting recipes), `Compacting` (insert / extract /
+  tooltip), `ICompactingItem` + `CompactingItemHandler`.
 
 ## 0.0.4
 

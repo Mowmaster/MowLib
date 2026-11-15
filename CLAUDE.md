@@ -1,4 +1,4 @@
-NeoForge 26.3.0.94, Minecraft 26.3, Java 25. I'm coming from 1.20 and JDK 8. Explain new APIs and modern Java features as you use them. I copy code in myself, so give complete, clearly placed snippets.
+Two Minecraft versions from one set of sources (Stonecutter, see Versions): NeoForge 26.3.0.94 (Minecraft 26.3) and NeoForge 26.1.2.122 (Minecraft 26.1.2), Java 25. I'm coming from 1.20 and JDK 8. Explain new APIs and modern Java features as you use them. I copy code in myself, so give complete, clearly placed snippets.
 
 # MowLib
 
@@ -169,6 +169,26 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   `MowLibTextUtils`, `MowLibParticles`, `LeftClickCooldown` (keeps cancelled left-click block actions to
   right-click's pace).
 
+## Versions (Stonecutter)
+- One set of sources in `src/` builds for every version in `settings.gradle` (`26.3`, `26.1.2`). Each version is a
+  Gradle subproject: `versions/<v>/` holds its `gradle.properties` (Minecraft, NeoForge, version range), its build
+  output and its `run` folder. `build.gradle` runs once per version; `stonecutter.gradle` is the root project
+  (active version, the wrapper task).
+- `src/` is always written for the active version (`stonecutter.active` in `stonecutter.gradle`). Commit with 26.3
+  active. Never edit that line by hand: switch with the "stonecutter" Gradle tasks ("Set active project to 26.1.2",
+  "Reset active project"), which rewrite `src/` and the line together.
+- Other versions build from a converted copy (`versions/<v>/build/generated/stonecutter`), made automatically:
+  `./gradlew :26.1.2:build`, `:26.1.2:runClient`.
+- Version differences, newest version's code first:
+  - A rename with unique text (a full class name, `Class.method(`): a global replacement in `build.gradle`'s
+    `stonecutter { replacements.string(...) }`.
+  - Anything else: a version comment in the file (`//? if >=26.3 {` ... `//?} else {` ... `//?}`; the inactive side
+    sits in a `/* */` comment).
+  - Code that only exists in newer versions: `files { disable(...) }` in `build.gradle`. `datagen/` is 26.3 only;
+    its output in `src/generated` is shared by all versions.
+- Every change must compile for every version. I build each version and paste errors. Look up the older version's
+  API in NeoForge's `26.1.x` branch and the primers (`primers/26.2`, `26.3` say what changed since 26.1).
+
 ## Releases
 - MowLib is in alpha: nothing is released until beta. Don't bump `mod_version` or remind me to until then.
 - `CHANGELOG.md`: every change goes under **Unreleased** as it's made, as a "Check" line (can break or change
@@ -183,13 +203,14 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
   newest copy breaks every older mod installed alongside it. Mods declare a range that stops before the next major
   (e.g. `[1.2.0,2.0.0)`).
 - Steps (I do these; Claude never commits, pushes or tags): bump `mod_version`, commit and push, tag `vX.Y.Z` and
-  push the tag, then `./gradlew publishToMavenLocal` (published as `com.mowmaster.mowlib:mowlib:X.Y.Z` in
-  `~/.m2`). Then update the version in each mod that needs the change.
+  push the tag, then `./gradlew publishToMavenLocal`. That publishes every version, each under its own name:
+  `com.mowmaster.mowlib:mowlib-<minecraft version>:X.Y.Z` (`mowlib-26.3`, `mowlib-26.1.2`) in `~/.m2`. Mods ask for
+  `name: "mowlib-${minecraft_version}"`. Then update the version in each mod that needs the change.
 
 ## 26.x notes (learned in CrystalBlocks)
 - Render layer comes from texture alpha; use `noOcclusion()` on see-through blocks.
-- Datagen: models via `ModelProvider`/`BlockModelGenerators` (override `getKnownItems`/`getKnownBlocks` to list
-  what it must cover); recipes and loot via `GatherDataRegistryEntriesEvent`. Recipe ids are full ids
+- Datagen (26.3 only, see Versions): models via `ModelProvider`/`BlockModelGenerators` (override
+  `getKnownItems`/`getKnownBlocks` to list what it must cover); recipes and loot via `GatherDataRegistryEntriesEvent`. Recipe ids are full ids
   (`"mowlib:picked_dye"`); a bare name lands in `minecraft:`.
 - Block entity save/load uses `ValueOutput`/`ValueInput`; `updateShape` gets a `ScheduledTickAccess`;
   `useItemOn` returns `InteractionResult.SUCCESS / PASS / TRY_WITH_EMPTY_HAND`.
@@ -207,7 +228,7 @@ and bundle it with Jar-in-Jar, so players don't install it separately.
 - Pull and read the repo only; never commit or push. I handle git.
 - Deliver changes as a zip of whole files at their repo paths, plus a list of files to delete.
 - For simple model fixes (a missing `tintindex`, `#`, texture key), just tell me the line to change; only send a model file when the geometry changes.
-- To check 26.3 APIs, read the public `neoforged/neoforge` repo (branch `26.3.x`) and the porting primers in `neoforged/.github` (`primers/26.1`, `26.2`, `26.3`). NeoForge's docs are in `neoforged/Documentation`.
+- To check 26.3 APIs, read the public `neoforged/neoforge` repo (branch `26.3.x`; `26.1.x` for 26.1.2) and the porting primers in `neoforged/.github` (`primers/26.1`, `26.2`, `26.3`). NeoForge's docs are in `neoforged/Documentation`.
 - The mods using MowLib: `Mowmaster/CrystalBlocks`, `Mowmaster/Pedestals`, `Mowmaster/Bibliomania` (branch `NeoForge-26x`).
 
 ## To do
